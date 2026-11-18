@@ -1,0 +1,294 @@
+
+{% load static %}
+
+<style>
+/* SIDEBAR BACKGROUND */
+.sidebar {
+    
+    background:
+        radial-gradient(circle at top left, #e8e5ff 0%, transparent 45%),
+        linear-gradient(180deg, #fbfaff 0%, #f0efff 100%);
+
+    border-right: 1px solid #e3e0ff;
+
+    
+    overflow-y: auto;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+
+
+.brand-logo {
+    width: 105px;
+    height: 65px;
+    margin: 0 auto 13px;
+
+}
+
+.brand h3 {
+    font-size: 19px;
+    font-weight: 800;
+    color: #373550;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.brand p {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+    color: #9996b9;
+    margin-top: 9px;
+}
+
+/* MENU */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 8px;
+}
+
+.sidebar-menu li a {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 15px 14px;
+    min-height: 48px;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+    color: #55536f;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
+
+    overflow: hidden;
+}
+
+/* ICON */
+.sidebar-menu li a i {
+    width: 22px;
+    min-width: 22px;
+
+    font-size: 19px;
+    text-align: center;
+    color: #9995c5;
+
+    transition:
+        transform .3s ease,
+        color .3s ease;
+}
+
+/* HOVER - ONLY LIGHT EFFECT */
+.sidebar-menu li a:not(.active):hover {
+    background: #eae8ff;
+    color: #7773df;
+}
+
+.sidebar-menu li a:not(.active):hover i {
+    color: #7773df;
+    transform: translateX(3px);
+}
+
+/* ACTIVE MENU */
+.sidebar-menu li a.active {
+    color: #ffffff;
+
+    background: linear-gradient(
+        110deg,
+        #a29eff,
+        #8580ec,
+        #7773df
+    );
+
+    box-shadow: 0 7px 19px rgba(119, 115, 223, .28);
+
+    animation: activeClick .45s ease;
+}
+
+/* ACTIVE LEFT LINE */
+.sidebar-menu li a.active::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 20%;
+
+    width: 4px;
+    height: 60%;
+
+    background: #ffffff;
+    border-radius: 0 5px 5px 0;
+}
+
+/* ACTIVE ICON ANIMATION */
+.sidebar-menu li a.active i {
+    color: white;
+    animation: iconClick .5s ease;
+}
+
+@keyframes activeClick {
+    0% {
+        transform: scale(.96);
+        opacity: .7;
+    }
+    60% {
+        transform: scale(1.025);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes iconClick {
+    0% {
+        transform: scale(.7) rotate(-15deg);
+    }
+    60% {
+        transform: scale(1.2) rotate(8deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
+    }
+}
+
+/* SCROLLBAR */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #d4d0f7;
+    border-radius: 10px;
+}
+
+/* RESPONSIVE */
+@media(max-width: 768px) {
+    .sidebar {
+        width: 235px;
+    }
+}
+</style>
+
+
+<aside class="sidebar " style="box-shadow: 8px 0 20px rgba(0, 0, 0, 0.30);">
+
+    <!-- BRAND -->
+    <div class="brand">
+
+        <div class="brand-logo">
+            <div class="brand text-center w-100">
+
+                <img
+                    src="{% static 'images/logo.png' %}"
+                    alt="Interiors by Kumaran"
+                    class="img-fluid brand-logo"
+                >
+
+            </div>
+        </div>
+
+        <h3>Interiors by<br>Kumaran</h3>
+
+        <p>Project Management System</p>
+
+    </div>
+
+
+    <!-- NAVIGATION MENU -->
+    <ul class="sidebar-menu">
+
+        <li>
+            <a href="{% url 'owner_dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'owner_dashboard' %}active{% endif %}">
+
+                <i class="bi bi-house-door"></i>
+                <span>Dashboard</span>
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'owner_projects' %}"
+               class="{% if request.resolver_match.url_name == 'owner_projects' %}active{% endif %}">
+
+                <i class="bi bi-folder"></i>
+                <span>Projects</span>
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'projects_map' %}"
+               class="{% if request.resolver_match.url_name == 'projects_map' %}active{% endif %}">
+
+                <i class="bi bi-geo-alt"></i>
+                <span>Project Map</span>
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#">
+                <i class="bi bi-person"></i>
+                <span>Clients</span>
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'owner_team' %}"
+               class="{% if request.resolver_match.url_name == 'owner_team' %}active{% endif %}">
+
+                <i class="bi bi-people"></i>
+                <span>Team</span>
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#">
+                <i class="bi bi-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#">
+                <i class="bi bi-bar-chart"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
+            </a>
+        </li>
+
+    </ul>
+
+</aside>

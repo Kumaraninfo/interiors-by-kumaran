@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBK Login</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <h1>Client Page</h1>
+        <!-- <h2>Login</h2> -->
+
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm px-3 py-3">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand fw-bold" href="#">
+            Interiors by Kumaran
+        </a>
+
+        <div class="d-flex align-items-center gap-3">
+
+            <a href="{% url 'sitepm_dashboard' %}"
+               class="btn btn-outline-success">
+                Dashboard
+            </a>
+
+            <a href="{% url 'client_profile' %}"
+               class="btn btn-light">
+                Profile
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-success">
+                    Logout
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</nav>
+        <!-- <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <label for="username">Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter username"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
+
+            <button type="submit">Login</button>
+
+        </form> -->
+
+    </div>
+
+</body>
+</html>

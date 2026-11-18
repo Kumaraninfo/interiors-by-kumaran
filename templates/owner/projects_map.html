@@ -1,0 +1,419 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Project Map | Interiors by Kumaran</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+   
+    
+    <!-- Leaflet Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    
+    <!-- Existing Sidebar and Header CSS -->
+    <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+     <!-- Project Map CSS -->
+    <link rel="stylesheet" href="{% static 'css/projects_map.css' %}">
+
+   <style>
+    
+   </style> 
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- PROJECT MAP SIDEBAR -->
+   {% include 'includes/sidebar_owner.html' %}
+
+    <main class="main-area">
+
+        <!-- EXISTING HEADER -->
+        {% include 'includes/header.html' %}
+
+        <section class="project-map-content">
+
+            <!-- PAGE TITLE -->
+            <div class="map-page-heading">
+                <div>
+                    <h2>Project Map</h2>
+                    <p>Owner Dashboard <i class="bi bi-chevron-right"></i> Project Map</p>
+                </div>
+            </div>
+
+            <!-- SUMMARY CARDS -->
+            <div class="map-stats">
+
+                <div class="map-stat-card neutral-stat">
+                    <div class="map-stat-icon"><i class="bi bi-layers"></i></div>
+                    <div>
+                        <p>Total Projects</p>
+                        <h3>42</h3>
+                    </div>
+                </div>
+
+                <div class="map-stat-card green-stat">
+                    <div class="map-stat-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <div>
+                        <p>On Site (Execution)</p>
+                        <h3>17</h3>
+                    </div>
+                </div>
+
+                <div class="map-stat-card yellow-stat">
+                    <div class="map-stat-icon"><i class="bi bi-tools"></i></div>
+                    <div>
+                        <p>Design Stage</p>
+                        <h3>08</h3>
+                    </div>
+                </div>
+
+                <div class="map-stat-card blue-stat">
+                    <div class="map-stat-icon"><i class="bi bi-file-earmark-text"></i></div>
+                    <div>
+                        <p>Quotation Stage</p>
+                        <h3>05</h3>
+                    </div>
+                </div>
+
+                <div class="map-stat-card purple-stat">
+                    <div class="map-stat-icon"><i class="bi bi-clock"></i></div>
+                    <div>
+                        <p>Site Visit Pending</p>
+                        <h3>03</h3>
+                    </div>
+                </div>
+
+                <div class="map-stat-card green-stat">
+                    <div class="map-stat-icon"><i class="bi bi-check2-circle"></i></div>
+                    <div>
+                        <p>Handover Completed</p>
+                        <h3>11</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- MAP AND PROJECT LIST -->
+            <div class="map-workspace">
+
+                <!-- LEFT PROJECT LIST -->
+                <div class="project-list-panel">
+
+                    <div class="project-list-heading">
+                        <h4>Project Locations (42)</h4>
+                        <button type="button" class="filter-button">
+                            <i class="bi bi-funnel"></i>
+                        </button>
+                    </div>
+
+                    <div class="project-filters">
+                        <button class="filter-tab active" data-filter="all">All (42)</button>
+                        <button class="filter-tab" data-filter="execution">Execution (17)</button>
+                        <button class="filter-tab" data-filter="design">Design (08)</button>
+                        <button class="filter-tab" data-filter="others">Others</button>
+                    </div>
+
+                    <div class="project-list">
+
+                        <div class="project-list-item"
+                             data-category="execution"
+                             data-lat="10.7905" data-lng="78.7047"
+                             data-id="IBK-1042">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=150" alt="Interior project">
+                            <div class="project-list-info">
+                                <strong>IBK-1042</strong>
+                                <span>Mr. Suresh</span>
+                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Trichy</span>
+                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Arun Kumar</span>
+                            </div>
+                            <span class="stage-pill execution-pill">Execution</span>
+                            <i class="bi bi-chevron-right item-arrow"></i>
+                        </div>
+
+                        <div class="project-list-item"
+                             data-category="design"
+                             data-lat="10.8562" data-lng="78.6935"
+                             data-id="IBK-1041">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=150" alt="Interior project">
+                            <div class="project-list-info">
+                                <strong>IBK-1041</strong>
+                                <span>Mrs. Divya</span>
+                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Srirangam</span>
+                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Raja</span>
+                            </div>
+                            <span class="stage-pill design-pill">3D Design</span>
+                            <i class="bi bi-chevron-right item-arrow"></i>
+                        </div>
+
+                        <div class="project-list-item"
+                             data-category="others"
+                             data-lat="10.7870" data-lng="79.1378"
+                             data-id="IBK-1040">
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=150" alt="Interior project">
+                            <div class="project-list-info">
+                                <strong>IBK-1040</strong>
+                                <span>Mr. Karthik</span>
+                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Thanjavur</span>
+                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Praveen</span>
+                            </div>
+                            <span class="stage-pill material-pill">Material Selection</span>
+                            <i class="bi bi-chevron-right item-arrow"></i>
+                        </div>
+
+                        <div class="project-list-item"
+                             data-category="others"
+                             data-lat="10.7900" data-lng="78.7000"
+                             data-id="IBK-1039">
+                            <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=150" alt="Interior project">
+                            <div class="project-list-info">
+                                <strong>IBK-1039</strong>
+                                <span>IT Company</span>
+                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Trichy</span>
+                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Manoj</span>
+                            </div>
+                            <span class="stage-pill site-pill">Site Visit</span>
+                            <i class="bi bi-chevron-right item-arrow"></i>
+                        </div>
+
+                        <div class="project-list-item"
+                             data-category="others"
+                             data-lat="10.3797" data-lng="78.8208"
+                             data-id="IBK-1038">
+                            <img src="https://images.unsplash.com/photo-1600210491369-e753d80a41f3?w=150" alt="Interior project">
+                            <div class="project-list-info">
+                                <strong>IBK-1038</strong>
+                                <span>Mr. Arun</span>
+                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Pudukkottai</span>
+                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Saravanan</span>
+                            </div>
+                            <span class="stage-pill quotation-pill">Quotation</span>
+                            <i class="bi bi-chevron-right item-arrow"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT INTERACTIVE MAP -->
+                <div class="map-display-panel">
+
+                    <div id="projectMap"></div>
+
+                    <div class="map-type-control">
+                        <button class="map-type active" data-type="street">Map</button>
+                        <button class="map-type" data-type="satellite">Satellite</button>
+                    </div>
+
+                    <div class="map-legend-bottom">
+                        <span><i class="legend-pin execution-color"></i> Execution</span>
+                        <span><i class="legend-pin design-color"></i> 3D Design</span>
+                        <span><i class="legend-pin material-color"></i> Material Selection</span>
+                        <span><i class="legend-pin quotation-color"></i> Quotation</span>
+                        <span><i class="legend-pin site-color"></i> Site Visit</span>
+                        <span><i class="legend-pin handover-color"></i> Handover</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    
+    const map = L.map('projectMap', {
+        center: [10.7905, 78.7047],
+        zoom: 12,
+        minZoom: 5,
+        maxZoom: 19
+    });
+    map.attributionControl.setPrefix(false);
+    const streetLayer = L.tileLayer(
+        
+        'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_584f_1_295d82fa50262963326fc265',
+        {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution/">CARTO</a>',
+            maxZoom: 20
+        }
+    );
+    const satelliteLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {
+            attribution: 'Tiles &copy; Esri'
+        }
+    );
+
+    streetLayer.addTo(map);
+
+    const projects = [
+        {
+            id: "IBK-1042",
+            client: "Mr. Suresh",
+            location: "Trichy",
+            manager: "Arun Kumar",
+            stage: "Execution",
+            progress: "72%",
+            lat: 10.7905,
+            lng: 78.7047,
+            color: "#159447"
+        },
+        {
+            id: "IBK-1041",
+            client: "Mrs. Divya",
+            location: "Srirangam",
+            manager: "Raja",
+            stage: "3D Design",
+            progress: "48%",
+            lat: 10.8562,
+            lng: 78.6935,
+            color: "#f2a900"
+        },
+        {
+            id: "IBK-1040",
+            client: "Mr. Karthik",
+            location: "Thanjavur",
+            manager: "Praveen",
+            stage: "Material Selection",
+            progress: "60%",
+            lat: 10.7870,
+            lng: 79.1378,
+            color: "#963ed1"
+        },
+        {
+            id: "IBK-1039",
+            client: "IT Company",
+            location: "Trichy",
+            manager: "Manoj",
+            stage: "Site Visit",
+            progress: "20%",
+            lat: 10.7900,
+            lng: 78.7000,
+            color: "#e52b2b"
+        },
+        {
+            id: "IBK-1038",
+            client: "Mr. Arun",
+            location: "Pudukkottai",
+            manager: "Saravanan",
+            stage: "Quotation",
+            progress: "10%",
+            lat: 10.3797,
+            lng: 78.8208,
+            color: "#168de0"
+        }
+    ];
+
+    const markers = {};
+
+    projects.forEach(project => {
+
+        const marker = L.circleMarker([project.lat, project.lng], {
+            radius: 10,
+            color: "#ffffff",
+            weight: 3,
+            fillColor: project.color,
+            fillOpacity: 1
+        }).addTo(map);
+
+        marker.bindPopup(`
+            <div class="map-popup">
+                <h6>${project.id}</h6>
+                <strong>${project.client}</strong>
+                <p>${project.stage} (${project.progress})</p>
+                <hr>
+                <div><i class="bi bi-geo-alt-fill"></i> ${project.location}</div>
+                <div><i class="bi bi-person"></i> Site PM: ${project.manager}</div>
+            </div>
+        `);
+
+        markers[project.id] = marker;
+    });
+
+    // Click project list to locate on map
+    document.querySelectorAll('.project-list-item').forEach(item => {
+
+        item.addEventListener('click', function () {
+
+            const id = this.dataset.id;
+            const marker = markers[id];
+
+            if (marker) {
+                map.flyTo(marker.getLatLng(), 15);
+                marker.openPopup();
+            }
+
+            document.querySelectorAll('.project-list-item').forEach(row => {
+                row.classList.remove('selected-project');
+            });
+
+            this.classList.add('selected-project');
+        });
+
+    });
+
+    // Filter projects
+    document.querySelectorAll('.filter-tab').forEach(button => {
+
+        button.addEventListener('click', function () {
+
+            document.querySelectorAll('.filter-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            this.classList.add('active');
+
+            const filter = this.dataset.filter;
+
+            document.querySelectorAll('.project-list-item').forEach(item => {
+                item.style.display =
+                    filter === 'all' || item.dataset.category === filter
+                    ? 'flex' : 'none';
+            });
+
+        });
+
+    });
+
+    // Map / Satellite switch
+    document.querySelectorAll('.map-type').forEach(button => {
+
+        button.addEventListener('click', function () {
+
+            document.querySelectorAll('.map-type').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            this.classList.add('active');
+
+            if (this.dataset.type === 'satellite') {
+                map.removeLayer(streetLayer);
+                satelliteLayer.addTo(map);
+            } else {
+                map.removeLayer(satelliteLayer);
+                streetLayer.addTo(map);
+            }
+
+        });
+
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

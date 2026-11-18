@@ -1,0 +1,269 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Interior | Interiors by Kumaran</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/client_booking.css' %}">
+</head>
+
+<body>
+
+<nav class="booking-nav">
+    <a href="{% url 'home' %}" class="booking-brand">
+        <span class="brand-symbol">⌂</span>
+        <span>INTERIORS BY KUMARAN</span>
+    </a>
+
+    <a href="{% url 'home' %}" class="back-home">
+        <i class="bi bi-arrow-left"></i> Back to Home
+    </a>
+</nav>
+
+<section class="booking-hero">
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+        <span class="hero-label">LET'S CREATE SOMETHING BEAUTIFUL</span>
+        <h1>Your Dream Home<br><span>Starts Here.</span></h1>
+        <p>Tell us about your space. Our interior design team will connect with you
+           to understand your requirements and plan your dream interiors.</p>
+
+        <div class="hero-points">
+            <span><i class="bi bi-check-circle-fill"></i> Personalised Design</span>
+            <span><i class="bi bi-check-circle-fill"></i> 3D Visualisation</span>
+            <span><i class="bi bi-check-circle-fill"></i> Professional Execution</span>
+        </div>
+    </div>
+</section>
+
+<section class="booking-section">
+    <div class="container">
+        <div class="booking-layout">
+
+            <div class="booking-intro">
+                <span class="section-kicker">BOOK A CONSULTATION</span>
+                <h2>Let's understand<br>your requirements.</h2>
+                <p class="intro-text">
+                    Share a few details about your property and the interiors
+                    you are looking for. Our team will contact you.
+                </p>
+
+                <div class="contact-benefit">
+                    <div class="benefit-icon"><i class="bi bi-telephone"></i></div>
+                    <div>
+                        <h6>Personal Consultation</h6>
+                        <p>Our team will contact you to discuss your requirements.</p>
+                    </div>
+                </div>
+
+                <div class="contact-benefit">
+                    <div class="benefit-icon"><i class="bi bi-house-heart"></i></div>
+                    <div>
+                        <h6>Designed Around You</h6>
+                        <p>Interiors planned around your lifestyle and space.</p>
+                    </div>
+                </div>
+
+                <div class="contact-benefit">
+                    <div class="benefit-icon"><i class="bi bi-box-seam"></i></div>
+                    <div>
+                        <h6>Complete Interior Solutions</h6>
+                        <p>From design and material selection to execution.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-card">
+                <div class="form-heading">
+                    <div>
+                        <span class="section-kicker">PROJECT ENQUIRY</span>
+                        <h3>Book Your Interior</h3>
+                        <p>Fill in the details below to get started.</p>
+                    </div>
+                    <div class="form-icon"><i class="bi bi-pencil-square"></i></div>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success" style="color: green !important;">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if form_errors %}
+                    <div class="alert alert-danger" style="color: red !important;">
+                        {% for error in form_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'client_booking' %}">
+                    {% csrf_token %}
+
+                    <h5 class="form-section-title">
+                        <span>01</span> Your Information
+                    </h5>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="client_name" class="form-control"
+                                   placeholder="Enter your name" maxlength="150" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" name="phone" class="form-control"
+                                   placeholder="Enter phone number" maxlength="15"
+                                   pattern="[0-9+\-\s]{7,15}" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" name="email" class="form-control"
+                                   placeholder="Enter your email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <h5 class="form-section-title">
+                        <span>02</span> Property Details
+                    </h5>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Project Type *</label>
+                            <select name="project_type" class="form-select" required>
+                                <option value="">Select project type</option>
+                                <option value="Full Home Interior">Full Home Interior</option>
+                                <option value="Apartment Interior">Apartment Interior</option>
+                                <option value="Villa Interior">Villa Interior</option>
+                                <option value="Kitchen Interior">Kitchen Interior</option>
+                                <option value="Bedroom Interior">Bedroom Interior</option>
+                                <option value="Commercial Interior">Commercial Interior</option>
+                                <option value="Renovation">Renovation</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Property Type</label>
+                            <select name="property_type" class="form-select" required>
+                                <option value="">Select property</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Individual House">Individual House</option>
+                                <option value="Villa">Villa</option>
+                                <option value="Office">Office</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Project Location *</label>
+                            <input type="text" name="location" class="form-control"
+                                   placeholder="City / Area / Locality" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Google Maps Link </label>
+                            <input type="url" name="google_map_link" class="form-control"
+                                   placeholder="Paste your property Google Maps link">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Property Area (Sq.ft)*</label>
+                            <input type="number" name="area_sqft" class="form-control"
+                                   placeholder="e.g. 1500" min="1" step="0.01" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Approximate Budget*</label>
+                            <select name="budget" class="form-select" required>
+                                <option value="">Select budget</option>
+                                <option value="Below 5 Lakhs">Below ₹5 Lakhs</option>
+                                <option value="5-10 Lakhs">₹5–10 Lakhs</option>
+                                <option value="10-15 Lakhs">₹10–15 Lakhs</option>
+                                <option value="15-25 Lakhs">₹15–25 Lakhs</option>
+                                <option value="Above 25 Lakhs">Above ₹25 Lakhs</option>
+                                <option value="Not Decided">Not Decided</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- <div class="form-divider"></div> -->
+
+                    <!-- <h5 class="form-section-title">
+                        <span>03</span> Room Requirements
+                    </h5>
+
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Bedrooms</label>
+                            <input type="number" name="bedroom_count"
+                                   class="form-control" value="0" min="0" max="50">
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Living Rooms</label>
+                            <input type="number" name="living_room_count"
+                                   class="form-control" value="0" min="0" max="50">
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Kitchens</label>
+                            <input type="number" name="kitchen_count"
+                                   class="form-control" value="0" min="0" max="50">
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Bathrooms</label>
+                            <input type="number" name="bathroom_count"
+                                   class="form-control" value="0" min="0" max="50">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Tell us about your requirements</label>
+                            <textarea name="message" class="form-control"
+                                      rows="4"
+                                      placeholder="Describe the interior work you are looking for..."></textarea>
+                        </div>
+                    </div> -->
+
+                    <div class="privacy-note">
+                        <i class="bi bi-shield-check"></i>
+                        Your information will be used by our team to contact you
+                        about this interior enquiry.
+                    </div>
+
+                    <button type="submit" class="submit-booking">
+                        Submit Booking Request
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+
+                    <p class="form-footnote">
+                        This is an enquiry request, not a confirmed project booking.
+                    </p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer class="booking-footer">
+    © 2026 Interiors by Kumaran. All Rights Reserved.
+</footer>
+
+</body>
+</html>

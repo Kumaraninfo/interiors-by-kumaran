@@ -1,0 +1,883 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In | Interiors by Kumaran</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
+:root {
+    --lavender: #9695f4;
+    --lavender-dark: #7777df;
+    --ink: #303044;
+    --muted: #9292a2;
+    --line: #e8e8ef;
+}
+* { box-sizing: border-box; }
+html, body { width:100%; height:100%; margin:0; overflow:hidden; }
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:#f5f5fa;
+    color:var(--ink);
+}
+.signup-shell {
+    width: 100vw;
+    height: 100dvh;
+    min-height: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 54% 46%;
+    background: #fff;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+/* LEFT BRAND / ILLUSTRATION PANEL */
+.brand-panel {
+    position:relative;
+    overflow:hidden;
+    padding: clamp(34px, 5vw, 76px);
+    color:#fff;
+    background:linear-gradient(145deg, #aaa8ff 0%, #8d8df0 58%, #7c7de5 100%);
+}
+.brand-name {
+    position:relative;
+    z-index:3;
+    font-family:Georgia,serif;
+    font-size:17px;
+    letter-spacing:.02em;
+}
+.brand-copy {
+    position:relative;
+    z-index:3;
+    max-width:330px;
+    margin-top:62px;
+}
+.brand-copy h1 {
+    font-family:Georgia,serif;
+    font-size:clamp(35px,4vw,53px);
+    font-weight:400;
+    line-height:1.05;
+    margin:0 0 15px;
+}
+.brand-copy p {
+    max-width:290px;
+    font-size:12px;
+    line-height:1.7;
+    color:rgba(255,255,255,.83);
+}
+.panel-caption {
+    position:absolute;
+    left:48px;
+    bottom:35px;
+    z-index:3;
+    font-size:10px;
+    color:rgba(255,255,255,.82);
+    letter-spacing:.04em;
+}
+.panel-orb {
+    position:absolute;
+    width:190px;
+    height:280px;
+    right:42px;
+    top:125px;
+    border-radius:48% 48% 43% 43%;
+    background:linear-gradient(145deg,#d0b5ed,#7355a9 78%);
+    box-shadow:inset -18px -12px 25px rgba(54,38,99,.22), 12px 20px 30px rgba(57,45,111,.18);
+    transform:rotate(7deg);
+}
+.panel-orb:before {
+    content:"";
+    position:absolute;
+    width:64px;
+    height:80px;
+    top:-48px;
+    left:65px;
+    border-radius:45% 45% 20% 20%;
+    background:linear-gradient(90deg,#cbb0e9,#8063b3);
+}
+.panel-orb:after {
+    content:"";
+    position:absolute;
+    width:17px;
+    height:115px;
+    bottom:-105px;
+    left:86px;
+    background:linear-gradient(90deg,#6d56a5,#a48bda);
+}
+.abstract-chair {
+    position:absolute;
+    z-index:2;
+    width:185px;
+    height:115px;
+    left:12%;
+    bottom:85px;
+}
+.chair-seat {
+    position:absolute;
+    width:132px;
+    height:18px;
+    left:10px;
+    bottom:28px;
+    border-radius:12px 7px 5px 5px;
+    background:#f0e9ff;
+    transform:skew(-12deg);
+    box-shadow:0 7px 0 #6e63c9;
+}
+.chair-back {
+    position:absolute;
+    width:24px;
+    height:82px;
+    left:18px;
+    bottom:43px;
+    border-radius:13px 13px 5px 5px;
+    background:linear-gradient(90deg,#f5efff,#c6c0f4);
+    transform:rotate(-13deg);
+}
+.chair-leg {
+    position:absolute;
+    width:8px;
+    height:44px;
+    bottom:0;
+    left:119px;
+    border-radius:5px;
+    background:#514eaa;
+    transform:rotate(8deg);
+}
+.plant {
+    position:absolute;
+    z-index:1;
+    right:12%;
+    bottom:67px;
+    width:80px;
+    height:125px;
+}
+.plant:before {
+    content:"";
+    position:absolute;
+    left:37px;
+    bottom:0;
+    height:74px;
+    width:5px;
+    background:#5b5ba9;
+}
+.plant:after {
+    content:"";
+    position:absolute;
+    left:8px;
+    top:0;
+    width:65px;
+    height:60px;
+    border-radius:70% 10% 70% 10%;
+    background:linear-gradient(135deg,#c7c1ff,#6969c7);
+    transform:rotate(-25deg);
+    box-shadow:22px 15px 0 -8px #7775d4,-13px 26px 0 -12px #e0d5ff;
+}
+.sparkle {
+    position:absolute;
+    color:rgba(255,255,255,.75);
+    font-size:18px;
+}
+.sparkle.one { right:27%; top:90px; }
+.sparkle.two { left:12%; top:54%; font-size:13px; }
+
+/* RIGHT LOGIN PANEL */
+.form-panel {
+    position: relative;
+    z-index: 4;
+    min-width: 0;
+    height: 100%;
+    margin-left: -62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 42px clamp(35px, 5vw, 78px) 42px clamp(85px, 8vw, 130px);
+    background: #fff;
+    border-radius: 86px 0 0 86px;
+    box-shadow: -16px 0 35px rgba(53, 48, 120, .06);
+}
+.form-content { width:100%; max-width:410px; }
+.form-heading { margin-bottom:25px; }
+.form-heading h2 {
+    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-size:clamp(34px, 2.6vw, 40px);
+    font-weight:700;
+    line-height:1.18;
+    color:#292b3b;
+    margin:0 0 7px;
+}
+.form-heading p { color:#777887; font-size:15px; font-weight:500; margin:0; }
+.account-note {
+    font-size:13px;
+    font-weight:500;
+    color:#777887;
+    margin-top:16px;
+}
+.account-note a { color:#8584e8; text-decoration:none; }
+.form-label {
+    font-size:14px;
+    color:#414354;
+    font-weight:700;
+    margin-bottom:9px;
+}
+.form-control {
+    height:49px;
+    border:1px solid #dedee8;
+    border-radius:5px;
+    background:#fff;
+    padding:10px 13px;
+    font-size:14px;
+    font-weight:500;
+    box-shadow:none;
+}
+.form-control:focus {
+    border-color:#9997f0;
+    box-shadow:0 0 0 3px rgba(150,149,244,.12);
+}
+.form-control::placeholder { color:#a5a6b3; font-size:13px; font-weight:400; }
+.password-wrap { position:relative; }
+.password-wrap .form-control { padding-right:42px; }
+.password-toggle {
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    border:0;
+    background:transparent;
+    color:#a3a3b0;
+    padding:4px;
+}
+.form-options {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin:15px 0 25px;
+    font-size:12px;
+    font-weight:500;
+}
+.form-check-label { color:#707180; font-weight:600; }
+.forgot-link { color:#7776dc; text-decoration:none; font-weight:700; }
+.forgot-link:hover { text-decoration:underline; }
+.signin-btn {
+    height:49px;
+    border:0;
+    border-radius:5px;
+    background:#9998f1;
+    color:#fff;
+    
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.02em;
+    transition:.2s;
+}
+.signin-btn:hover { background:#7e7de1; color:#fff; }
+.back-home {
+    display:block;
+    text-align:center;
+    margin-top:19px;
+    color:#a0a0ad;
+    font-size:12px;
+    font-weight:600;
+    text-decoration:none;
+}
+.back-home:hover { color:#7776db; }
+.footer-note {
+    position:absolute;
+    bottom:19px;
+    left:0;
+    right:0;
+    text-align:center;
+    color:#b1b1bd;
+    font-size:10px;
+    font-weight:500;
+}
+
+
+/* ANIMATED INTERIOR FURNITURE: SOFA / WARDROBE / PLANTS */
+.furniture-scene {
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    perspective:1000px;
+    overflow:hidden;
+}
+.furniture-sofa {
+    position:absolute;
+    left:7%;
+    bottom:13%;
+    width:300px;
+    height:190px;
+    transform-style:preserve-3d;
+    animation:sofaHover 6s ease-in-out infinite;
+    transition:transform .22s ease-out;
+}
+.sofa-back {
+    position:absolute;
+    left:25px;
+    bottom:70px;
+    width:230px;
+    height:90px;
+    border-radius:24px 24px 13px 13px;
+    background:linear-gradient(145deg,#d8c8f0,#8d78c5 78%);
+    box-shadow:inset 0 8px 13px rgba(255,255,255,.28), 0 15px 22px rgba(54,43,123,.2);
+}
+.sofa-seat {
+    position:absolute;
+    left:15px;
+    bottom:38px;
+    width:250px;
+    height:52px;
+    border-radius:15px;
+    background:linear-gradient(180deg,#b7a4df,#7968b9);
+    box-shadow:0 9px 0 #6555a5, 0 17px 22px rgba(45,37,111,.2);
+}
+.sofa-arm {
+    position:absolute;
+    bottom:42px;
+    width:43px;
+    height:83px;
+    border-radius:17px 17px 10px 10px;
+    background:linear-gradient(90deg,#8d79c4,#c4b3e7);
+    z-index:2;
+}
+.sofa-arm-left { left:0; }
+.sofa-arm-right { right:16px; }
+.sofa-cushion {
+    position:absolute;
+    bottom:83px;
+    width:75px;
+    height:58px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#e5d9f5,#b5a0dc);
+    box-shadow:inset -5px -5px 10px rgba(76,58,132,.13);
+    z-index:3;
+}
+.cushion-one { left:72px; transform:rotate(-5deg); }
+.cushion-two { left:154px; transform:rotate(5deg); }
+.sofa-leg {
+    position:absolute;
+    bottom:18px;
+    width:9px;
+    height:23px;
+    border-radius:2px;
+    background:#51447e;
+}
+.sofa-leg-one { left:42px; }
+.sofa-leg-two { right:45px; }
+
+.furniture-wardrobe {
+    position:absolute;
+    right:12%;
+    top:19%;
+    width:145px;
+    height:245px;
+    transform-style:preserve-3d;
+    animation:wardrobeFloat 7s ease-in-out infinite;
+    transition:transform .22s ease-out;
+}
+.wardrobe-top {
+    position:absolute;
+    top:0;
+    left:-7px;
+    width:159px;
+    height:15px;
+    background:linear-gradient(90deg,#e3c7a5,#a77c5d);
+    transform:skewY(-4deg);
+    border-radius:3px;
+}
+.wardrobe-body {
+    position:absolute;
+    inset:13px 0 10px;
+    display:flex;
+    gap:4px;
+    padding:7px;
+    background:linear-gradient(90deg,#9a6c4d,#d1aa82 48%,#8c6248);
+    border-radius:4px;
+    box-shadow:12px 18px 28px rgba(52,42,105,.2), inset 4px 0 8px rgba(255,255,255,.2);
+}
+.wardrobe-door {
+    position:relative;
+    flex:1;
+    border:1px solid rgba(83,54,35,.28);
+    background:linear-gradient(90deg,#c99d73,#e1c09a 45%,#b98b63);
+    border-radius:2px;
+}
+.wardrobe-door span {
+    position:absolute;
+    right:7px;
+    top:48%;
+    width:4px;
+    height:23px;
+    border-radius:4px;
+    background:#75533c;
+    box-shadow:0 0 3px rgba(255,255,255,.4);
+}
+.wardrobe-base {
+    position:absolute;
+    bottom:0;
+    left:5px;
+    width:135px;
+    height:10px;
+    background:#805a41;
+    border-radius:0 0 3px 3px;
+}
+
+.interior-plant {
+    position:absolute;
+    width:82px;
+    height:160px;
+    transform-style:preserve-3d;
+    transition:transform .22s ease-out;
+    animation:plantSway 5s ease-in-out infinite;
+}
+.plant-one { left:13%; top:24%; }
+.plant-two { right:32%; bottom:13%; transform:scale(.72); animation-delay:-2s; }
+.plant-stem {
+    position:absolute;
+    left:39px;
+    top:32px;
+    width:4px;
+    height:92px;
+    background:#477d63;
+    border-radius:4px;
+}
+.plant-leaves { position:absolute; inset:0 0 40px; }
+.plant-leaves i {
+    position:absolute;
+    width:28px;
+    height:54px;
+    border-radius:100% 0 100% 0;
+    background:linear-gradient(135deg,#b6d4a8,#477e68);
+    box-shadow:inset -3px -3px 5px rgba(30,80,57,.15);
+    transform-origin:bottom right;
+}
+.plant-leaves i:nth-child(1) { left:12px; top:20px; transform:rotate(-42deg); }
+.plant-leaves i:nth-child(2) { left:39px; top:7px; transform:rotate(18deg) scale(.9); }
+.plant-leaves i:nth-child(3) { left:0; top:57px; transform:rotate(-65deg) scale(.82); }
+.plant-leaves i:nth-child(4) { left:43px; top:53px; transform:rotate(48deg) scale(.82); }
+.plant-leaves i:nth-child(5) { left:26px; top:0; transform:rotate(-4deg) scale(.78); }
+.plant-pot {
+    position:absolute;
+    bottom:0;
+    left:18px;
+    width:48px;
+    height:42px;
+    background:linear-gradient(90deg,#b9785e,#e1b094 55%,#a96850);
+    clip-path:polygon(8% 0,92% 0,80% 100%,20% 100%);
+    border-radius:3px 3px 10px 10px;
+    box-shadow:0 8px 15px rgba(49,39,112,.16);
+}
+.decor-caption {
+    position:absolute;
+    left:36%;
+    top:13%;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    color:#fff;
+    border:1px solid rgba(255,255,255,.45);
+    border-radius:30px;
+    padding:9px 13px;
+    background:rgba(111,101,190,.22);
+    font-size:8px;
+    letter-spacing:.16em;
+    transition:transform .22s ease-out;
+}
+.decor-caption i { font-size:16px; }
+@keyframes sofaHover {
+    0%,100% { transform:translateY(0) rotate(-1deg); }
+    50% { transform:translateY(-9px) rotate(1deg); }
+}
+@keyframes wardrobeFloat {
+    0%,100% { translate:0 0; }
+    50% { translate:0 -10px; }
+}
+@keyframes plantSway {
+    0%,100% { rotate:-2deg; }
+    50% { rotate:3deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .furniture-sofa,.furniture-wardrobe,.interior-plant { animation:none; }
+}
+
+/* INTERIOR MATERIALS: FLOAT + CURSOR PARALLAX */
+.material-scene {
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    perspective:900px;
+    overflow:hidden;
+}
+.material-card {
+    position:absolute;
+    width:126px;
+    height:154px;
+    padding:10px;
+    border:1px solid rgba(255,255,255,.62);
+    border-radius:13px;
+    background:rgba(255,255,255,.17);
+    box-shadow:0 18px 38px rgba(46,39,115,.19);
+    backdrop-filter:blur(8px);
+    transform-style:preserve-3d;
+    transition:transform .22s ease-out;
+    animation:materialFloat 6s ease-in-out infinite;
+}
+.material-label {
+    display:block;
+    color:rgba(255,255,255,.9);
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:.2em;
+    margin-bottom:8px;
+}
+.wood-card { right:13%; top:19%; transform:rotate(-9deg); animation-delay:-1s; }
+.tile-card { right:31%; bottom:17%; width:112px; height:132px; transform:rotate(8deg); animation-delay:-3s; }
+.fabric-card { left:8%; bottom:23%; width:105px; height:128px; transform:rotate(-7deg); animation-delay:-2s; }
+.paint-card { right:8%; bottom:13%; width:110px; height:104px; transform:rotate(7deg); animation-delay:-4s; }
+.wood-swatch {
+    height:112px;
+    border-radius:7px;
+    background:
+      repeating-linear-gradient(8deg,rgba(65,34,17,.18) 0 2px,transparent 2px 11px),
+      linear-gradient(110deg,#d6a16c,#8c5739 45%,#c58a58 70%,#70452f);
+}
+.tile-swatch {
+    height:90px;
+    border-radius:6px;
+    background:
+      linear-gradient(90deg,transparent 48%,rgba(255,255,255,.7) 49% 51%,transparent 52%),
+      linear-gradient(0deg,transparent 48%,rgba(255,255,255,.7) 49% 51%,transparent 52%),
+      linear-gradient(135deg,#eee9df,#c9c2b6);
+    background-size:100% 100%,100% 100%,100% 100%;
+}
+.fabric-swatch {
+    height:86px;
+    border-radius:6px;
+    background:
+      repeating-linear-gradient(45deg,rgba(255,255,255,.18) 0 1px,transparent 1px 5px),
+      repeating-linear-gradient(-45deg,rgba(65,50,110,.15) 0 1px,transparent 1px 5px),
+      linear-gradient(135deg,#d8c5e8,#8f79b8);
+}
+.paint-dots { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.paint-dots i { height:27px; border-radius:5px; display:block; }
+.paint-dots i:nth-child(1) { background:#e8d6bd; }
+.paint-dots i:nth-child(2) { background:#a7b39a; }
+.paint-dots i:nth-child(3) { background:#c7b5d8; }
+.paint-dots i:nth-child(4) { background:#b77c5d; }
+.material-ruler {
+    position:absolute;
+    left:34%;
+    top:15%;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 13px;
+    color:#fff;
+    border:1px solid rgba(255,255,255,.42);
+    border-radius:30px;
+    background:rgba(92,82,180,.22);
+    font-size:8px;
+    letter-spacing:.16em;
+    transition:transform .22s ease-out;
+    animation:materialFloat 7s ease-in-out infinite;
+}
+.material-ruler i { font-size:17px; }
+.material-glow {
+    position:absolute;
+    width:260px;
+    height:260px;
+    left:35%;
+    top:38%;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.19),transparent 68%);
+    filter:blur(5px);
+    transform:translate(-50%,-50%);
+}
+@keyframes materialFloat {
+    0%,100% { translate:0 0; }
+    50% { translate:0 -13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .material-card,.material-ruler { animation:none; transition:none; }
+}
+
+@media (max-height: 700px) and (min-width: 761px) {
+    .brand-panel { padding-top: 28px; padding-bottom: 28px; }
+    .brand-copy { margin-top: 34px; }
+    .brand-copy h1 { font-size: 40px; }
+    .brand-copy p { font-size: 11px; }
+    .panel-orb { transform: scale(.82) rotate(7deg); transform-origin: top right; }
+    .abstract-chair { transform: scale(.8); transform-origin: bottom left; }
+    .form-panel { padding-top: 20px; padding-bottom: 20px; }
+    .form-heading { margin-bottom: 17px; }
+    .form-heading h2 { font-size: 32px; }
+    .form-heading p { font-size: 13px; }
+    .account-note { font-size: 12px; margin-top: 10px; }
+    .form-label { font-size: 12px; }
+    .form-control { height: 43px; font-size: 13px; }
+    .form-options { margin: 9px 0 16px; font-size: 11px; }
+    .signin-btn { height: 44px; font-size: 15px; }
+}
+@media(max-width:760px) {
+    html, body { height:auto; min-height:100%; overflow-x:hidden; overflow-y:auto; }
+    .signup-shell {
+        width:100%;
+        height:auto;
+        min-height:100dvh;
+        margin:0;
+        display:flex;
+        flex-direction:column;
+        border-radius:0;
+        overflow:visible;
+    }
+    .brand-panel {
+        min-height:245px;
+        height:245px;
+        flex:0 0 245px;
+        padding:25px 28px;
+    }
+    .brand-copy { margin-top:24px; max-width:240px; }
+    .brand-copy h1 { font-size:34px; }
+    .brand-copy p { font-size:10px; }
+    .panel-orb { width:105px; height:150px; right:35px; top:65px; }
+    .panel-orb:before { width:38px; height:48px; top:-28px; left:35px; }
+    .panel-orb:after { width:10px; height:62px; bottom:-58px; left:48px; }
+    .abstract-chair,.plant,.panel-caption,.sparkle,.material-scene,.furniture-scene { display:none; }
+    .form-panel {
+        height:auto;
+        min-height:calc(100dvh - 245px);
+        margin-left:0;
+        margin-top:-28px;
+        padding:42px 27px 54px;
+        border-radius:34px 34px 0 0;
+        box-shadow:0 -10px 28px rgba(53,48,120,.06);
+    }
+    .form-content { max-width:440px; }
+    .form-heading { margin-bottom:22px; }
+    .form-heading h2 { font-size:30px; }
+    .form-heading p { font-size:14px; }
+    .account-note { font-size:12px; }
+    .form-label { font-size:13px; }
+    .form-control { height:47px; font-size:14px; }
+    .form-options { font-size:11px; }
+    .signin-btn { height:48px; font-size:15px; }
+    .footer-note { bottom:14px; }
+}
+@media(max-width:380px) {
+    .brand-panel { min-height:215px; height:215px; flex-basis:215px; }
+    .brand-copy { margin-top:17px; }
+    .brand-copy h1 { font-size:29px; }
+    .form-panel { min-height:calc(100dvh - 215px); padding-left:21px; padding-right:21px; }
+}
+</style>
+</head>
+
+<body>
+<div class="signup-shell">
+
+    <!-- LEFT BRAND PANEL -->
+    <section class="brand-panel">
+        <div class="brand-logo">
+            <div style="width: 85px;height: 60px;">
+
+                <img
+                    src="{% static 'images/logo.png' %}"
+                    alt="Interiors by Kumaran"
+                    class="img-fluid brand-logo"
+                >
+
+            </div>
+        </div>
+        <div class="brand-name fs-5">Interiors by Kumaran</div>
+
+        <div class="brand-copy">
+            <h1 class="fw-mediyum">Welcome<br>Back</h1>
+            <p style="font-size: 13px;">
+                Your interior project journey starts here.
+                Sign in to follow your designs, project updates
+                and home transformation.
+            </p>
+        </div>
+
+        <!-- Animated interior furniture: sofa, wardrobe and indoor plants -->
+        <div class="furniture-scene" id="materialScene" aria-hidden="true">
+
+            <div class="furniture-sofa parallax-item" data-depth="24">
+                <div class="sofa-back"></div>
+                <div class="sofa-arm sofa-arm-left"></div>
+                <div class="sofa-arm sofa-arm-right"></div>
+                <div class="sofa-seat"></div>
+                <div class="sofa-cushion cushion-one"></div>
+                <div class="sofa-cushion cushion-two"></div>
+                <div class="sofa-leg sofa-leg-one"></div>
+                <div class="sofa-leg sofa-leg-two"></div>
+            </div>
+
+            <div class="furniture-wardrobe parallax-item" data-depth="15">
+                <div class="wardrobe-top"></div>
+                <div class="wardrobe-body">
+                    <div class="wardrobe-door door-one"><span></span></div>
+                    <div class="wardrobe-door door-two"><span></span></div>
+                </div>
+                <div class="wardrobe-base"></div>
+            </div>
+
+            <div class="interior-plant plant-one parallax-item" data-depth="32">
+                <div class="plant-leaves">
+                    <i></i><i></i><i></i><i></i><i></i>
+                </div>
+                <div class="plant-stem"></div>
+                <div class="plant-pot"></div>
+            </div>
+
+            <div class="interior-plant plant-two parallax-item" data-depth="20">
+                <div class="plant-leaves">
+                    <i></i><i></i><i></i><i></i><i></i>
+                </div>
+                <div class="plant-stem"></div>
+                <div class="plant-pot"></div>
+            </div>
+
+            <div class="decor-caption parallax-item" data-depth="10">
+                <i class="bi bi-house-heart"></i>
+                <span>INTERIOR LIVING</span>
+            </div>
+        </div>
+        <div class="panel-orb"></div>
+        <div class="abstract-chair">
+            <div class="chair-back"></div>
+            <div class="chair-seat"></div>
+            <div class="chair-leg"></div>
+        </div>
+        <div class="plant"></div>
+        <span class="sparkle one">✦</span>
+        <span class="sparkle two">✧</span>
+        <div class="panel-caption">Design · Planning · Execution · Handover</div>
+    </section>
+
+    <!-- RIGHT LOGIN FORM -->
+    <section class="form-panel">
+        <main class="form-content">
+            <div class="form-heading">
+                <h2>Welcome to IBK</h2>
+                <p>Let's help you get started.</p>
+              
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger py-2 small" role="alert">
+                <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label" for="username">Username</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        class="form-control"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-wrap">
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+                        <button type="button" class="password-toggle"
+                                onclick="togglePassword()"
+                                aria-label="Show or hide password">
+                            <i class="bi bi-eye-slash" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               id="rememberMe" name="remember_me">
+                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn signin-btn w-100">Sign In</button>
+            </form>
+
+            <a href="{% url 'home' %}" class="back-home fs-8">
+                <i class="bi bi-arrow-left me-1"></i> Back to Home
+            </a>
+        </main>
+
+        <div class="footer-note">© 2026 Interiors by Kumaran. All rights reserved.</div>
+    </section>
+</div>
+
+<script>
+function togglePassword() {
+    const password = document.getElementById("password");
+    const icon = document.getElementById("eyeIcon");
+    const isPassword = password.type === "password";
+
+    password.type = isPassword ? "text" : "password";
+    icon.classList.toggle("bi-eye", isPassword);
+    icon.classList.toggle("bi-eye-slash", !isPassword);
+}
+</script>
+
+<script>
+(() => {
+    const scene = document.getElementById("materialScene");
+    if (!scene) return;
+
+    const items = scene.querySelectorAll(".parallax-item");
+    let frame = null;
+
+    scene.closest(".brand-panel").addEventListener("pointermove", (event) => {
+        const rect = scene.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+        if (frame) cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+            items.forEach((item) => {
+                const depth = Number(item.dataset.depth || 15);
+                const moveX = x * depth;
+                const moveY = y * depth;
+                item.style.translate = `${moveX}px ${moveY}px`;
+                item.style.rotate = `${x * 3}deg`;
+            });
+        });
+    });
+
+    scene.closest(".brand-panel").addEventListener("pointerleave", () => {
+        items.forEach((item) => {
+            item.style.translate = "0 0";
+            item.style.rotate = "0deg";
+        });
+    });
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <h2>IBK</h2>
+        <h3>Interiors by Kumaran</h3>
+        <p>Project Management System</p>
+    </div>
+
+    <div class="sidebar-user">
+        <i class="bi bi-person-badge"></i>
+        <div>
+            <strong>Manager</strong>
+            <span>Dashboard</span>
+        </div>
+    </div>
+
+    <ul class="sidebar-menu">
+
+        <li>
+            <a href="{% url 'manager_dashboard' %}">
+                <i class="bi bi-house"></i> Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'manager_projects' %}">
+                <i class="bi bi-layers"></i> Projects
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'manager_team' %}">
+                <i class="bi bi-people"></i> Team
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'manager_clients' %}">
+                <i class="bi bi-person"></i> Clients
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'manager_reports' %}">
+                <i class="bi bi-bar-chart"></i> Reports
+            </a>
+        </li>
+
+    </ul>
+
+</aside>

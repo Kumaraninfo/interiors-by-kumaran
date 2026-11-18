@@ -1,0 +1,175 @@
+
+.team-container {
+    padding: 30px;
+}
+
+.team-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 15px;
+}
+
+.team-heading h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: #202b27;
+}
+
+.team-heading p {
+    color: #89918d;
+    margin: 5px 0 0;
+}
+
+.team-heading .btn-success {
+    background: #176b4b;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+}
+
+.team-stat-card {
+    background: #fff;
+    border: 1px solid #e9eeeb;
+    border-radius: 12px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: #e9f4ee;
+    color: #176b4b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.team-stat-card p {
+    margin: 0 0 5px;
+    color: #818b85;
+    font-size: 13px;
+}
+
+.team-stat-card h3 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.team-filter {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.search-box {
+    position: relative;
+    width: 350px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 14px;
+    top: 12px;
+    color: #8b958f;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #e4e9e6;
+    border-radius: 8px;
+}
+
+.team-filter select {
+    width: 200px;
+}
+
+.team-table-card {
+    background: #fff;
+    border: 1px solid #e9eeeb;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.team-table-card th {
+    color: #78847d;
+    font-size: 13px;
+    font-weight: 600;
+    background: #f8faf9;
+    padding: 15px;
+}
+
+.team-table-card td {
+    padding: 16px 15px;
+    border-bottom: 1px solid #f0f2f1;
+    font-size: 14px;
+}
+
+.employee-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.employee-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #e9f4ee;
+    color: #176b4b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+.role-badge {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.role-badge.manager {
+    background: #eaf0ff;
+    color: #4264a8;
+}
+
+.role-badge.sitepm {
+    background: #fff3df;
+    color: #a56b18;
+}
+
+.empty-icon {
+    font-size: 35px;
+    color: #aab5ae;
+}
+
+@media (max-width: 768px) {
+    .team-container {
+        padding: 18px;
+    }
+
+    .team-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .team-filter {
+        flex-direction: column;
+    }
+
+    .search-box,
+    .team-filter select {
+        width: 100%;
+    }
+}
