@@ -2614,7 +2614,6 @@
 .mini-stat span {
     display: block;
     margin-bottom: 3px;
-    color: #858197;
     font-size: 11px;
     font-weight: 650;
     line-height: 1.3;
@@ -2629,7 +2628,7 @@
     line-height: 1.2;
 }
 
-.mini-purple .mini-stat-icon {
+/* .mini-purple .mini-stat-icon {
     background: #efedff;
     color: #8179df;
 }
@@ -2642,7 +2641,7 @@
 .mini-green .mini-stat-icon {
     background: #e6f8ee;
     color: #37a477;
-}
+} */
 
 .projects-topbar .create-project-btn {
     flex: 0 0 auto;

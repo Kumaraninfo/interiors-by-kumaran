@@ -13,7 +13,7 @@ from uuid import uuid4
 from .models import (UserProfile,Client,Employee,Project,ProjectDetail)
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
-
+from django.utils.dateparse import parse_date
 
 
 def home(request):
@@ -99,223 +99,501 @@ def login_page(request):
 @login_required
 def owner_dashboard(request):
 
-    # Owner login check
-    if not request.user.is_authenticated:
-        return redirect("login")
+    # ==================================
+    # 1. OWNER AUTHENTICATION
+    # ==================================
 
-    if not request.user.userprofile.is_owneruser:
-        return redirect("login")
+    profile = request.user.userprofile
+
+    if not profile.is_owneruser:
+        return redirect('login')
 
 
-   
-    # DATABASE DATA
-  
+    # ==================================
+    # 2. DATABASE DATA
+    # ==================================
 
     clients = Client.objects.all().order_by("-created_at")
 
     employees = Employee.objects.all().order_by("employee_name")
 
-    projects = (
-        Project.objects
-        .select_related("client")
-        .prefetch_related("details")
-        .order_by("-created_at")
-    )
+    projects = Project.objects.select_related(
+        "client"
+    ).order_by("-created_at")
 
-    project_details = ProjectDetail.objects.all().order_by("-created_at")
+    project_details = ProjectDetail.objects.all()
 
 
-    detail_key_map = {
-        "room": "rooms",
-        "scope": "scope",
-        "assignment": "assignments",
-        "status_history": "status_history",
-        "site_visit": "site_visits",
-        "quotation": "quotations",
-        "payment": "payments",
-        "design": "designs",
-        "material": "materials",
-        "execution_task": "execution_tasks",
-        "document": "documents",
-        "handover": "handover",
-        "enquiry": "enquiries",
+    # ==================================
+    # 3. PROJECT STATUS PROGRESS
+    # ==================================
+
+    progress_map = {
+        "enquiry": 1,
+        "quotation": 8,
+        "site_visit": 25,
+        "payment": 50,
+        "3d_design": 63,
+        "material_selection": 75,
+        "execution": 90,
+        "handover": 100,
     }
 
+
     # ==================================
-    # FINAL JSON
+    # 4. RECENT PROJECTS - LATEST 5
     # ==================================
 
-    all_database_json = {}
+    recent_projects = []
 
-    for client in clients:
+    latest_projects = projects[:5]
 
-        # Unique Client Key
-        client_key = f"CLI-{client.client_key.hex[:8]}"
+    for project in latest_projects:
 
-        client_data = {
-            "client_id": client.client_id,
-            "name": client.client_name,
-            "phone": client.phone,
-            "alternative_phone": client.alternative_phone,
-            "email": client.email,
-            "projects": {}
-        }
+        current_status = project.current_status
 
-        # Only this client's projects
-        for project in projects:
+        progress = progress_map.get(
+            current_status,
+            0
+        )
 
-            if project.client_id != client.client_id:
-                continue
+        recent_projects.append({
 
-            project_data = {
+            "project_code": project.project_code,
 
-                "project_information": {
-                    "project_type": project.project_type,
-                    "location": project.location,
-                    "google_map_link": project.google_map_link,
-                    "area_sqft": project.area_sqft,
-                    "bedroom_count": project.bedroom_count,
-                    "living_room_count": project.living_room_count,
-                    "kitchen_count": project.kitchen_count,
-                    "bathroom_count": project.bathroom_count,
-                    "current_status": project.current_status,
-                    "enquiry_date": project.enquiry_date,
-                    "project_start_date": project.project_start_date,
-                    "target_handover_date": project.target_handover_date,
-                    "actual_handover_date": project.actual_handover_date,
-                },
+            "client_name": (
+                project.client.client_name
+                if project.client else "N/A"
+            ),
 
-                "rooms": [],
-                "scope": [],
-                "assignments": [],
-                "status_history": [],
-                "site_visits": [],
-                "quotations": [],
-                "payments": [],
-                "designs": [],
-                "materials": [],
-                "execution_tasks": [],
-                "documents": [],
-                "handover": [],
-                "enquiries": [],
-            }
+           "location": project.location.title() if project.location else "N/A",
 
-            # Get details belonging to this project
-            for detail in project.details.all():
+            "current_status": current_status,
 
-                key = detail_key_map.get(detail.detail_type)
+            "status": project.get_current_status_display(),
 
-                if key:
-                    project_data[key].append({
+            "progress": progress,
 
-                        "detail_id": detail.detail_id,
-                        "data": detail.detail_data,
-                        "created_by_id": detail.created_by_id,
-                        "created_at": detail.created_at,
-                        "updated_at": detail.updated_at,
+            "target_handover_date": project.target_handover_date,
 
-                    })
+        })
 
-            # Project ID as JSON key
-            client_data["projects"][project.project_code] = project_data
+    # ==================================
+    # PROJECT TIMELINE - DATABASE DATA
+    # ==================================
 
-        # Random Client Key as parent JSON key
-        all_database_json[client_key] = client_data
+    timeline_statuses = [
+        {
+            "key": "enquiry",
+            "label": "Enquiry",
+            "icon": "bi bi-chat-square-text",
+            "class": "timeline-enquiry",
+        },
+        {
+            "key": "quotation",
+            "label": "Quotation",
+            "icon": "bi bi-file-earmark-text",
+            "class": "timeline-quotation",
+        },
+        {
+            "key": "site_visit",
+            "label": "Site Visit",
+            "icon": "bi bi-geo-alt",
+            "class": "timeline-site",
+        },
+        {
+            "key": "payment",
+            "label": "Payment",
+            "icon": "bi bi-credit-card",
+            "class": "timeline-payment",
+        },
+        {
+            "key": "3d_design",
+            "label": "3D Design",
+            "icon": "bi bi-box",
+            "class": "timeline-design",
+        },
+        {
+            "key": "material_selection",
+            "label": "Material Selection",
+            "icon": "bi bi-palette",
+            "class": "timeline-material",
+        },
+        {
+            "key": "execution",
+            "label": "Execution",
+            "icon": "bi bi-tools",
+            "class": "timeline-execution",
+        },
+        {
+            "key": "handover",
+            "label": "Handover",
+            "icon": "bi bi-house-check",
+            "class": "timeline-handover",
+        },
+    ]
 
-  
-        # PROJECT STATUS COUNTS
-      
+    project_timeline = []
 
-        total_projects = projects.count()
+    for stage in timeline_statuses:
 
-        enquiry_count = projects.filter(
-            current_status="enquiry"
+        count = projects.filter(
+            current_status=stage["key"]
         ).count()
 
-        quotation_count = projects.filter(
-            current_status="quotation"
-        ).count()
+        # Show only stages that contain projects
+        if count > 0:
 
-        site_visit_count = projects.filter(
-            current_status="site_visit"
-        ).count()
+            project_timeline.append({
 
-        payment_count = projects.filter(
-            current_status="payment"
-        ).count()
+                "label": stage["label"],
+                "count": count,
+                "icon": stage["icon"],
+                "class": stage["class"],
 
-        design_count = projects.filter(
-            current_status="3d_design"
-        ).count()
+            })
+    # ==================================
+    # 5. PROJECT STATUS COUNTS
+    # ==================================
 
-        material_count = projects.filter(
-            current_status="material_selection"
-        ).count()
+    total_projects = projects.count()
 
-        execution_count = projects.filter(
-            current_status="execution"
-        ).count()
+    enquiry_count = projects.filter(
+        current_status="enquiry"
+    ).count()
 
-        hold_count= projects.filter(
-            current_status="hold"
-        ).count()
-        discontinued_count = projects.filter(
-            current_status="discontinue"
-        ).count()
-        completed_projects = projects.filter(
-            current_status="handover"
-        ).count()
-        
-       
-        
+    quotation_count = projects.filter(
+        current_status="quotation"
+    ).count()
 
-        ongoing_projects = total_projects - completed_projects
-        
-       
+    site_visit_count = projects.filter(
+        current_status="site_visit"
+    ).count()
 
-        context = {
+    payment_count = projects.filter(
+        current_status="payment"
+    ).count()
 
-            "clients": clients,
-            "employees": employees,
-            "projects": projects,
-            "project_details": project_details,
+    design_count = projects.filter(
+        current_status="3d_design"
+    ).count()
 
-            # General Counts
-            "total_clients": clients.count(),
-            "total_employees": employees.count(),
-            "total_projects": total_projects,
-            "total_details": project_details.count(),
+    material_count = projects.filter(
+        current_status="material_selection"
+    ).count()
 
-            # Project Summary
-            "ongoing_projects": ongoing_projects,
-            "completed_projects": completed_projects,
-            "enquiry_count": enquiry_count,
-            "quotation_count": quotation_count,
-            "site_visit_count": site_visit_count,
-            "payment_count": payment_count,
-            "design_count": design_count,
-            "material_count": material_count,
-            "execution_count": execution_count,
-            "discontinued_projects": discontinued_count,
-            "hold_projects": hold_count,
-            # JSON Data
-            "all_database_json": all_database_json,
+    execution_count = projects.filter(
+        current_status="execution"
+    ).count()
 
-        }
-    
+    handover_count = projects.filter(
+        current_status="handover"
+    ).count()
+
+
+    # ==================================
+    # 6. DASHBOARD SUMMARY
+    # ==================================
+
+    completed_projects = handover_count
+
+    ongoing_projects = total_projects - completed_projects
+
+
+    # ==================================
+    # 7. DASHBOARD CONTEXT
+    # ==================================
+
+    context = {
+
+        # Database
+        "clients": clients,
+        "employees": employees,
+        "projects": projects,
+        "project_details": project_details,
+
+        # General Counts
+        "total_clients": clients.count(),
+        "total_employees": employees.count(),
+        "total_projects": total_projects,
+        "total_details": project_details.count(),
+
+        # Project Summary
+        "ongoing_projects": ongoing_projects,
+        "completed_projects": completed_projects,
+
+        # Individual Status Counts
+        "enquiry_count": enquiry_count,
+        "quotation_count": quotation_count,
+        "site_visit_count": site_visit_count,
+        "payment_count": payment_count,
+        "design_count": design_count,
+        "material_count": material_count,
+        "execution_count": execution_count,
+        "handover_count": handover_count,
+
+        # Recent Projects
+        "recent_projects": recent_projects,
+        "project_timeline": project_timeline,
+
+    }
+
+
+    # ==================================
+    # 8. RENDER DASHBOARD
+    # ==================================
+
     return render(request,"owner/dashboard.html",context)
 
 @login_required(login_url='login')
 @never_cache
 
+
 def owner_project_map(request):
 
-    if not request.user.userprofile.is_owneruser:
+    # ==================================
+    # 1. OWNER AUTHENTICATION
+    # ==================================
+
+    profile = request.user.userprofile
+
+    if not profile.is_owneruser:
         return redirect('login')
 
-    return render(request, 'owner/projects_map.html', {
-        'page_title': 'Project Map',
-    })
+
+    # ==================================
+    # 2. DATABASE DATA
+    # ==================================
+
+    clients = Client.objects.all().order_by("-created_at")
+
+    employees = Employee.objects.all().order_by("employee_name")
+
+    projects = Project.objects.select_related(
+        "client"
+    ).order_by("-created_at")
+
+    project_details = ProjectDetail.objects.all()
+
+
+    # ==================================
+    # 3. PROJECT STATUS PROGRESS
+    # ==================================
+
+    progress_map = {
+        "enquiry": 1,
+        "quotation": 8,
+        "site_visit": 25,
+        "payment": 50,
+        "3d_design": 63,
+        "material_selection": 75,
+        "execution": 90,
+        "handover": 100,
+    }
+
+
+    # ==================================
+    # 4. RECENT PROJECTS - LATEST 5
+    # ==================================
+
+    recent_projects = []
+
+    latest_projects = projects[:5]
+
+    for project in latest_projects:
+
+        current_status = project.current_status
+
+        progress = progress_map.get(
+            current_status,
+            0
+        )
+
+        recent_projects.append({
+
+            "project_code": project.project_code,
+
+            "client_name": (
+                project.client.client_name
+                if project.client else "N/A"
+            ),
+
+           "location": project.location.title() if project.location else "N/A",
+
+            "current_status": current_status,
+
+            "status": project.get_current_status_display(),
+
+            "progress": progress,
+
+            "target_handover_date": project.target_handover_date,
+
+        })
+
+    # ==================================
+    # PROJECT TIMELINE - DATABASE DATA
+    # ==================================
+
+    timeline_statuses = [
+        {
+            "key": "enquiry",
+            "label": "Enquiry",
+            "icon": "bi bi-chat-square-text",
+            "class": "timeline-enquiry",
+        },
+        {
+            "key": "quotation",
+            "label": "Quotation",
+            "icon": "bi bi-file-earmark-text",
+            "class": "timeline-quotation",
+        },
+        {
+            "key": "site_visit",
+            "label": "Site Visit",
+            "icon": "bi bi-geo-alt",
+            "class": "timeline-site",
+        },
+        {
+            "key": "payment",
+            "label": "Payment",
+            "icon": "bi bi-credit-card",
+            "class": "timeline-payment",
+        },
+        {
+            "key": "3d_design",
+            "label": "3D Design",
+            "icon": "bi bi-box",
+            "class": "timeline-design",
+        },
+        {
+            "key": "material_selection",
+            "label": "Material Selection",
+            "icon": "bi bi-palette",
+            "class": "timeline-material",
+        },
+        {
+            "key": "execution",
+            "label": "Execution",
+            "icon": "bi bi-tools",
+            "class": "timeline-execution",
+        },
+        {
+            "key": "handover",
+            "label": "Handover",
+            "icon": "bi bi-house-check",
+            "class": "timeline-handover",
+        },
+    ]
+
+    project_timeline = []
+
+    for stage in timeline_statuses:
+
+        count = projects.filter(
+            current_status=stage["key"]
+        ).count()
+
+        # Show only stages that contain projects
+        if count > 0:
+
+            project_timeline.append({
+
+                "label": stage["label"],
+                "count": count,
+                "icon": stage["icon"],
+                "class": stage["class"],
+
+            })
+    # ==================================
+    # 5. PROJECT STATUS COUNTS
+    # ==================================
+
+    total_projects = projects.count()
+
+    enquiry_count = projects.filter(
+        current_status="enquiry"
+    ).count()
+
+    quotation_count = projects.filter(
+        current_status="quotation"
+    ).count()
+
+    site_visit_count = projects.filter(
+        current_status="site_visit"
+    ).count()
+
+    payment_count = projects.filter(
+        current_status="payment"
+    ).count()
+
+    design_count = projects.filter(
+        current_status="3d_design"
+    ).count()
+
+    material_count = projects.filter(
+        current_status="material_selection"
+    ).count()
+
+    execution_count = projects.filter(
+        current_status="execution"
+    ).count()
+
+    handover_count = projects.filter(
+        current_status="handover"
+    ).count()
+
+
+    # ==================================
+    # 6. DASHBOARD SUMMARY
+    # ==================================
+
+    completed_projects = handover_count
+
+    ongoing_projects = total_projects - completed_projects
+
+
+    # ==================================
+    # 7. DASHBOARD CONTEXT
+    # ==================================
+
+    context = {
+
+        # Database
+        "clients": clients,
+        "employees": employees,
+        "projects": projects,
+        "project_details": project_details,
+
+        # General Counts
+        "total_clients": clients.count(),
+        "total_employees": employees.count(),
+        "total_projects": total_projects,
+        "total_details": project_details.count(),
+
+        # Project Summary
+        "ongoing_projects": ongoing_projects,
+        "completed_projects": completed_projects,
+
+        # Individual Status Counts
+        "enquiry_count": enquiry_count,
+        "quotation_count": quotation_count,
+        "site_visit_count": site_visit_count,
+        "payment_count": payment_count,
+        "design_count": design_count,
+        "material_count": material_count,
+        "execution_count": execution_count,
+        "handover_count": handover_count,
+
+        # Recent Projects
+        "recent_projects": recent_projects,
+        "project_timeline": project_timeline,
+
+    }
+
+
+
+    return render(request,"owner/projects_map.html",context)
+
 
 
 @login_required(login_url='login')
@@ -574,6 +852,141 @@ def update_project_status(request, project_id):
     )
 
     return redirect('owner_projects')
+
+
+@login_required
+def edit_project(request, project_id):
+
+    project = get_object_or_404(
+        Project.objects.select_related("client"),
+        project_id=project_id
+    )
+
+    # Owner permission
+    profile = getattr(request.user, "userprofile", None)
+
+    if not profile or not profile.is_owneruser:
+        messages.error(request, "You don't have permission to edit this project.")
+        return redirect("login")
+
+    client = project.client
+
+    # Latest enquiry details
+    enquiry = (
+        project.details
+        .filter(detail_type="enquiry")
+        .order_by("-created_at")
+        .first()
+    )
+
+    enquiry_data = enquiry.detail_data if enquiry else {}
+
+    if request.method == "POST":
+
+        try:
+            with transaction.atomic():
+
+                # CLIENT DETAILS
+                client.client_name = request.POST.get("client_name", "").strip()
+                client.phone = request.POST.get("phone", "").strip()
+                client.alternative_phone = request.POST.get("alternative_phone", "").strip()
+                client.email = request.POST.get("email", "").strip() or None
+
+                if not client.client_name or not client.phone:
+                    raise ValueError("Client name and phone are required.")
+
+                client.save()
+
+                # PROJECT DETAILS
+                project.project_code = request.POST.get(
+                    "project_code", project.project_code
+                ).strip()
+
+                project.location = request.POST.get("location", "").strip()
+                project.google_map_link = request.POST.get("google_map_link", "").strip()
+                project.project_type = request.POST.get("project_type", "").strip()
+
+                area = request.POST.get("area_sqft", "").strip()
+                project.area_sqft = Decimal(area) if area else None
+
+                # ROOM COUNTS
+                project.bedroom_count = int(request.POST.get("bedroom_count") or 0)
+                project.living_room_count = int(request.POST.get("living_room_count") or 0)
+                project.kitchen_count = int(request.POST.get("kitchen_count") or 0)
+                project.bathroom_count = int(request.POST.get("bathroom_count") or 0)
+
+                # PROJECT STATUS
+                status = request.POST.get("current_status")
+
+                valid_statuses = dict(Project.PROJECT_STATUS)
+
+                if status not in valid_statuses:
+                    raise ValueError("Invalid project status.")
+
+                project.current_status = status
+
+                # PROJECT DATES
+                project.enquiry_date = (
+                    parse_date(request.POST.get("enquiry_date", ""))
+                    or project.enquiry_date
+                )
+
+                project.project_start_date = parse_date(
+                    request.POST.get("project_start_date", "")
+                )
+
+                project.target_handover_date = parse_date(
+                    request.POST.get("target_handover_date", "")
+                )
+
+                project.actual_handover_date = parse_date(
+                    request.POST.get("actual_handover_date", "")
+                )
+
+                # MAP COORDINATES
+                latitude = request.POST.get("latitude", "").strip()
+                longitude = request.POST.get("longitude", "").strip()
+
+                project.latitude = Decimal(latitude) if latitude else None
+                project.longitude = Decimal(longitude) if longitude else None
+
+                project.save()
+
+                # ENQUIRY DETAILS - JSON
+                enquiry_data = enquiry.detail_data.copy() if enquiry else {}
+
+                enquiry_data.update({
+                    "property_type": request.POST.get("property_type", ""),
+                    "budget": request.POST.get("budget", ""),
+                    "message": request.POST.get("message", ""),
+                })
+
+                if enquiry:
+                    enquiry.detail_data = enquiry_data
+                    enquiry.save()
+                else:
+                    ProjectDetail.objects.create(
+                        project=project,
+                        detail_type="enquiry",
+                        detail_data=enquiry_data,
+                        created_by=request.user
+                    )
+
+            messages.success(request, "Project updated successfully!")
+            return redirect("owner_projects")
+
+        except (ValueError, InvalidOperation, TypeError) as error:
+            messages.error(request, f"Unable to update project: {error}")
+
+    context = {
+        "project": project,
+        "client": client,
+        "enquiry_data": enquiry_data,
+        "status_choices": Project.PROJECT_STATUS,
+    }
+
+    return render(request, "owner/edit_project.html", context)
+
 
 @login_required(login_url='login')
 @never_cache

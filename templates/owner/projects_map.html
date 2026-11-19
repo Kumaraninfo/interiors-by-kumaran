@@ -56,7 +56,7 @@
                     <div class="map-stat-icon"><i class="bi bi-layers"></i></div>
                     <div>
                         <p>Total Projects</p>
-                        <h3>42</h3>
+                        <h3>{{ total_projects|default:0 }}</h3>
                     </div>
                 </div>
 
@@ -64,7 +64,7 @@
                     <div class="map-stat-icon"><i class="bi bi-geo-alt-fill"></i></div>
                     <div>
                         <p>On Site (Execution)</p>
-                        <h3>17</h3>
+                        <h3>{{ ongoing_projects|default:0 }}</h3>
                     </div>
                 </div>
 
@@ -72,15 +72,15 @@
                     <div class="map-stat-icon"><i class="bi bi-tools"></i></div>
                     <div>
                         <p>Design Stage</p>
-                        <h3>08</h3>
+                         <h3>{{ design_count|default:0 }}</h3>
                     </div>
                 </div>
 
                 <div class="map-stat-card blue-stat">
                     <div class="map-stat-icon"><i class="bi bi-file-earmark-text"></i></div>
                     <div>
-                        <p>Quotation Stage</p>
-                        <h3>05</h3>
+                        <p>Material Selection</p>
+                        <h3>{{ material_count|default:0 }}</h3>
                     </div>
                 </div>
 
@@ -88,15 +88,15 @@
                     <div class="map-stat-icon"><i class="bi bi-clock"></i></div>
                     <div>
                         <p>Site Visit Pending</p>
-                        <h3>03</h3>
+                        <h3>{{ site_visit_count|default:0 }}</h3>
                     </div>
                 </div>
 
                 <div class="map-stat-card green-stat">
                     <div class="map-stat-icon"><i class="bi bi-check2-circle"></i></div>
                     <div>
-                        <p>Handover Completed</p>
-                        <h3>11</h3>
+                        <p>Handover </p>
+                        <h3>{{ handover_count|default:0 }}</h3>
                     </div>
                 </div>
 
@@ -114,15 +114,14 @@
                             <i class="bi bi-funnel"></i>
                         </button>
                     </div>
-
-                    <div class="project-filters">
+                    <!-- <div class="project-filters">
                         <button class="filter-tab active" data-filter="all">All (42)</button>
                         <button class="filter-tab" data-filter="execution">Execution (17)</button>
                         <button class="filter-tab" data-filter="design">Design (08)</button>
                         <button class="filter-tab" data-filter="others">Others</button>
-                    </div>
+                    </div> -->
 
-                    <div class="project-list">
+                    <!-- <div class="project-list">
 
                         <div class="project-list-item"
                              data-category="execution"
@@ -199,8 +198,58 @@
                             <i class="bi bi-chevron-right item-arrow"></i>
                         </div>
 
+                    </div> -->
+                    <div class="project-filters">
+
+                        <button class="filter-tab active" data-filter="all">
+                            All ({{ total_projects }})
+                        </button>
+
+                        <button class="filter-tab" data-filter="execution">
+                            Execution ({{ execution_count }})
+                        </button>
+
+                        <button class="filter-tab" data-filter="design">
+                            Design ({{ design_count }})
+                        </button>
+
+                        <button class="filter-tab" data-filter="others">
+                            Others ({{ total_projects|add:"-1" }})
+                        </button>
+
                     </div>
 
+                    <div class="project-list">
+
+                        {% for project in projects %}
+
+                        <div class="project-list-item"
+                            data-id="{{ project.project_code }}"
+                            data-category="{{ project.current_status }}">
+
+                            <div class="project-list-info">
+
+                                <strong>{{ project.project_code }}</strong>
+
+                                <span>{{ project.client.client_name }}</span>
+
+                                <span>{{ project.location|default:"Location not added" }}</span>
+
+                            </div>
+
+                            <span class="stage-pill">
+                                {{ project.get_current_status_display }}
+                            </span>
+
+                        </div>
+
+                        {% empty %}
+
+                        <p>No projects available</p>
+
+                        {% endfor %}
+
+                    </div>
                 </div>
 
                 <!-- RIGHT INTERACTIVE MAP -->
@@ -234,183 +283,884 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-    
-    const map = L.map('projectMap', {
+
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ==========================================
+    // 1. INITIALIZE MAP
+    // ==========================================
+
+    const map = L.map("projectMap", {
         center: [10.7905, 78.7047],
         zoom: 12,
         minZoom: 5,
         maxZoom: 19
     });
+
     map.attributionControl.setPrefix(false);
+
+
+    // ==========================================
+    // 2. MAP LAYERS
+    // ==========================================
+
     const streetLayer = L.tileLayer(
-        
-        'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_584f_1_295d82fa50262963326fc265',
+        "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_584f_1_295d82fa50262963326fc265",
         {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution/">CARTO</a>',
+            attribution:
+                '',
             maxZoom: 20
         }
     );
+
     const satelliteLayer = L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         {
-            attribution: 'Tiles &copy; Esri'
+            attribution: "Tiles &copy; Esri",
+            maxZoom: 19
         }
     );
 
     streetLayer.addTo(map);
 
+
+    // ==========================================
+    // 3. CUSTOM PROJECT ICONS
+    // ==========================================
+
+    const projectIcons = {
+
+        "Execution": L.icon({
+            iconUrl: "{% static 'images/execution.png' %}",
+            iconSize: [65, 65],
+            iconAnchor: [32, 60],
+            popupAnchor: [0, -55]
+        }),
+
+        "Quotation": L.icon({
+            iconUrl: "{% static 'images/Quotation.png' %}",
+            iconSize: [65, 65],
+            iconAnchor: [32, 60],
+            popupAnchor: [0, -55]
+        }),
+        "3D Design": L.icon({
+            iconUrl: "{% static 'images/3ddesign.png' %}",
+            iconSize: [65, 65],
+            iconAnchor: [32, 60],
+            popupAnchor: [0, -55]
+        }),
+
+        "Site Visit": L.icon({
+            iconUrl: "{% static 'images/upcoming-sitevisit.png' %}",
+            iconSize: [95, 65],
+            iconAnchor: [32, 60],
+            popupAnchor: [0, -55]
+        }),
+        "Payment": L.icon({
+            iconUrl: "{% static 'images/execution2.png' %}",
+            iconSize: [65, 65],
+            iconAnchor: [32, 60],
+            popupAnchor: [0, -55]
+        }),
+
+        "Material Selection": L.icon({
+            iconUrl: "{% static 'images/materialselect.png' %}",
+            iconSize: [65, 65],
+            iconAnchor: [32, 60],
+            popupAnchor: [0, -55]
+        }),
+        "Handover": L.icon({
+            iconUrl: "{% static 'images/handover.png' %}",
+            iconSize: [65, 65],
+            iconAnchor: [32, 60],
+            popupAnchor: [0, -55]
+        })
+
+        
+
+    };
+
+
+    // ==========================================
+    // 4. DATABASE PROJECT DATA
+    // ==========================================
+
     const projects = [
-        {
-            id: "IBK-1042",
-            client: "Mr. Suresh",
-            location: "Trichy",
-            manager: "Arun Kumar",
-            stage: "Execution",
-            progress: "72%",
-            lat: 10.7905,
-            lng: 78.7047,
-            color: "#159447"
-        },
-        {
-            id: "IBK-1041",
-            client: "Mrs. Divya",
-            location: "Srirangam",
-            manager: "Raja",
-            stage: "3D Design",
-            progress: "48%",
-            lat: 10.8562,
-            lng: 78.6935,
-            color: "#f2a900"
-        },
-        {
-            id: "IBK-1040",
-            client: "Mr. Karthik",
-            location: "Thanjavur",
-            manager: "Praveen",
-            stage: "Material Selection",
-            progress: "60%",
-            lat: 10.7870,
-            lng: 79.1378,
-            color: "#963ed1"
-        },
-        {
-            id: "IBK-1039",
-            client: "IT Company",
-            location: "Trichy",
-            manager: "Manoj",
-            stage: "Site Visit",
-            progress: "20%",
-            lat: 10.7900,
-            lng: 78.7000,
-            color: "#e52b2b"
-        },
-        {
-            id: "IBK-1038",
-            client: "Mr. Arun",
-            location: "Pudukkottai",
-            manager: "Saravanan",
-            stage: "Quotation",
-            progress: "10%",
-            lat: 10.3797,
-            lng: 78.8208,
-            color: "#168de0"
-        }
+
+        {% for project in projects %}
+
+            {% if project.latitude != None and project.longitude != None %}
+
+            {
+                id: "{{ project.project_code|escapejs }}",
+
+                client: "{{ project.client.client_name|escapejs }}",
+
+                location: "{{ project.location|default:'Location not added'|escapejs }}",
+
+                lat: Number("{{ project.latitude }}"),
+
+                lng: Number("{{ project.longitude }}"),
+
+                status: "{{ project.get_current_status_display|escapejs }}",
+
+                statusCode: "{{ project.current_status|escapejs }}"
+            },
+
+            {% endif %}
+
+        {% endfor %}
+
     ];
+
+
+    // ==========================================
+    // 5. MARKER GROUP
+    // ==========================================
 
     const markers = {};
 
-    projects.forEach(project => {
+    const markerGroup = L.featureGroup().addTo(map);
 
-        const marker = L.circleMarker([project.lat, project.lng], {
-            radius: 10,
-            color: "#ffffff",
-            weight: 3,
-            fillColor: project.color,
-            fillOpacity: 1
-        }).addTo(map);
+
+    // ==========================================
+    // 6. CREATE PROJECT MARKERS
+    // ==========================================
+
+    projects.forEach(function (project) {
+
+        // Validate coordinates
+        if (
+            !Number.isFinite(project.lat) ||
+            !Number.isFinite(project.lng) ||
+            project.lat < -90 ||
+            project.lat > 90 ||
+            project.lng < -180 ||
+            project.lng > 180
+        ) {
+            console.warn("Invalid coordinates:", project.id);
+            return;
+        }
+
+
+        // Select custom icon
+        const selectedIcon =
+            projectIcons[project.status] || new L.Icon.Default();
+
+
+        // IMPORTANT: L.marker for image icons
+        const marker = L.marker(
+            [project.lat, project.lng],
+            {
+                icon: selectedIcon,
+                title: project.id,
+                alt: project.status
+            }
+        );
+
+
+        marker.addTo(markerGroup);
+
+
+        // ==========================================
+        // 7. POPUP CONTENT
+        // ==========================================
+
+        const popup = document.createElement("div");
+
+        popup.className = "map-popup";
+
+
+        const heading = document.createElement("h6");
+
+        heading.textContent = project.id;
+
+
+        const client = document.createElement("strong");
+
+        client.textContent = project.client;
+
+
+        const status = document.createElement("p");
+
+        status.textContent = project.status;
+
+
+        const divider = document.createElement("hr");
+
+
+        const location = document.createElement("div");
+
+        location.innerHTML =
+            '<i class="bi bi-geo-alt-fill"></i> ';
+
+        location.appendChild(
+            document.createTextNode(project.location)
+        );
+
+
+        popup.appendChild(heading);
+        popup.appendChild(client);
+        popup.appendChild(status);
+        popup.appendChild(divider);
+        popup.appendChild(location);
+
+
+        marker.bindPopup(popup);
+
+
+        // Save marker
+        markers[project.id] = marker;
+
+    });
+
+
+    // ==========================================
+    // 8. AUTO ZOOM
+    // ==========================================
+
+    if (markerGroup.getLayers().length > 0) {
+
+        map.fitBounds(markerGroup.getBounds(), {
+            padding: [35, 35],
+            maxZoom: 13
+        });
+
+    }
+
+
+    // ==========================================
+    // 9. PROJECT LIST CLICK
+    // ==========================================
+
+    document.querySelectorAll(".project-list-item").forEach(
+        function (item) {
+
+            item.addEventListener("click", function () {
+
+                const id = this.dataset.id;
+
+                const marker = markers[id];
+
+                if (marker) {
+
+                    map.flyTo(marker.getLatLng(), 15);
+
+                    marker.openPopup();
+
+                }
+
+                document.querySelectorAll(
+                    ".project-list-item"
+                ).forEach(function (row) {
+
+                    row.classList.remove("selected-project");
+
+                });
+
+                this.classList.add("selected-project");
+
+            });
+
+        }
+    );
+
+
+    // ==========================================
+    // 10. PROJECT FILTER
+    // ==========================================
+
+    document.querySelectorAll(".filter-tab").forEach(
+        function (button) {
+
+            button.addEventListener("click", function () {
+
+                document.querySelectorAll(
+                    ".filter-tab"
+                ).forEach(function (btn) {
+
+                    btn.classList.remove("active");
+
+                });
+
+                this.classList.add("active");
+
+                const filter = this.dataset.filter;
+
+
+                markerGroup.clearLayers();
+
+
+                document.querySelectorAll(
+                    ".project-list-item"
+                ).forEach(function (item) {
+
+                    const category = item.dataset.category;
+
+                    let show = false;
+
+                    if (filter === "all") {
+
+                        show = true;
+
+                    } else if (filter === "design") {
+
+                        show = category === "3d_design" ||
+                               category === "design";
+
+                    } else if (filter === "others") {
+
+                        show = category !== "execution" &&
+                               category !== "3d_design" &&
+                               category !== "design";
+
+                    } else {
+
+                        show = category === filter;
+
+                    }
+
+                    item.style.display = show ? "flex" : "none";
+
+                });
+
+
+                // Add matching markers
+                projects.forEach(function (project) {
+
+                    const status = project.statusCode;
+
+                    let show = false;
+
+                    if (filter === "all") {
+
+                        show = true;
+
+                    } else if (filter === "design") {
+
+                        show = status === "3d_design";
+
+                    } else if (filter === "others") {
+
+                        show = status !== "execution" &&
+                               status !== "3d_design";
+
+                    } else {
+
+                        show = status === filter;
+
+                    }
+
+                    if (show && markers[project.id]) {
+
+                        markerGroup.addLayer(markers[project.id]);
+
+                    }
+
+                });
+
+
+                // Zoom filtered markers
+                if (markerGroup.getLayers().length > 0) {
+
+                    map.fitBounds(markerGroup.getBounds(), {
+                        padding: [35, 35],
+                        maxZoom: 13
+                    });
+
+                }
+
+            });
+
+        }
+    );
+
+
+    // ==========================================
+    // 11. MAP / SATELLITE SWITCH
+    // ==========================================
+
+    document.querySelectorAll(".map-type").forEach(
+        function (button) {
+
+            button.addEventListener("click", function () {
+
+                document.querySelectorAll(
+                    ".map-type"
+                ).forEach(function (btn) {
+
+                    btn.classList.remove("active");
+
+                });
+
+                this.classList.add("active");
+
+
+                if (this.dataset.type === "satellite") {
+
+                    map.removeLayer(streetLayer);
+
+                    satelliteLayer.addTo(map);
+
+                } else {
+
+                    map.removeLayer(satelliteLayer);
+
+                    streetLayer.addTo(map);
+
+                }
+
+            });
+
+        }
+    );
+
+
+    // ==========================================
+    // 12. MAP SIZE FIX
+    // ==========================================
+
+    setTimeout(function () {
+
+        map.invalidateSize();
+
+    }, 500);
+
+
+    console.log("Total Projects:", projects.length);
+
+    console.log(
+        "Markers Displayed:",
+        markerGroup.getLayers().length
+    );
+
+});
+</script> -->
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ==========================================
+    // 1. MAP INITIALIZATION
+    // ==========================================
+
+    const map = L.map("projectMap", {
+        zoomControl: true
+    }).setView([10.7905, 78.7047], 7);
+
+
+    // ==========================================
+    // 2. MAP LAYERS
+    // ==========================================
+
+    const streetLayer = L.tileLayer(
+         "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_584f_1_295d82fa50262963326fc265",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap"
+        }
+    );
+
+    const satelliteLayer = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+            maxZoom: 19,
+            attribution: "Tiles &copy; Esri"
+        }
+    );
+
+    streetLayer.addTo(map);
+
+
+    // ==========================================
+    // 3. CUSTOM PROJECT ICONS
+    // ==========================================
+
+    const projectIcons = {
+
+        "Enquiry": L.icon({
+            iconUrl: "{% static 'images/enquiry.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        }),
+
+        "Quotation": L.icon({
+            iconUrl: "{% static 'images/Quotation.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        }),
+
+        "Site Visit": L.icon({
+            iconUrl: "{% static 'images/upcoming-sitevisit.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        }),
+
+        "Payment": L.icon({
+            iconUrl: "{% static 'images/payment.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        }),
+
+        "3D Design": L.icon({
+            iconUrl: "{% static 'images/3ddesign.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        }),
+
+        "Material Selection": L.icon({
+            iconUrl: "{% static 'images/materialselect.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        }),
+
+        "Execution": L.icon({
+            iconUrl: "{% static 'images/execution.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        }),
+
+        "Handover": L.icon({
+            iconUrl: "{% static 'images/handover.png' %}",
+            iconSize: [42, 42],
+            iconAnchor: [21, 42],
+            popupAnchor: [0, -40]
+        })
+
+    };
+
+
+    // ==========================================
+    // 4. DATABASE PROJECT DATA
+    // ==========================================
+
+    const projects = [
+
+        {% for project in projects %}
+
+            {% if project.latitude != None and project.longitude != None %}
+
+            {
+                id: "{{ project.project_code|escapejs }}",
+
+                client: "{{ project.client.client_name|default:'N/A'|escapejs }}",
+
+                location: "{{ project.location|default:'Location not added'|escapejs }}",
+
+                lat: Number("{{ project.latitude }}"),
+
+                lng: Number("{{ project.longitude }}"),
+
+                status: "{{ project.get_current_status_display|escapejs }}",
+
+                statusCode: "{{ project.current_status|escapejs }}"
+
+            },
+
+            {% endif %}
+
+        {% endfor %}
+
+    ];
+
+
+    // ==========================================
+    // 5. MARKER STORAGE
+    // ==========================================
+
+    const markers = {};
+
+    const markerGroup = L.featureGroup().addTo(map);
+
+
+    // ==========================================
+    // 6. CREATE PROJECT MARKERS
+    // ==========================================
+
+    projects.forEach(function (project) {
+
+        if (
+            !Number.isFinite(project.lat) ||
+            !Number.isFinite(project.lng)
+        ) {
+            return;
+        }
+
+        const selectedIcon =
+            projectIcons[project.status] || new L.Icon.Default();
+
+
+        const marker = L.marker(
+            [project.lat, project.lng],
+            {
+                icon: selectedIcon
+            }
+        );
+
+
+        // Project Popup
 
         marker.bindPopup(`
-            <div class="map-popup">
+            <div class="project-map-popup">
+
                 <h6>${project.id}</h6>
-                <strong>${project.client}</strong>
-                <p>${project.stage} (${project.progress})</p>
-                <hr>
-                <div><i class="bi bi-geo-alt-fill"></i> ${project.location}</div>
-                <div><i class="bi bi-person"></i> Site PM: ${project.manager}</div>
+
+                <p>
+                    <strong>Client:</strong>
+                    ${project.client}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    ${project.status}
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    ${project.location}
+                </p>
+
             </div>
         `);
 
+
+        // Store marker using project ID
+
         markers[project.id] = marker;
+
+        markerGroup.addLayer(marker);
+
     });
 
-    // Click project list to locate on map
-    document.querySelectorAll('.project-list-item').forEach(item => {
 
-        item.addEventListener('click', function () {
+    // ==========================================
+    // 7. AUTO ZOOM ALL PROJECTS
+    // ==========================================
 
-            const id = this.dataset.id;
-            const marker = markers[id];
+    if (markerGroup.getLayers().length > 0) {
 
-            if (marker) {
-                map.flyTo(marker.getLatLng(), 15);
-                marker.openPopup();
-            }
+        map.fitBounds(markerGroup.getBounds(), {
+            padding: [40, 40],
+            maxZoom: 12
+        });
 
-            document.querySelectorAll('.project-list-item').forEach(row => {
-                row.classList.remove('selected-project');
+    }
+
+
+    // ==========================================
+    // 8. PROJECT LIST CLICK
+    // ==========================================
+
+    document.querySelectorAll(".project-list-item").forEach(function (item) {
+
+        item.addEventListener("click", function () {
+
+            const projectId = this.dataset.id;
+
+            const marker = markers[projectId];
+
+
+            // Remove previous selection
+
+            document.querySelectorAll(".project-list-item").forEach(function (el) {
+
+                el.classList.remove("selected");
+
             });
 
-            this.classList.add('selected-project');
+
+            // Highlight selected project
+
+            this.classList.add("selected");
+
+
+            // Move map to selected project
+
+            if (marker) {
+
+                const latLng = marker.getLatLng();
+
+                map.flyTo(latLng, 16, {
+                    animate: true,
+                    duration: 1.5
+                });
+
+                marker.openPopup();
+
+            } else {
+
+                console.log(
+                    "Project location not available:",
+                    projectId
+                );
+
+            }
+
         });
 
     });
 
-    // Filter projects
-    document.querySelectorAll('.filter-tab').forEach(button => {
 
-        button.addEventListener('click', function () {
+    // ==========================================
+    // 9. PROJECT STATUS FILTERS
+    // ==========================================
 
-            document.querySelectorAll('.filter-tab').forEach(btn => {
-                btn.classList.remove('active');
+    function matchesFilter(status, filter) {
+
+        if (filter === "all") {
+            return true;
+        }
+
+        if (filter === "design") {
+            return status === "3d_design";
+        }
+
+        if (filter === "others") {
+
+            return (
+                status !== "execution" &&
+                status !== "3d_design"
+            );
+
+        }
+
+        return status === filter;
+
+    }
+
+
+    document.querySelectorAll(".filter-tab").forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            // Active filter button
+
+            document.querySelectorAll(".filter-tab").forEach(function (btn) {
+
+                btn.classList.remove("active");
+
             });
 
-            this.classList.add('active');
+            this.classList.add("active");
+
 
             const filter = this.dataset.filter;
 
-            document.querySelectorAll('.project-list-item').forEach(item => {
-                item.style.display =
-                    filter === 'all' || item.dataset.category === filter
-                    ? 'flex' : 'none';
+
+            // Filter sidebar projects
+
+            document.querySelectorAll(".project-list-item").forEach(function (item) {
+
+                const status = item.dataset.category;
+
+                if (matchesFilter(status, filter)) {
+
+                    item.style.display = "";
+
+                } else {
+
+                    item.style.display = "none";
+
+                    item.classList.remove("selected");
+
+                }
+
             });
 
-        });
 
-    });
+            // Filter map markers
 
-    // Map / Satellite switch
-    document.querySelectorAll('.map-type').forEach(button => {
+            markerGroup.clearLayers();
 
-        button.addEventListener('click', function () {
+            projects.forEach(function (project) {
 
-            document.querySelectorAll('.map-type').forEach(btn => {
-                btn.classList.remove('active');
+                if (
+                    matchesFilter(project.statusCode, filter) &&
+                    markers[project.id]
+                ) {
+
+                    markerGroup.addLayer(markers[project.id]);
+
+                }
+
             });
 
-            this.classList.add('active');
 
-            if (this.dataset.type === 'satellite') {
-                map.removeLayer(streetLayer);
-                satelliteLayer.addTo(map);
-            } else {
-                map.removeLayer(satelliteLayer);
-                streetLayer.addTo(map);
+            // Auto zoom filtered markers
+
+            if (markerGroup.getLayers().length > 0) {
+
+                map.fitBounds(markerGroup.getBounds(), {
+                    padding: [40, 40],
+                    maxZoom: 12
+                });
+
             }
 
         });
 
     });
+
+
+    // ==========================================
+    // 10. STREET / SATELLITE SWITCH
+    // ==========================================
+
+    document.querySelectorAll(".map-type").forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            document.querySelectorAll(".map-type").forEach(function (btn) {
+
+                btn.classList.remove("active");
+
+            });
+
+            this.classList.add("active");
+
+
+            const type = this.dataset.type;
+
+            if (type === "satellite") {
+
+                map.removeLayer(streetLayer);
+
+                satelliteLayer.addTo(map);
+
+            } else {
+
+                map.removeLayer(satelliteLayer);
+
+                streetLayer.addTo(map);
+
+            }
+
+        });
+
+    });
+
+
+    // ==========================================
+    // 11. MAP SIZE REFRESH
+    // ==========================================
+
+    setTimeout(function () {
+
+        map.invalidateSize();
+
+    }, 300);
+
+
+});
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

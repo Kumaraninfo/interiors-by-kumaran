@@ -227,14 +227,13 @@
 
         <li>
             <a href="{% url 'owner_projects' %}"
-               class="{% if request.resolver_match.url_name == 'owner_projects' %}active{% endif %}">
+            class="{% if request.resolver_match.url_name == 'owner_projects' or request.resolver_match.url_name == 'edit_project' %}active{% endif %}">
 
                 <i class="bi bi-folder"></i>
                 <span>Projects</span>
 
             </a>
         </li>
-
 
         <li>
             <a href="{% url 'projects_map' %}"

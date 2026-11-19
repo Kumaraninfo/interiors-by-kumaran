@@ -112,11 +112,11 @@
 
                     <div class="card border rounded-4 shadow-sm p-3 w-100 h-100">
 
-                        <h6 class="fw-bold pt-3 mb-4">
+                        <h6 class="fw-bold  mb-4">
                             Project Status Overview
                         </h6>
 
-                        <div class="row align-items-center g-2 flex-grow-1">
+                        <div class="row align-items-center g-5  flex-grow-1 ">
 
                             <!-- CHART -->
                             <div class="col-6">
@@ -162,7 +162,7 @@
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
 
-                            <h6 class="fw-bold mb-0">Project Locations</h6>
+                            <h6 class="fw-bold pt-0 mt-0">Project Locations</h6>
 
                             <a href="{% url 'projects_map' %}"
                            style="border: 1px solid #dce3de; 
@@ -211,39 +211,48 @@
                     <div class="card border rounded-4 shadow-sm p-3 w-100 h-100">
 
                         <h6 class="fw-bold mb-4">
-                            Project Timeline – This Month
+                            Project Timeline – Current Status
                         </h6>
 
                         <div class="timeline">
 
-                            <div class="timeline-item completed">
+                            {% for item in project_timeline %}
+
+                            <div class="timeline-item {{ item.class }}">
+
                                 <span class="timeline-icon">
-                                    <i class="bi bi-check-lg"></i>
+
+                                    <i class="{{ item.icon }}"></i>
+
                                 </span>
-                                <p>3 Projects – Design Approval</p>
+
+                                <div class="d-flex align-items-center justify-content-between w-100">
+
+                                    <p class="mb-0">
+                                        {{ item.label }}
+                                    </p>
+
+                                    <span class="timeline-count">
+                                        {{ item.count }}
+                                    </span>
+
+                                </div>
+
                             </div>
 
-                            <div class="timeline-item completed">
-                                <span class="timeline-icon">
-                                    <i class="bi bi-check-lg"></i>
-                                </span>
-                                <p>5 Projects – Execution Started</p>
+                            {% empty %}
+
+                            <div class="text-center py-4">
+
+                                <i class="bi bi-folder2-open fs-3 text-secondary"></i>
+
+                                <p class="text-secondary small mt-2 mb-0">
+                                    No project activity available
+                                </p>
+
                             </div>
 
-                            <div class="timeline-item current">
-                                <span class="timeline-icon"></span>
-                                <p>4 Projects – In Progress</p>
-                            </div>
-
-                            <div class="timeline-item upcoming">
-                                <span class="timeline-icon"></span>
-                                <p>2 Projects – Final Inspection</p>
-                            </div>
-
-                            <div class="timeline-item upcoming">
-                                <span class="timeline-icon"></span>
-                                <p>3 Projects – Handover</p>
-                            </div>
+                            {% endfor %}
 
                         </div>
 
@@ -293,89 +302,86 @@
                                     </tr>
                                 </thead>
 
+                                
                                 <tbody>
 
-                                    <tr>
-                                        <td>IBK-1042</td>
-                                        <td><i class="bi bi-person"></i> Mr. Suresh</td>
-                                        <td><i class="bi bi-geo-alt-fill"></i> Trichy</td>
-                                        <td><span class="stage execution-stage">Execution</span></td>
-                                        <td>
-                                            <div class="progress-cell">
-                                                <b>72%</b>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-success" style="width:72%"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>30 Nov 2026</td>
-                                    </tr>
+                                    {% for project in recent_projects %}
 
                                     <tr>
-                                        <td>IBK-1041</td>
-                                        <td><i class="bi bi-person"></i> Mrs. Divya</td>
-                                        <td><i class="bi bi-geo-alt-fill"></i> Srirangam</td>
-                                        <td><span class="stage design-stage">3D Design</span></td>
+
+                                        <!-- PROJECT ID -->
                                         <td>
-                                            <div class="progress-cell">
-                                                <b>48%</b>
+                                            <strong>{{ project.project_code }}</strong>
+                                        </td>
+
+                                        <!-- CLIENT NAME -->
+                                        <td>
+                                            <i class="bi bi-person"></i>
+                                            {{ project.client_name }}
+                                        </td>
+
+                                        <!-- LOCATION -->
+                                        <td>
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            {{ project.location }}
+                                        </td>
+
+                                        <!-- PROJECT STAGE -->
+                                        <td>
+                                            <span class="stage stage-{{ project.current_status }}">
+                                                {{ project.status }}
+                                            </span>
+                                        </td>
+
+                                        <!-- PROGRESS -->
+                                        <td>
+                                           <div class="progress-cell">
+
+                                                <b>{{ project.progress }}%</b>
+
                                                 <div class="progress">
-                                                    <div class="progress-bar bg-warning" style="width:48%"></div>
+                                                    <div
+                                                        class="progress-bar progress-{{ project.current_status }}"
+                                                        role="progressbar"
+                                                        style="width: {{ project.progress }}%;"
+                                                        aria-valuenow="{{ project.progress }}"
+                                                        aria-valuemin="0"
+                                                        aria-valuemax="100">
+                                                    </div>
                                                 </div>
+
                                             </div>
                                         </td>
-                                        <td>15 Dec 2026</td>
+
+                                        <!-- TARGET HANDOVER -->
+                                        <td>
+                                            {% if project.target_handover_date %}
+                                                {{ project.target_handover_date|date:"d M Y" }}
+                                            {% else %}
+                                                <span class="text-muted">Not Set</span>
+                                            {% endif %}
+                                        </td>
+
                                     </tr>
 
-                                    <tr>
-                                        <td>IBK-1040</td>
-                                        <td><i class="bi bi-person"></i> Mr. Karthik</td>
-                                        <td><i class="bi bi-geo-alt-fill"></i> Thanjavur</td>
-                                        <td><span class="stage material-stage">Material Selection</span></td>
-                                        <td>
-                                            <div class="progress-cell">
-                                                <b>60%</b>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-info" style="width:60%"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>20 Dec 2026</td>
-                                    </tr>
+                                    {% empty %}
 
                                     <tr>
-                                        <td>IBK-1039</td>
-                                        <td><i class="bi bi-building"></i> IT Company</td>
-                                        <td><i class="bi bi-geo-alt-fill"></i> Trichy</td>
-                                        <td><span class="stage site-stage">Site Visit</span></td>
-                                        <td>
-                                            <div class="progress-cell">
-                                                <b>20%</b>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-warning" style="width:20%"></div>
-                                                </div>
-                                            </div>
+                                        <td colspan="6" class="text-center py-4">
+
+                                            <i class="bi bi-folder2-open fs-3 text-secondary"></i>
+
+                                            <p class="text-secondary mb-0 mt-2">
+                                                No projects available
+                                            </p>
+
                                         </td>
-                                        <td>10 Dec 2026</td>
                                     </tr>
 
-                                    <tr>
-                                        <td>IBK-1038</td>
-                                        <td><i class="bi bi-person"></i> Mr. Arun</td>
-                                        <td><i class="bi bi-geo-alt-fill"></i> Pudukkottai</td>
-                                        <td><span class="stage quotation-stage">Quotation</span></td>
-                                        <td>
-                                            <div class="progress-cell">
-                                                <b>10%</b>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-info" style="width:10%"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>25 Dec 2026</td>
-                                    </tr>
+                                    {% endfor %}
 
                                 </tbody>
+
                             </table>
 
                         </div>
@@ -448,8 +454,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
+    // ==========================================
+    // 1. PROJECT STATUS DATA
+    // ==========================================
 
     const projectStatusData = [
         {
@@ -484,18 +495,38 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     ];
 
+
+    // ==========================================
+    // 2. TOTAL PROJECTS
+    // ==========================================
+
     const total = projectStatusData.reduce(
-        (sum, item) => sum + item.count, 0
+        (sum, item) => sum + item.count,
+        0
     );
 
     document.getElementById("chartTotal").textContent = total;
+
 
     const filteredData = projectStatusData.filter(
         item => item.count > 0
     );
 
-    // DOUGHNUT CHART
-    new Chart(document.getElementById("projectDonutChart"), {
+
+    // ==========================================
+    // 3. DOUGHNUT CHART
+    // ==========================================
+
+    const chartCanvas = document.getElementById("projectDonutChart");
+
+    // Destroy existing chart if already initialized
+    const existingChart = Chart.getChart(chartCanvas);
+
+    if (existingChart) {
+        existingChart.destroy();
+    }
+
+    new Chart(chartCanvas, {
 
         type: "doughnut",
 
@@ -513,6 +544,7 @@ document.addEventListener("DOMContentLoaded", function () {
         options: {
 
             responsive: true,
+
             maintainAspectRatio: false,
 
             cutout: "62%",
@@ -526,13 +558,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 tooltip: {
                     enabled: true,
 
-                    position: 'nearest',
+                    position: "nearest",
 
-                    yAlign: 'left',
+                    yAlign: "left",
 
                     caretPadding: 12,
-
-                    
 
                     titleFont: {
                         size: 12,
@@ -557,219 +587,364 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    // RIGHT SIDE LEGEND
-    // RIGHT SIDE LEGEND
-document.getElementById("chartLegend").innerHTML =
 
-    projectStatusData
-        .filter(item => item.count >= 1)
-        .map(item => {
+    // ==========================================
+    // 4. RIGHT SIDE CHART LEGEND
+    // ==========================================
 
-            const percentage = total > 0
-                ? ((item.count / total) * 100).toFixed(0)
-                : 0;
+    document.getElementById("chartLegend").innerHTML =
 
-            return `
+        projectStatusData
+            .filter(item => item.count >= 1)
+            .map(item => {
 
-                <div class="d-flex align-items-center justify-content-between gap-1">
+                const percentage = total > 0
+                    ? ((item.count / total) * 100).toFixed(0)
+                    : 0;
 
-                    <div class="d-flex align-items-center gap-2 overflow-hidden">
+                return `
 
-                        <span class="rounded-1 flex-shrink-0"
-                            style="width:10px;height:10px;background:${item.color}">
-                        </span>
+                    <div class="d-flex align-items-center justify-content-between gap-1">
 
-                        <span class="text-secondary text-truncate"
-                              style="font-size:11px;">
+                        <div class="d-flex align-items-center pl-2 gap-2 overflow-hidden w-100">
 
-                            ${item.name} (${percentage}%)
+                            <span class="rounded-1 flex-shrink-0"
+                                style="width:10px;height:10px;background:${item.color}">
+                            </span>
 
-                        </span>
+                            <span class="text-secondary text-truncate text-end"
+                                style="font-size:11px;">
+
+                                ${item.name} (${percentage}%)
+
+                            </span>
+
+                        </div>
 
                     </div>
 
-                    <span class="fw-bold text-dark flex-shrink-0"
-                          style="font-size:11px;">
+                `;
 
-                        ${item.count.toString().padStart(2, "0")}
-
-                    </span>
-
-                </div>
-
-            `;
-
-        }).join("");
-
-});
+            }).join("");
 
 
-//Map Scripts
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    // ==================================
-    // 1. LEAFLET DEFAULT MARKER SETTINGS
-    // ==================================
+    // ==========================================
+    // 5. LEAFLET DEFAULT MARKER SETTINGS
+    // ==========================================
 
     delete L.Icon.Default.prototype._getIconUrl;
 
     L.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+
+        iconRetinaUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+
+        iconUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+
+        shadowUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
+
     });
 
 
-    // ==================================
-    // 2. INITIALIZE MAP
-    // ==================================
 
-    const map = L.map('dashboardProjectMap', {
+    // ==========================================
+    // 6. INITIALIZE MAP
+    // ==========================================
+
+    const map = L.map("dashboardProjectMap", {
+
         center: [10.7905, 78.7047],
+
         zoom: 11,
+
         minZoom: 5,
+
         maxZoom: 19,
-        zoomControl: true,
-        
+
+        zoomControl: true
+
     });
 
-   
     map.attributionControl.setPrefix(false);
 
 
-    // ==================================
-    // 3. NORMAL MAP - CARTO VOYAGER
-    // ==================================
 
-    const normalLayer = L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_584f_1_295d82fa50262963326fc265',
+    // ==========================================
+    // 7. CARTO VOYAGER MAP LAYER
+    // ==========================================
+
+    L.tileLayer(
+
+        "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_584f_1_295d82fa50262963326fc265",
+
         {
-            attribution: '',
-            subdomains: 'abcd',
+
+            attribution: "",
+
+            subdomains: "abcd",
+
             minZoom: 0,
+
             maxZoom: 20,
+
             maxNativeZoom: 20,
+
             tileSize: 256,
+
             updateWhenIdle: true,
+
             keepBuffer: 4
+
         }
+
     ).addTo(map);
 
 
-    // ==================================
-    // 4. CUSTOM PROJECT MARKER ICONS
-    // ==================================
+
+    // ==========================================
+    // 8. CUSTOM PROJECT MARKER ICONS
+    // ==========================================
 
     const projectIcons = {
 
         "Execution": L.icon({
-            iconUrl: '/static/images/execution2.png',
+
+            iconUrl: "/static/images/execution2.png",
+
             iconSize: [65, 65],
+
             iconAnchor: [27, 50],
+
             popupAnchor: [0, -45]
+
         }),
 
         "Site Visit": L.icon({
-            iconUrl: '/static/images/sitevisit.png',
+
+            iconUrl: "/static/images/sitevisit.png",
+
             iconSize: [55, 55],
+
             iconAnchor: [27, 50],
+
             popupAnchor: [0, -45]
+
         })
 
     };
 
 
-    // ==================================
-    // 5. PROJECT LOCATIONS
-    // ==================================
+
+    // ==========================================
+    // 9. GET PROJECT DATA FROM DJANGO CONTEXT
+    // ==========================================
 
     const projects = [
 
-        {
-            id: 'IBK-1042',
-            client: 'Mr. Suresh',
-            city: 'Trichy',
-            lat: 10.7905,
-            lng: 78.7047,
-            status: 'Execution'
-        },
+        {% for project in projects %}
 
-        {
-            id: 'IBK-1041',
-            client: 'Mrs. Divya',
-            city: 'Srirangam',
-            lat: 10.8562,
-            lng: 78.6935,
-            status: 'Site Visit'
-        }
+            {% if project.current_status == "execution" or project.current_status == "site_visit" %}
+
+                {% if project.latitude != None and project.longitude != None %}
+
+                {
+                    id: "{{ project.project_code|escapejs }}",
+                    client: "{{ project.client.client_name|escapejs }}",
+                    city: "{{ project.location|default:'N/A'|escapejs }}",
+                    lat: Number("{{ project.latitude }}"),
+                    lng: Number("{{ project.longitude }}"),
+                    status: "{{ project.get_current_status_display|escapejs }}"
+                },
+
+                {% endif %}
+
+            {% endif %}
+
+        {% endfor %}
 
     ];
 
 
-    // ==================================
-    // 6. ADD PROJECT MARKERS
-    // ==================================
+
+    // ==========================================
+    // 10. ADD DATABASE PROJECT MARKERS
+    // ==========================================
+
+    const markers = [];
 
     projects.forEach(function (project) {
 
-        // Get status-based custom icon
+        // Validate coordinates
+        if (
+
+            !Number.isFinite(project.lat) ||
+
+            !Number.isFinite(project.lng) ||
+
+            project.lat < -90 ||
+
+            project.lat > 90 ||
+
+            project.lng < -180 ||
+
+            project.lng > 180
+
+        ) {
+
+            return;
+
+        }
+
+
+        // Status-based custom icon
         const selectedIcon =
             projectIcons[project.status] || new L.Icon.Default();
 
+
+        // Create marker
         const marker = L.marker(
+
             [project.lat, project.lng],
+
             {
+
                 icon: selectedIcon,
+
                 title: project.id,
+
                 alt: project.status
+
             }
+
         ).addTo(map);
 
 
-        // Project Popup
-        marker.bindPopup(`
-            <div class="project-map-popup">
 
-                <h6 style="margin:0 0 10px; font-weight:700;">
-                    ${project.id}
-                </h6>
+        // ==========================================
+        // PROJECT POPUP
+        // ==========================================
 
-                <hr style="margin:5px 0 10px;">
+        const popupContent = document.createElement("div");
 
-                <p style="margin:5px 0;">
-                    <strong>Client:</strong> ${project.client}
-                </p>
+        popupContent.className = "project-map-popup";
 
-                <p style="margin:5px 0;">
-                    <strong>Location:</strong> ${project.city}
-                </p>
 
-                <p style="margin:5px 0;">
-                    <strong>Status:</strong> ${project.status}
-                </p>
+        const heading = document.createElement("h6");
 
-            </div>
-        `);
+        heading.style.cssText = "margin:0 0 10px;font-weight:700;";
+
+        heading.textContent = project.id;
+
+
+        const divider = document.createElement("hr");
+
+        divider.style.cssText = "margin:5px 0 10px;";
+
+
+        const clientPara = document.createElement("p");
+
+        clientPara.style.margin = "5px 0";
+
+        clientPara.innerHTML = "<strong>Client:</strong> ";
+
+        clientPara.appendChild(
+            document.createTextNode(project.client)
+        );
+
+
+        const locationPara = document.createElement("p");
+
+        locationPara.style.margin = "5px 0";
+
+        locationPara.innerHTML = "<strong>Location:</strong> ";
+
+        locationPara.appendChild(
+            document.createTextNode(project.city)
+        );
+
+
+        const statusPara = document.createElement("p");
+
+        statusPara.style.margin = "5px 0";
+
+        statusPara.innerHTML = "<strong>Status:</strong> ";
+
+        statusPara.appendChild(
+            document.createTextNode(project.status)
+        );
+
+
+        popupContent.appendChild(heading);
+
+        popupContent.appendChild(divider);
+
+        popupContent.appendChild(clientPara);
+
+        popupContent.appendChild(locationPara);
+
+        popupContent.appendChild(statusPara);
+
+
+        marker.bindPopup(popupContent);
+
+        markers.push(marker);
 
     });
 
 
-    // ==================================
-    // 7. MAP SIZE FIX
-    // ==================================
+
+    // ==========================================
+    // 11. AUTO ZOOM ALL PROJECT LOCATIONS
+    // ==========================================
+
+    if (markers.length > 0) {
+
+        const group = L.featureGroup(markers);
+
+        map.fitBounds(group.getBounds(), {
+
+            padding: [30, 30],
+
+            maxZoom: 13
+
+        });
+
+    }
+
+
+
+    // ==========================================
+    // 12. MAP SIZE FIX
+    // ==========================================
 
     setTimeout(function () {
+
         map.invalidateSize();
+
     }, 500);
 
+
     map.whenReady(function () {
+
         map.invalidateSize();
+
     });
+
+
+
+    // ==========================================
+    // 13. CONSOLE CHECK
+    // ==========================================
+
+    console.log("Total Database Projects:", projects.length);
+
+    console.log("Projects Displayed on Map:", markers.length);
 
 
 });
-
 </script>
 
 </body>

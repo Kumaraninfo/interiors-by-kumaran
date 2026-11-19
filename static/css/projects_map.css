@@ -1,9 +1,24 @@
 
+/* =========================================
+   PROJECT MAP PAGE
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
 .project-map-content {
+    width: 100%;
+    min-width: 0;
     padding: 18px 15px;
     background: #f8f8f7;
     min-height: calc(100vh - 80px);
+    overflow-x: hidden;
 }
+
+/* =========================================
+   PAGE HEADING
+========================================= */
 
 .map-page-heading h2 {
     font-size: 27px;
@@ -23,82 +38,174 @@
     margin: 0 5px;
 }
 
+/* =========================================
+   SUMMARY CARDS
+========================================= */
+
 .map-stats {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+
+    /* Available width based responsive cards */
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+
     gap: 12px;
     margin-bottom: 24px;
+    width: 100%;
 }
 
 .map-stat-card {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 90px;
+
     padding: 13px;
+
     border: 1px solid #e3e7e4;
     border-radius: 15px;
-    min-height: 90px;
-}
 
-.map-stat-card p {
-    font-size: 12px;
-    font-weight: 650;
-    margin: 0 0 5px;
-    white-space: nowrap;
-}
-
-.map-stat-card h3 {
-    font-size: 27px;
-    font-weight: 800;
-    margin: 0;
-    color: #17251d;
+    overflow: hidden;
 }
 
 .map-stat-icon {
-    width: 52px;
-    height: 52px;
-    flex-shrink: 0;
+    width: 45px;
+    height: 45px;
+
+    flex: 0 0 45px;
+
     border-radius: 50%;
     background: rgba(255,255,255,.75);
+
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 25px;
+
+    font-size: 22px;
 }
 
-.neutral-stat { background: #f5f6f5; }
-.green-stat { background: #eaf8eb; border-color: #d5efd8; }
-.yellow-stat { background: #fff7e9; border-color: #f7e9ce; }
-.blue-stat { background: #edf6ff; border-color: #d8e9fb; }
-.purple-stat { background: #f5efff; border-color: #e8dcfa; }
+/* Text container */
+.map-stat-card > div:not(.map-stat-icon) {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+}
 
-.neutral-stat .map-stat-icon { color: #18784a; }
-.green-stat .map-stat-icon { color: #149246; }
-.yellow-stat .map-stat-icon { color: #a66b10; }
-.blue-stat .map-stat-icon { color: #1976ad; }
-.purple-stat .map-stat-icon { color: #783ac0; }
+.map-stat-card p {
+    width: 100%;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    margin: 0 0 5px;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+
+    line-height: 1.35;
+}
+
+.map-stat-card h3 {
+    font-size: 25px;
+    font-weight: 800;
+
+    margin: 0;
+    color: #17251d;
+
+    line-height: 1.2;
+}
+
+/* Card backgrounds */
+
+.neutral-stat {
+    background: #f5f6f5;
+}
+
+.green-stat {
+    background: #eaf8eb;
+    border-color: #d5efd8;
+}
+
+.yellow-stat {
+    background: #fff7e9;
+    border-color: #f7e9ce;
+}
+
+.blue-stat {
+    background: #edf6ff;
+    border-color: #d8e9fb;
+}
+
+.purple-stat {
+    background: #f5efff;
+    border-color: #e8dcfa;
+}
+
+/* Icon colors */
+
+.neutral-stat .map-stat-icon {
+    color: #18784a;
+}
+
+.green-stat .map-stat-icon {
+    color: #149246;
+}
+
+.yellow-stat .map-stat-icon {
+    color: #a66b10;
+}
+
+.blue-stat .map-stat-icon {
+    color: #1976ad;
+}
+
+.purple-stat .map-stat-icon {
+    color: #783ac0;
+}
+
+/* =========================================
+   MAP WORKSPACE
+========================================= */
 
 .map-workspace {
     display: grid;
-    grid-template-columns: 430px minmax(0, 1fr);
+    grid-template-columns: minmax(300px, 430px) minmax(0, 1fr);
+
     gap: 14px;
+
+    width: 100%;
     height: 680px;
+    min-width: 0;
 }
+
+/* =========================================
+   PROJECT LIST PANEL
+========================================= */
 
 .project-list-panel {
     background: #fff;
+
     border: 1px solid #e0e5e1;
     border-radius: 17px;
+
     overflow: hidden;
+
     display: flex;
     flex-direction: column;
+
+    min-width: 0;
 }
 
 .project-list-heading {
     padding: 17px 15px 12px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
 }
 
 .project-list-heading h4 {
@@ -110,27 +217,40 @@
 .filter-button {
     width: 38px;
     height: 38px;
+
+    flex-shrink: 0;
+
     border-radius: 50%;
     border: 1px solid #e2e6e3;
     background: white;
+
     font-size: 17px;
 }
 
 .project-filters {
     display: flex;
     gap: 7px;
+
     padding: 0 13px 12px;
+
     border-bottom: 1px solid #e8ece9;
+
     overflow-x: auto;
 }
 
 .filter-tab {
+    flex-shrink: 0;
+
     border: 1px solid #e0e5e2;
     background: white;
+
     border-radius: 25px;
+
     padding: 8px 13px;
+
     font-size: 11px;
     font-weight: 650;
+
     white-space: nowrap;
 }
 
@@ -143,18 +263,25 @@
 .project-list {
     overflow-y: auto;
     flex: 1;
+    min-height: 0;
 }
 
 .project-list-item {
     position: relative;
+
     display: flex;
     align-items: flex-start;
     gap: 12px;
+
     padding: 13px;
     margin: 0 12px;
+
     border-bottom: 1px solid #e9edeb;
+
     cursor: pointer;
     transition: .2s;
+
+    min-width: 0;
 }
 
 .project-list-item:hover,
@@ -166,6 +293,9 @@
 .project-list-item img {
     width: 78px;
     height: 78px;
+
+    flex: 0 0 78px;
+
     border-radius: 11px;
     object-fit: cover;
 }
@@ -174,7 +304,9 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    min-width: 105px;
+
+    min-width: 0;
+    flex: 1;
 }
 
 .project-list-info strong {
@@ -183,6 +315,7 @@
 
 .project-list-info span {
     font-size: 12px;
+    overflow-wrap: anywhere;
 }
 
 .project-list-info .location-line,
@@ -196,31 +329,65 @@
 
 .stage-pill {
     border-radius: 25px;
+
     padding: 5px 10px;
+
     font-size: 11px;
     font-weight: 700;
-    white-space: nowrap;
+
+    white-space: normal;
+    text-align: center;
+
+    flex-shrink: 0;
 }
 
-.execution-pill { background: #d9f4df; color: #176e36; }
-.design-pill { background: #fff0c5; color: #98610a; }
-.material-pill { background: #eee0ff; color: #7942a7; }
-.site-pill { background: #ffe1d5; color: #a94e27; }
-.quotation-pill { background: #dceeff; color: #27699e; }
+.execution-pill {
+    background: #d9f4df;
+    color: #176e36;
+}
+
+.design-pill {
+    background: #fff0c5;
+    color: #98610a;
+}
+
+.material-pill {
+    background: #eee0ff;
+    color: #7942a7;
+}
+
+.site-pill {
+    background: #ffe1d5;
+    color: #a94e27;
+}
+
+.quotation-pill {
+    background: #dceeff;
+    color: #27699e;
+}
 
 .item-arrow {
     position: absolute;
     right: 3px;
     top: 40%;
+
     font-size: 19px;
 }
 
+/* =========================================
+   MAP DISPLAY
+========================================= */
+
 .map-display-panel {
     position: relative;
+
     border-radius: 18px;
     border: 1px solid #dfe6df;
+
     overflow: hidden;
+
     min-width: 0;
+    min-height: 0;
 }
 
 #projectMap {
@@ -229,23 +396,32 @@
     z-index: 1;
 }
 
+/* Map type buttons */
+
 .map-type-control {
     position: absolute;
     top: 17px;
     right: 18px;
+
     z-index: 500;
+
     background: white;
     padding: 4px;
+
     border-radius: 25px;
     box-shadow: 0 2px 10px #0002;
+
     display: flex;
 }
 
 .map-type {
     border: none;
     background: white;
+
     padding: 8px 20px;
+
     border-radius: 22px;
+
     font-size: 12px;
     font-weight: 650;
 }
@@ -255,21 +431,33 @@
     color: white;
 }
 
+/* =========================================
+   MAP LEGEND
+========================================= */
+
 .map-legend-bottom {
     position: absolute;
     bottom: 15px;
     left: 50%;
+
     transform: translateX(-50%);
+
     z-index: 500;
+
     background: white;
     border-radius: 12px;
+
     box-shadow: 0 2px 12px #0002;
+
     padding: 12px 15px;
+
     display: flex;
     align-items: center;
     gap: 15px;
+
     width: max-content;
     max-width: 95%;
+
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -283,17 +471,40 @@
 .legend-pin {
     width: 11px;
     height: 11px;
+
     display: inline-block;
+
     border-radius: 50%;
     margin-right: 5px;
 }
 
-.execution-color { background: #159447; }
-.design-color { background: #f2a900; }
-.material-color { background: #963ed1; }
-.quotation-color { background: #168de0; }
-.site-color { background: #e52b2b; }
-.handover-color { background: #777; }
+.execution-color {
+    background: #159447;
+}
+
+.design-color {
+    background: #f2a900;
+}
+
+.material-color {
+    background: #963ed1;
+}
+
+.quotation-color {
+    background: #168de0;
+}
+
+.site-color {
+    background: #e52b2b;
+}
+
+.handover-color {
+    background: #777;
+}
+
+/* =========================================
+   MAP POPUP
+========================================= */
 
 .map-popup h6 {
     font-weight: 750;
@@ -311,17 +522,28 @@
     font-size: 12px;
 }
 
-@media(max-width: 1200px) {
+/* =========================================
+   TABLET / SMALL LAPTOP
+========================================= */
+
+@media (max-width: 1200px) {
+
     .map-stats {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .map-workspace {
-        grid-template-columns: 350px minmax(0, 1fr);
+        grid-template-columns: minmax(280px, 350px) minmax(0, 1fr);
     }
+
 }
 
-@media(max-width: 850px) {
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 850px) {
+
     .map-workspace {
         grid-template-columns: 1fr;
         height: auto;
@@ -336,30 +558,46 @@
     }
 
     .map-stats {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
 }
 
-@media(max-width: 500px) {
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+
+    .project-map-content {
+        padding: 14px 10px;
+    }
+
+    .map-page-heading h2 {
+        font-size: 23px;
+    }
+
     .map-stats {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 7px;
     }
 
     .map-stat-card {
         padding: 9px;
         gap: 7px;
+        min-height: 75px;
     }
 
     .map-stat-icon {
         width: 37px;
         height: 37px;
+        flex-basis: 37px;
         font-size: 18px;
     }
 
     .map-stat-card p {
         font-size: 10px;
-        white-space: normal;
+        line-height: 1.3;
     }
 
     .map-stat-card h3 {
@@ -368,5 +606,44 @@
 
     .map-legend-bottom {
         gap: 7px;
+        padding: 9px;
     }
+
+    .map-legend-bottom span {
+        font-size: 10px;
+    }
+
+    .map-display-panel {
+        height: 450px;
+    }
+
+}
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+
+    .map-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .map-stat-card {
+        min-height: 70px;
+    }
+
+}
+.project-list-item {
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.project-list-item:hover {
+    background: #f1f7f3;
+}
+
+.project-list-item.selected {
+    background: #e5f2e9;
+    border-left: 4px solid #16834a;
 }

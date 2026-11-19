@@ -57,31 +57,31 @@
 
                 <div class="compact-summary">
 
-                    <div style="background-color: #f5effd;" class="mini-stat mini-purple">
+                    <div style="background: #dceaff; color: #2864a5;" class="mini-stat ">
                         <div class="mini-stat-icon">
                             <i class="bi bi-buildings"></i>
                         </div>
-                        <div>
+                        <div style=" color: #2864a5;" >
                             <span>Total Projects</span>
                             <h4>{{ total_projects|default:0 }}</h4>
                         </div>
                     </div>
 
-                    <div style="background-color: #fff8ec;"  class="mini-stat mini-yellow">
+                    <div style="background: #ffe2d0; color: #b85b27;"  class="mini-stat ">
                         <div class="mini-stat-icon">
                             <i class="bi bi-tools"></i>
                         </div>
-                        <div>
+                        <div style=" color: #b85b27;">
                             <span>Ongoing Projects</span>
                             <h4>{{ ongoing_projects|default:0 }}</h4>
                         </div>
                     </div>
 
-                    <div style="background-color: #d5f0d8;" class="mini-stat mini-green">
+                    <div style="background: #d8efdd; color: #16743b;" class="mini-stat">
                         <div class="mini-stat-icon">
                             <i class="bi bi-check-circle"></i>
                         </div>
-                        <div>
+                        <div style="color: #16743b !important;" >
                             <span>Completed Projects</span>
                             <h4>{{ completed_projects|default:0 }}</h4>
                         </div>
@@ -288,20 +288,10 @@
 
                                 <td>
 
-                                    <button type="button"
-                                            class="view-project-btn"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#updateStatusModal"
-                                            data-project-id="{{ project.project_id }}"
-                                            data-project-code="{{ project.project_code }}"
-                                            data-current-status="{{ project.current_status }}"
-                                            data-update-url="{% url 'update_project_status' project.project_id %}">
-
-                                        Update
-
-                                        <i class="bi bi-pencil-square"></i>
-
-                                    </button>
+                                   <a href="{% url 'edit_project' project.project_id %}"
+                                    class="btn btn-sm btn-primary">
+                                        <i class="bi bi-pencil-square"></i> Update
+                                    </a>
 
                                 </td>
 
