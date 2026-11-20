@@ -214,11 +214,12 @@
                         </button>
 
                         <button class="filter-tab" data-filter="others">
-                            Others ({{ total_projects|add:"-1" }})
+                            Others ({{ others_count }})
                         </button>
 
                     </div>
 
+                    
                     <div class="project-list">
 
                         {% for project in projects %}
@@ -227,29 +228,67 @@
                             data-id="{{ project.project_code }}"
                             data-category="{{ project.current_status }}">
 
+                            <!-- Project Thumbnail -->
+                            <div class="project-thumbnail">
+                                <img
+                                    src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=200"
+                                    alt="Interior Project">
+                            </div>
+
+                            <!-- Project Details -->
                             <div class="project-list-info">
 
                                 <strong>{{ project.project_code }}</strong>
 
-                                <span>{{ project.client.client_name }}</span>
+                                <span>
+                                    {{ project.client.client_name|default:"N/A" }}
+                                </span>
 
-                                <span>{{ project.location|default:"Location not added" }}</span>
+                                <span class="location-line">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    {{ project.location|default:"Location not added" }}
+                                </span>
 
                             </div>
 
-                            <span class="stage-pill">
-                                {{ project.get_current_status_display }}
-                            </span>
+                            <!-- Status Badge -->
+                            {% if project.current_status == "execution" %}
+                                <span class="stage-pill execution-pill">Execution</span>
+
+                            {% elif project.current_status == "3d_design" %}
+                                <span class="stage-pill design-pill">3D Design</span>
+
+                            {% elif project.current_status == "material_selection" %}
+                                <span class="stage-pill material-pill">Material Selection</span>
+
+                            {% elif project.current_status == "site_visit" %}
+                                <span class="stage-pill site-pill">Site Visit</span>
+
+                            {% elif project.current_status == "quotation" %}
+                                <span class="stage-pill quotation-pill">Quotation</span>
+
+                            {% elif project.current_status == "payment" %}
+                                <span class="stage-pill payment-pill">Payment</span>
+
+                            {% elif project.current_status == "handover" %}
+                                <span class="stage-pill handover-pill">Handover</span>
+
+                            {% elif project.current_status == "enquiry" %}
+                                <span class="stage-pill enquiry-pill">Enquiry</span>
+                            {% endif %}
+
+                            <i class="bi bi-chevron-right item-arrow"></i>
 
                         </div>
 
                         {% empty %}
 
-                        <p>No projects available</p>
+                            <p class="text-center py-4">No projects available</p>
 
                         {% endfor %}
 
                     </div>
+
                 </div>
 
                 <!-- RIGHT INTERACTIVE MAP -->
@@ -263,12 +302,46 @@
                     </div>
 
                     <div class="map-legend-bottom">
-                        <span><i class="legend-pin execution-color"></i> Execution</span>
-                        <span><i class="legend-pin design-color"></i> 3D Design</span>
-                        <span><i class="legend-pin material-color"></i> Material Selection</span>
-                        <span><i class="legend-pin quotation-color"></i> Quotation</span>
-                        <span><i class="legend-pin site-color"></i> Site Visit</span>
-                        <span><i class="legend-pin handover-color"></i> Handover</span>
+
+                        <span>
+                            <img src="{% static 'images/execution.png' %}" alt="">
+                            Execution
+                        </span>
+
+                        <span>
+                            <img src="{% static 'images/3ddesign.png' %}" alt="">
+                            3D Design
+                        </span>
+
+                        <span>
+                            <img src="{% static 'images/materialselect.png' %}" alt="">
+                            Material Selection
+                        </span>
+
+                        <span>
+                            <img src="{% static 'images/Quotation.png' %}" alt="">
+                            Quotation
+                        </span>
+
+                        <span>
+                            <img src="{% static 'images/upcoming-sitevisit.png' %}" alt="">
+                            Site Visit
+                        </span>
+
+                        <span>
+                            <img src="{% static 'images/execution2.png' %}" alt="">
+                            Payment
+                        </span>
+
+                        <span>
+                            <img src="{% static 'images/handover.png' %}" alt="">
+                            Handover
+                        </span>
+                        <span>
+                            <img src="{% static 'images/Enquiry.png' %}" alt="">
+                            Enquiry
+                        </span>
+
                     </div>
 
                 </div>
@@ -282,461 +355,6 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-<!-- <script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    // ==========================================
-    // 1. INITIALIZE MAP
-    // ==========================================
-
-    const map = L.map("projectMap", {
-        center: [10.7905, 78.7047],
-        zoom: 12,
-        minZoom: 5,
-        maxZoom: 19
-    });
-
-    map.attributionControl.setPrefix(false);
-
-
-    // ==========================================
-    // 2. MAP LAYERS
-    // ==========================================
-
-    const streetLayer = L.tileLayer(
-        "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_584f_1_295d82fa50262963326fc265",
-        {
-            attribution:
-                '',
-            maxZoom: 20
-        }
-    );
-
-    const satelliteLayer = L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        {
-            attribution: "Tiles &copy; Esri",
-            maxZoom: 19
-        }
-    );
-
-    streetLayer.addTo(map);
-
-
-    // ==========================================
-    // 3. CUSTOM PROJECT ICONS
-    // ==========================================
-
-    const projectIcons = {
-
-        "Execution": L.icon({
-            iconUrl: "{% static 'images/execution.png' %}",
-            iconSize: [65, 65],
-            iconAnchor: [32, 60],
-            popupAnchor: [0, -55]
-        }),
-
-        "Quotation": L.icon({
-            iconUrl: "{% static 'images/Quotation.png' %}",
-            iconSize: [65, 65],
-            iconAnchor: [32, 60],
-            popupAnchor: [0, -55]
-        }),
-        "3D Design": L.icon({
-            iconUrl: "{% static 'images/3ddesign.png' %}",
-            iconSize: [65, 65],
-            iconAnchor: [32, 60],
-            popupAnchor: [0, -55]
-        }),
-
-        "Site Visit": L.icon({
-            iconUrl: "{% static 'images/upcoming-sitevisit.png' %}",
-            iconSize: [95, 65],
-            iconAnchor: [32, 60],
-            popupAnchor: [0, -55]
-        }),
-        "Payment": L.icon({
-            iconUrl: "{% static 'images/execution2.png' %}",
-            iconSize: [65, 65],
-            iconAnchor: [32, 60],
-            popupAnchor: [0, -55]
-        }),
-
-        "Material Selection": L.icon({
-            iconUrl: "{% static 'images/materialselect.png' %}",
-            iconSize: [65, 65],
-            iconAnchor: [32, 60],
-            popupAnchor: [0, -55]
-        }),
-        "Handover": L.icon({
-            iconUrl: "{% static 'images/handover.png' %}",
-            iconSize: [65, 65],
-            iconAnchor: [32, 60],
-            popupAnchor: [0, -55]
-        })
-
-        
-
-    };
-
-
-    // ==========================================
-    // 4. DATABASE PROJECT DATA
-    // ==========================================
-
-    const projects = [
-
-        {% for project in projects %}
-
-            {% if project.latitude != None and project.longitude != None %}
-
-            {
-                id: "{{ project.project_code|escapejs }}",
-
-                client: "{{ project.client.client_name|escapejs }}",
-
-                location: "{{ project.location|default:'Location not added'|escapejs }}",
-
-                lat: Number("{{ project.latitude }}"),
-
-                lng: Number("{{ project.longitude }}"),
-
-                status: "{{ project.get_current_status_display|escapejs }}",
-
-                statusCode: "{{ project.current_status|escapejs }}"
-            },
-
-            {% endif %}
-
-        {% endfor %}
-
-    ];
-
-
-    // ==========================================
-    // 5. MARKER GROUP
-    // ==========================================
-
-    const markers = {};
-
-    const markerGroup = L.featureGroup().addTo(map);
-
-
-    // ==========================================
-    // 6. CREATE PROJECT MARKERS
-    // ==========================================
-
-    projects.forEach(function (project) {
-
-        // Validate coordinates
-        if (
-            !Number.isFinite(project.lat) ||
-            !Number.isFinite(project.lng) ||
-            project.lat < -90 ||
-            project.lat > 90 ||
-            project.lng < -180 ||
-            project.lng > 180
-        ) {
-            console.warn("Invalid coordinates:", project.id);
-            return;
-        }
-
-
-        // Select custom icon
-        const selectedIcon =
-            projectIcons[project.status] || new L.Icon.Default();
-
-
-        // IMPORTANT: L.marker for image icons
-        const marker = L.marker(
-            [project.lat, project.lng],
-            {
-                icon: selectedIcon,
-                title: project.id,
-                alt: project.status
-            }
-        );
-
-
-        marker.addTo(markerGroup);
-
-
-        // ==========================================
-        // 7. POPUP CONTENT
-        // ==========================================
-
-        const popup = document.createElement("div");
-
-        popup.className = "map-popup";
-
-
-        const heading = document.createElement("h6");
-
-        heading.textContent = project.id;
-
-
-        const client = document.createElement("strong");
-
-        client.textContent = project.client;
-
-
-        const status = document.createElement("p");
-
-        status.textContent = project.status;
-
-
-        const divider = document.createElement("hr");
-
-
-        const location = document.createElement("div");
-
-        location.innerHTML =
-            '<i class="bi bi-geo-alt-fill"></i> ';
-
-        location.appendChild(
-            document.createTextNode(project.location)
-        );
-
-
-        popup.appendChild(heading);
-        popup.appendChild(client);
-        popup.appendChild(status);
-        popup.appendChild(divider);
-        popup.appendChild(location);
-
-
-        marker.bindPopup(popup);
-
-
-        // Save marker
-        markers[project.id] = marker;
-
-    });
-
-
-    // ==========================================
-    // 8. AUTO ZOOM
-    // ==========================================
-
-    if (markerGroup.getLayers().length > 0) {
-
-        map.fitBounds(markerGroup.getBounds(), {
-            padding: [35, 35],
-            maxZoom: 13
-        });
-
-    }
-
-
-    // ==========================================
-    // 9. PROJECT LIST CLICK
-    // ==========================================
-
-    document.querySelectorAll(".project-list-item").forEach(
-        function (item) {
-
-            item.addEventListener("click", function () {
-
-                const id = this.dataset.id;
-
-                const marker = markers[id];
-
-                if (marker) {
-
-                    map.flyTo(marker.getLatLng(), 15);
-
-                    marker.openPopup();
-
-                }
-
-                document.querySelectorAll(
-                    ".project-list-item"
-                ).forEach(function (row) {
-
-                    row.classList.remove("selected-project");
-
-                });
-
-                this.classList.add("selected-project");
-
-            });
-
-        }
-    );
-
-
-    // ==========================================
-    // 10. PROJECT FILTER
-    // ==========================================
-
-    document.querySelectorAll(".filter-tab").forEach(
-        function (button) {
-
-            button.addEventListener("click", function () {
-
-                document.querySelectorAll(
-                    ".filter-tab"
-                ).forEach(function (btn) {
-
-                    btn.classList.remove("active");
-
-                });
-
-                this.classList.add("active");
-
-                const filter = this.dataset.filter;
-
-
-                markerGroup.clearLayers();
-
-
-                document.querySelectorAll(
-                    ".project-list-item"
-                ).forEach(function (item) {
-
-                    const category = item.dataset.category;
-
-                    let show = false;
-
-                    if (filter === "all") {
-
-                        show = true;
-
-                    } else if (filter === "design") {
-
-                        show = category === "3d_design" ||
-                               category === "design";
-
-                    } else if (filter === "others") {
-
-                        show = category !== "execution" &&
-                               category !== "3d_design" &&
-                               category !== "design";
-
-                    } else {
-
-                        show = category === filter;
-
-                    }
-
-                    item.style.display = show ? "flex" : "none";
-
-                });
-
-
-                // Add matching markers
-                projects.forEach(function (project) {
-
-                    const status = project.statusCode;
-
-                    let show = false;
-
-                    if (filter === "all") {
-
-                        show = true;
-
-                    } else if (filter === "design") {
-
-                        show = status === "3d_design";
-
-                    } else if (filter === "others") {
-
-                        show = status !== "execution" &&
-                               status !== "3d_design";
-
-                    } else {
-
-                        show = status === filter;
-
-                    }
-
-                    if (show && markers[project.id]) {
-
-                        markerGroup.addLayer(markers[project.id]);
-
-                    }
-
-                });
-
-
-                // Zoom filtered markers
-                if (markerGroup.getLayers().length > 0) {
-
-                    map.fitBounds(markerGroup.getBounds(), {
-                        padding: [35, 35],
-                        maxZoom: 13
-                    });
-
-                }
-
-            });
-
-        }
-    );
-
-
-    // ==========================================
-    // 11. MAP / SATELLITE SWITCH
-    // ==========================================
-
-    document.querySelectorAll(".map-type").forEach(
-        function (button) {
-
-            button.addEventListener("click", function () {
-
-                document.querySelectorAll(
-                    ".map-type"
-                ).forEach(function (btn) {
-
-                    btn.classList.remove("active");
-
-                });
-
-                this.classList.add("active");
-
-
-                if (this.dataset.type === "satellite") {
-
-                    map.removeLayer(streetLayer);
-
-                    satelliteLayer.addTo(map);
-
-                } else {
-
-                    map.removeLayer(satelliteLayer);
-
-                    streetLayer.addTo(map);
-
-                }
-
-            });
-
-        }
-    );
-
-
-    // ==========================================
-    // 12. MAP SIZE FIX
-    // ==========================================
-
-    setTimeout(function () {
-
-        map.invalidateSize();
-
-    }, 500);
-
-
-    console.log("Total Projects:", projects.length);
-
-    console.log(
-        "Markers Displayed:",
-        markerGroup.getLayers().length
-    );
-
-});
-</script> -->
 
 
 <script>
@@ -781,8 +399,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const projectIcons = {
 
         "Enquiry": L.icon({
-            iconUrl: "{% static 'images/enquiry.png' %}",
-            iconSize: [42, 42],
+            iconUrl: "{% static 'images/Enquiry.png' %}",
+            iconSize: [72, 52],
             iconAnchor: [21, 42],
             popupAnchor: [0, -40]
         }),
@@ -796,7 +414,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         "Site Visit": L.icon({
             iconUrl: "{% static 'images/upcoming-sitevisit.png' %}",
-            iconSize: [42, 42],
+            iconSize: [72, 52],
             iconAnchor: [21, 42],
             popupAnchor: [0, -40]
         }),

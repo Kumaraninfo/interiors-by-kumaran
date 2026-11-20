@@ -70,6 +70,7 @@ class Employee(models.Model):
         return self.employee_name
 
 
+
 class Project(models.Model):
 
     PROJECT_STATUS = [
@@ -81,11 +82,15 @@ class Project(models.Model):
         ("material_selection", "Material Selection"),
         ("execution", "Execution"),
         ("handover", "Handover"),
-        
     ]
 
     project_id = models.BigAutoField(primary_key=True)
-    project_code = models.CharField(max_length=30, unique=True)
+
+    project_code = models.CharField(
+        max_length=30,
+        unique=True,
+        blank=True
+    )
 
     client = models.ForeignKey(
         Client,
@@ -95,10 +100,29 @@ class Project(models.Model):
 
     location = models.CharField(max_length=150, blank=True)
     google_map_link = models.TextField(blank=True)
-    latitude = models.DecimalField(max_digits=10,decimal_places=7,null=True,blank=True)
-    longitude = models.DecimalField(max_digits=10,decimal_places=7,null=True,blank=True)
+
+    latitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        null=True,
+        blank=True
+    )
+
+    longitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        null=True,
+        blank=True
+    )
+
     project_type = models.CharField(max_length=100, blank=True)
-    area_sqft = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    area_sqft = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
 
     bedroom_count = models.IntegerField(default=0)
     living_room_count = models.IntegerField(default=0)
@@ -121,6 +145,26 @@ class Project(models.Model):
 
     class Meta:
         db_table = "projects"
+
+    def save(self, *args, **kwargs):
+
+        if not self.project_code:
+
+            last_project = Project.objects.filter(
+                project_code__startswith="IBK-"
+            ).order_by("-project_id").first()
+
+            if last_project:
+                last_number = int(
+                    last_project.project_code.split("-")[1]
+                )
+                next_number = last_number + 1
+            else:
+                next_number = 1
+
+            self.project_code = f"IBK-{next_number:04d}"
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.project_code

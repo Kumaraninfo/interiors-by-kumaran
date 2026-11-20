@@ -409,7 +409,8 @@
     <div class="modal-body project-panel-body">
 
 
-        <form method="POST" action="" id="createProjectForm">
+       <form method="POST" action="{% url 'newproject' %}" id="createProjectForm">
+
 
             {% csrf_token %}
 
@@ -982,7 +983,22 @@
         </div>
     </div>
 </div>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
 
+            <i class="bi bi-check-circle-fill me-2"></i>
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    {% endfor %}
+{% endif %}
 
 <!-- =========================================
      JAVASCRIPT

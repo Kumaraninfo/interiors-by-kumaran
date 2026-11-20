@@ -16,4 +16,7 @@ urlpatterns = [
     path("sitepm/dashboard/",views.sitepm_dashboard,name="sitepm_dashboard"),
     path("client/dashboard/",views.client_dashboard,name="client_dashboard"),
     path("client-booking/",views.client_booking,name="client_booking"),
+
+    path("owner/newproject/", views.owner_projects, name="newproject"),
+
 ]

@@ -2,28 +2,44 @@
 {% load static %}
 
 <style>
-/* SIDEBAR BACKGROUND */
+
+/* =====================================
+   SIDEBAR BACKGROUND
+===================================== */
+
 .sidebar {
-    
+    position: fixed !important;
+    top: 0;
+    left: 0;
+
+    width: 255px !important;
+    height: 100vh;
+
     background:
         radial-gradient(circle at top left, #e8e5ff 0%, transparent 45%),
         linear-gradient(180deg, #fbfaff 0%, #f0efff 100%);
 
     border-right: 1px solid #e3e0ff;
 
-    
-    overflow-y: auto;
+    overflow-y: hidden !important;
+    overflow-x: hidden;
+
     font-family: 'Inter', 'Segoe UI', sans-serif;
     box-sizing: border-box;
+
+    flex-shrink: 0;
+    z-index: 1000;
 }
 
 
+/* =====================================
+   BRAND
+===================================== */
 
 .brand-logo {
     width: 105px;
     height: 65px;
     margin: 0 auto 13px;
-
 }
 
 .brand h3 {
@@ -42,7 +58,11 @@
     margin-top: 9px;
 }
 
-/* MENU */
+
+/* =====================================
+   MENU
+===================================== */
+
 .sidebar-menu {
     list-style: none;
     padding: 0;
@@ -80,7 +100,11 @@
     overflow: hidden;
 }
 
-/* ICON */
+
+/* =====================================
+   ICON
+===================================== */
+
 .sidebar-menu li a i {
     width: 22px;
     min-width: 22px;
@@ -94,7 +118,11 @@
         color .3s ease;
 }
 
-/* HOVER - ONLY LIGHT EFFECT */
+
+/* =====================================
+   HOVER
+===================================== */
+
 .sidebar-menu li a:not(.active):hover {
     background: #eae8ff;
     color: #7773df;
@@ -105,7 +133,11 @@
     transform: translateX(3px);
 }
 
-/* ACTIVE MENU */
+
+/* =====================================
+   ACTIVE MENU
+===================================== */
+
 .sidebar-menu li a.active {
     color: #ffffff;
 
@@ -121,7 +153,9 @@
     animation: activeClick .45s ease;
 }
 
+
 /* ACTIVE LEFT LINE */
+
 .sidebar-menu li a.active::before {
     content: "";
 
@@ -136,39 +170,58 @@
     border-radius: 0 5px 5px 0;
 }
 
-/* ACTIVE ICON ANIMATION */
+
+/* ACTIVE ICON */
+
 .sidebar-menu li a.active i {
     color: white;
     animation: iconClick .5s ease;
 }
 
+
+/* =====================================
+   ANIMATIONS
+===================================== */
+
 @keyframes activeClick {
+
     0% {
         transform: scale(.96);
         opacity: .7;
     }
+
     60% {
         transform: scale(1.025);
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
     }
+
 }
 
 @keyframes iconClick {
+
     0% {
         transform: scale(.7) rotate(-15deg);
     }
+
     60% {
         transform: scale(1.2) rotate(8deg);
     }
+
     100% {
         transform: scale(1) rotate(0);
     }
+
 }
 
-/* SCROLLBAR */
+
+/* =====================================
+   SCROLLBAR
+===================================== */
+
 .sidebar::-webkit-scrollbar {
     width: 4px;
 }
@@ -178,12 +231,61 @@
     border-radius: 10px;
 }
 
-/* RESPONSIVE */
-@media(max-width: 768px) {
-    .sidebar {
-        width: 235px;
-    }
+
+/* =====================================
+   PAGE LAYOUT
+===================================== */
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
 }
+
+.app-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+
+.main-area {
+    margin-left: 255px !important;
+
+    width: calc(100% - 255px) !important;
+    min-width: 0;
+
+    height: 100vh;
+
+    overflow-y: auto;
+    overflow-x: auto;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 235px !important;
+    }
+
+    .main-area {
+        margin-left: 235px !important;
+        width: calc(100% - 235px) !important;
+    }
+
+}
+
 </style>
 
 

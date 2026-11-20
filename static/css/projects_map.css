@@ -347,13 +347,18 @@
 }
 
 .design-pill {
-    background: #fff0c5;
-    color: #98610a;
+    background: #EADCFB;
+    color: #7936B2;
+    border: 1px solid #D8B9F5;
 }
 
 .material-pill {
     background: #eee0ff;
     color: #7942a7;
+}
+.enquiry-pill {
+   background: #C2410C;
+    color: #FFFFFF;
 }
 
 .site-pill {
@@ -366,6 +371,11 @@
     color: #27699e;
 }
 
+.handover-pill {
+    background: #FFF0C2;
+    color: #A66B00;
+    border: 1px solid #F2D58A;
+}
 .item-arrow {
     position: absolute;
     right: 3px;
@@ -646,4 +656,51 @@
 .project-list-item.selected {
     background: #e5f2e9;
     border-left: 4px solid #16834a;
+}
+
+
+
+/* MAP LEGEND - RIGHT BOTTOM */
+
+.map-legend-bottom {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    left: auto;
+
+    transform: none;
+
+    z-index: 500;
+
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #e4e9e5;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+
+    padding: 12px 15px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+
+    width: 190px;
+    max-width: 90%;
+}
+
+.map-legend-bottom span {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    font-size: 11px;
+    font-weight: 650;
+    color: #34443a;
+}
+
+.map-legend-bottom img {
+    width: 27px;
+    height: 27px;
+    object-fit: contain;
 }

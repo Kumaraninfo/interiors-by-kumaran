@@ -350,6 +350,31 @@ textarea.form-control {
     }
 }
 
+/* =====================================
+   PROJECT STATUS & TIMELINE
+===================================== */
+
+.status-timeline-section {
+    width: 100%;
+    min-width: 0;
+}
+
+.status-timeline-grid {
+    width: 100%;
+    align-items: end;
+}
+
+.status-timeline-grid > div {
+    min-width: 0;
+}
+
+.status-timeline-grid .form-control,
+.status-timeline-grid .form-select {
+    width: 100%;
+    min-width: 0;
+}
+
+
     </style>
 </head>
 
@@ -640,62 +665,84 @@ textarea.form-control {
                     <hr class="section-divider">
 
 
-                    <!-- 04 STATUS AND DATES -->
-                    <div class="form-section">
+                    
+                    
+                    <!-- 04 PROJECT STATUS & TIMELINE -->
+
+                    <div class="form-section status-timeline-section">
 
                         <div class="section-heading">
                             <i class="bi bi-kanban"></i>
                             Project Status & Timeline
                         </div>
 
-                        <div class="row g-2">
+                        <div class="row g-3 status-timeline-grid">
 
-                            <div class="col-md-4">
+                            <!-- CURRENT PROJECT STAGE -->
+
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Current Project Stage</label>
+
                                 <select name="current_status" class="form-select" required>
+
                                     {% for value, label in status_choices %}
+
                                         <option value="{{ value }}"
                                             {% if project.current_status == value %}selected{% endif %}>
                                             {{ label }}
                                         </option>
+
                                     {% endfor %}
+
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
-                                <label class="form-label">Enquiry Date</label>
-                                <input type="date"
-                                       name="enquiry_date"
-                                       class="form-control"
-                                       value="{{ project.enquiry_date|date:'Y-m-d' }}">
-                            </div>
 
-                            <div class="col-md-4">
+                            <!-- PROJECT START DATE -->
+
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Project Start Date</label>
-                                <input type="date"
-                                       name="project_start_date"
-                                       class="form-control"
-                                       value="{{ project.project_start_date|date:'Y-m-d' }}">
+
+                                <input
+                                    type="date"
+                                    name="project_start_date"
+                                    class="form-control"
+                                    value="{{ project.project_start_date|date:'Y-m-d' }}"
+                                >
                             </div>
 
-                            <div class="col-md-6">
+
+                            <!-- TARGET HANDOVER DATE -->
+
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Target Handover Date</label>
-                                <input type="date"
-                                       name="target_handover_date"
-                                       class="form-control"
-                                       value="{{ project.target_handover_date|date:'Y-m-d' }}">
+
+                                <input
+                                    type="date"
+                                    name="target_handover_date"
+                                    class="form-control"
+                                    value="{{ project.target_handover_date|date:'Y-m-d' }}"
+                                >
                             </div>
 
-                            <div class="col-md-6">
+
+                            <!-- ACTUAL HANDOVER DATE -->
+
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Actual Handover Date</label>
-                                <input type="date"
-                                       name="actual_handover_date"
-                                       class="form-control"
-                                       value="{{ project.actual_handover_date|date:'Y-m-d' }}">
+
+                                <input
+                                    type="date"
+                                    name="actual_handover_date"
+                                    class="form-control"
+                                    value="{{ project.actual_handover_date|date:'Y-m-d' }}"
+                                >
                             </div>
 
                         </div>
+
                     </div>
+
 
                     <hr class="section-divider">
 

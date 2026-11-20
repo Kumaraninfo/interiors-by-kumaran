@@ -543,18 +543,13 @@ def owner_project_map(request):
     ).count()
 
 
-    # ==================================
-    # 6. DASHBOARD SUMMARY
-    # ==================================
-
+   
     completed_projects = handover_count
 
     ongoing_projects = total_projects - completed_projects
 
-
-    # ==================================
-    # 7. DASHBOARD CONTEXT
-    # ==================================
+    others_count = total_projects - execution_count - design_count
+    
 
     context = {
 
@@ -583,6 +578,7 @@ def owner_project_map(request):
         "material_count": material_count,
         "execution_count": execution_count,
         "handover_count": handover_count,
+        "others_count": others_count,
 
         # Recent Projects
         "recent_projects": recent_projects,
@@ -596,17 +592,380 @@ def owner_project_map(request):
 
 
 
+# @login_required(login_url='login')
+# @never_cache
+# def owner_projects(request):
+
+#     profile = request.user.userprofile
+
+#     if not profile.is_owneruser:
+#         return redirect('login')
+
+#     # ==================================
+#     # DATABASE DATA
+#     # ==================================
+
+#     clients = Client.objects.all().order_by("-created_at")
+
+#     employees = Employee.objects.all().order_by("employee_name")
+
+#     projects = (
+#         Project.objects
+#         .select_related("client")
+#         .prefetch_related("details")
+#         .order_by("-created_at")
+#     )
+
+#     project_details = ProjectDetail.objects.all().order_by("-created_at")
+
+#     # ==================================
+#     # DETAIL TYPES
+#     # ==================================
+
+#     detail_key_map = {
+#         "room": "rooms",
+#         "scope": "scope",
+#         "assignment": "assignments",
+#         "status_history": "status_history",
+#         "site_visit": "site_visits",
+#         "quotation": "quotations",
+#         "payment": "payments",
+#         "design": "designs",
+#         "material": "materials",
+#         "execution_task": "execution_tasks",
+#         "document": "documents",
+#         "handover": "handover",
+#         "enquiry": "enquiries",
+#     }
+
+#     # ==================================
+#     # FINAL JSON
+#     # ==================================
+
+#     all_database_json = {}
+
+#     for client in clients:
+
+#         # Unique Client Key
+#         client_key = f"CLI-{client.client_key.hex[:8]}"
+
+#         client_data = {
+#             "client_id": client.client_id,
+#             "name": client.client_name,
+#             "phone": client.phone,
+#             "alternative_phone": client.alternative_phone,
+#             "email": client.email,
+#             "projects": {}
+#         }
+
+#         # Only this client's projects
+#         for project in projects:
+
+#             if project.client_id != client.client_id:
+#                 continue
+
+#             project_data = {
+
+#                 "project_information": {
+#                     "project_type": project.project_type,
+#                     "location": project.location,
+#                     "google_map_link": project.google_map_link,
+#                     "area_sqft": project.area_sqft,
+#                     "bedroom_count": project.bedroom_count,
+#                     "living_room_count": project.living_room_count,
+#                     "kitchen_count": project.kitchen_count,
+#                     "bathroom_count": project.bathroom_count,
+#                     "current_status": project.current_status,
+#                     "enquiry_date": project.enquiry_date,
+#                     "project_start_date": project.project_start_date,
+#                     "target_handover_date": project.target_handover_date,
+#                     "actual_handover_date": project.actual_handover_date,
+#                 },
+
+#                 "rooms": [],
+#                 "scope": [],
+#                 "assignments": [],
+#                 "status_history": [],
+#                 "site_visits": [],
+#                 "quotations": [],
+#                 "payments": [],
+#                 "designs": [],
+#                 "materials": [],
+#                 "execution_tasks": [],
+#                 "documents": [],
+#                 "handover": [],
+#                 "enquiries": [],
+#             }
+
+#             # Get details belonging to this project
+#             for detail in project.details.all():
+
+#                 key = detail_key_map.get(detail.detail_type)
+
+#                 if key:
+#                     project_data[key].append({
+
+#                         "detail_id": detail.detail_id,
+#                         "data": detail.detail_data,
+#                         "created_by_id": detail.created_by_id,
+#                         "created_at": detail.created_at,
+#                         "updated_at": detail.updated_at,
+
+#                     })
+
+#             # Project ID as JSON key
+#             client_data["projects"][project.project_code] = project_data
+
+#         # Random Client Key as parent JSON key
+#         all_database_json[client_key] = client_data
+
+#         # PROJECT STATUS COUNTS
+        
+
+#         total_projects = projects.count()
+
+#         enquiry_count = projects.filter(
+#             current_status="enquiry"
+#         ).count()
+
+#         quotation_count = projects.filter(
+#             current_status="quotation"
+#         ).count()
+
+#         site_visit_count = projects.filter(
+#             current_status="site_visit"
+#         ).count()
+
+#         payment_count = projects.filter(
+#             current_status="payment"
+#         ).count()
+
+#         design_count = projects.filter(
+#             current_status="3d_design"
+#         ).count()
+
+#         material_count = projects.filter(
+#             current_status="material_selection"
+#         ).count()
+
+#         execution_count = projects.filter(
+#             current_status="execution"
+#         ).count()
+
+#         handover_count = projects.filter(
+#             current_status="handover"
+#         ).count()
+        
+
+#         completed_projects = handover_count
+
+#         ongoing_projects = total_projects - completed_projects
+
+#         # ==================================
+#         # DASHBOARD CONTEXT
+#         # ==================================
+
+#         context = {
+
+#             "clients": clients,
+#             "employees": employees,
+#             "projects": projects,
+#             "project_details": project_details,
+
+#             # General Counts
+#             "total_clients": clients.count(),
+#             "total_employees": employees.count(),
+#             "total_projects": total_projects,
+#             "total_details": project_details.count(),
+
+#             # Project Summary
+#             "ongoing_projects": ongoing_projects,
+#             "completed_projects": completed_projects,
+
+#             # Individual Status Counts
+#             "enquiry_count": enquiry_count,
+#             "quotation_count": quotation_count,
+#             "site_visit_count": site_visit_count,
+#             "payment_count": payment_count,
+#             "design_count": design_count,
+#             "material_count": material_count,
+#             "execution_count": execution_count,
+#             "handover_count": handover_count,
+
+#             # JSON Data
+#             "all_database_json": all_database_json,
+
+#         }
+
+#         # print(context)
+
+#         return render(request,"owner/projects.html",context)
+
+
 @login_required(login_url='login')
 @never_cache
 def owner_projects(request):
 
-    profile = request.user.userprofile
+    profile = getattr(request.user, "userprofile", None)
 
-    if not profile.is_owneruser:
+    if not profile or not profile.is_owneruser:
         return redirect('login')
 
     # ==================================
-    # DATABASE DATA
+    # 1. CREATE NEW PROJECT - POST
+    # ==================================
+
+    if request.method == "POST":
+
+        try:
+            with transaction.atomic():
+
+                # CLIENT DETAILS
+                client_name = request.POST.get("client_name", "").strip()
+                phone = request.POST.get("phone", "").strip()
+                alternative_phone = request.POST.get("alternative_phone", "").strip()
+                email = request.POST.get("email", "").strip()
+
+                # PROJECT DETAILS
+                project_type = request.POST.get("project_type", "").strip()
+                property_type = request.POST.get("property_type", "").strip()
+                location = request.POST.get("location", "").strip()
+                google_map_link = request.POST.get("google_map_link", "").strip()
+
+                area = request.POST.get("area_sqft", "").strip()
+                budget = request.POST.get("budget", "").strip()
+                message = request.POST.get("message", "").strip()
+
+                # VALIDATION
+                if not client_name:
+                    raise ValueError("Client name is required.")
+
+                if not phone:
+                    raise ValueError("Phone number is required.")
+
+                if not email:
+                    raise ValueError("Email is required.")
+
+                if not project_type:
+                    raise ValueError("Project type is required.")
+
+                if not property_type:
+                    raise ValueError("Property type is required.")
+
+                if not location:
+                    raise ValueError("Location is required.")
+
+                if not area:
+                    raise ValueError("Area is required.")
+
+                if not budget:
+                    raise ValueError("Budget is required.")
+
+                area_sqft = Decimal(area)
+
+                if area_sqft <= 0:
+                    raise ValueError("Area must be greater than zero.")
+
+                # ROOM COUNTS
+                bedroom_count = int(request.POST.get("bedroom_count") or 0)
+                living_room_count = int(request.POST.get("living_room_count") or 0)
+                kitchen_count = int(request.POST.get("kitchen_count") or 0)
+                bathroom_count = int(request.POST.get("bathroom_count") or 0)
+
+                if min(
+                    bedroom_count,
+                    living_room_count,
+                    kitchen_count,
+                    bathroom_count
+                ) < 0:
+                    raise ValueError("Room counts cannot be negative.")
+
+                # ==================================
+                # 2. CREATE CLIENT
+                # ==================================
+
+                client = Client.objects.create(
+                    client_name=client_name,
+                    phone=phone,
+                    alternative_phone=alternative_phone,
+                    email=email
+                )
+
+                # ==================================
+                # 3. GENERATE PROJECT CODE
+                # ==================================
+
+                last_project = Project.objects.filter(
+                    project_code__startswith="IBK-"
+                ).order_by("-project_id").first()
+
+                if last_project:
+                    last_number = int(last_project.project_code.split("-")[1])
+                    next_number = max(last_number + 1, 9)
+                else:
+                    next_number = 9
+
+                project_code = f"IBK-{next_number:04d}"
+
+                # ==================================
+                # 4. CREATE PROJECT
+                # ==================================
+
+                project = Project.objects.create(
+                    project_code=project_code,
+                    client=client,
+                    location=location,
+                    google_map_link=google_map_link,
+                    project_type=project_type,
+                    area_sqft=area_sqft,
+                    bedroom_count=bedroom_count,
+                    living_room_count=living_room_count,
+                    kitchen_count=kitchen_count,
+                    bathroom_count=bathroom_count,
+                    current_status="enquiry"
+                )
+
+                # ==================================
+                # 5. SAVE ENQUIRY DETAILS
+                # ==================================
+
+                ProjectDetail.objects.create(
+                    project=project,
+                    detail_type="enquiry",
+                    detail_data={
+                        "property_type": property_type,
+                        "budget": budget,
+                        "message": message,
+                        "source": "owner_created"
+                    },
+                    created_by=request.user
+                )
+
+            messages.success(
+                request,
+                f"{project.project_code} created successfully!"
+            )
+
+            return redirect("newproject")
+
+        except (ValueError, InvalidOperation, TypeError) as error:
+
+            messages.error(request, str(error))
+            return redirect("newproject")
+
+        except Exception as error:
+
+            print("PROJECT CREATE ERROR:", repr(error))
+
+            messages.error(
+                request,
+                "Project save failed. Check terminal for the error."
+            )
+
+            return redirect("newproject")
+
+    # ==================================
+    # 6. GET DATABASE DATA
     # ==================================
 
     clients = Client.objects.all().order_by("-created_at")
@@ -623,7 +982,7 @@ def owner_projects(request):
     project_details = ProjectDetail.objects.all().order_by("-created_at")
 
     # ==================================
-    # DETAIL TYPES
+    # 7. DETAIL TYPES
     # ==================================
 
     detail_key_map = {
@@ -643,14 +1002,13 @@ def owner_projects(request):
     }
 
     # ==================================
-    # FINAL JSON
+    # 8. BUILD CLIENT PROJECT JSON
     # ==================================
 
     all_database_json = {}
 
     for client in clients:
 
-        # Unique Client Key
         client_key = f"CLI-{client.client_key.hex[:8]}"
 
         client_data = {
@@ -662,14 +1020,12 @@ def owner_projects(request):
             "projects": {}
         }
 
-        # Only this client's projects
         for project in projects:
 
             if project.client_id != client.client_id:
                 continue
 
             project_data = {
-
                 "project_information": {
                     "project_type": project.project_type,
                     "location": project.location,
@@ -701,109 +1057,72 @@ def owner_projects(request):
                 "enquiries": [],
             }
 
-            # Get details belonging to this project
             for detail in project.details.all():
 
                 key = detail_key_map.get(detail.detail_type)
 
                 if key:
                     project_data[key].append({
-
                         "detail_id": detail.detail_id,
                         "data": detail.detail_data,
                         "created_by_id": detail.created_by_id,
                         "created_at": detail.created_at,
                         "updated_at": detail.updated_at,
-
                     })
 
-            # Project ID as JSON key
             client_data["projects"][project.project_code] = project_data
 
-        # Random Client Key as parent JSON key
         all_database_json[client_key] = client_data
 
-        # PROJECT STATUS COUNTS
-        
+    # ==================================
+    # 9. PROJECT STATUS COUNTS
+    # ==================================
 
-        total_projects = projects.count()
+    total_projects = projects.count()
 
-        enquiry_count = projects.filter(
-            current_status="enquiry"
-        ).count()
+    enquiry_count = projects.filter(current_status="enquiry").count()
+    quotation_count = projects.filter(current_status="quotation").count()
+    site_visit_count = projects.filter(current_status="site_visit").count()
+    payment_count = projects.filter(current_status="payment").count()
+    design_count = projects.filter(current_status="3d_design").count()
+    material_count = projects.filter(current_status="material_selection").count()
+    execution_count = projects.filter(current_status="execution").count()
+    handover_count = projects.filter(current_status="handover").count()
 
-        quotation_count = projects.filter(
-            current_status="quotation"
-        ).count()
+    completed_projects = handover_count
+    ongoing_projects = total_projects - completed_projects
 
-        site_visit_count = projects.filter(
-            current_status="site_visit"
-        ).count()
+    # ==================================
+    # 10. PAGE CONTEXT
+    # ==================================
 
-        payment_count = projects.filter(
-            current_status="payment"
-        ).count()
+    context = {
+        "clients": clients,
+        "employees": employees,
+        "projects": projects,
+        "project_details": project_details,
 
-        design_count = projects.filter(
-            current_status="3d_design"
-        ).count()
+        "total_clients": clients.count(),
+        "total_employees": employees.count(),
+        "total_projects": total_projects,
+        "total_details": project_details.count(),
 
-        material_count = projects.filter(
-            current_status="material_selection"
-        ).count()
+        "ongoing_projects": ongoing_projects,
+        "completed_projects": completed_projects,
 
-        execution_count = projects.filter(
-            current_status="execution"
-        ).count()
+        "enquiry_count": enquiry_count,
+        "quotation_count": quotation_count,
+        "site_visit_count": site_visit_count,
+        "payment_count": payment_count,
+        "design_count": design_count,
+        "material_count": material_count,
+        "execution_count": execution_count,
+        "handover_count": handover_count,
 
-        handover_count = projects.filter(
-            current_status="handover"
-        ).count()
-        
+        "all_database_json": all_database_json,
+    }
 
-        completed_projects = handover_count
-
-        ongoing_projects = total_projects - completed_projects
-
-        # ==================================
-        # DASHBOARD CONTEXT
-        # ==================================
-
-        context = {
-
-            "clients": clients,
-            "employees": employees,
-            "projects": projects,
-            "project_details": project_details,
-
-            # General Counts
-            "total_clients": clients.count(),
-            "total_employees": employees.count(),
-            "total_projects": total_projects,
-            "total_details": project_details.count(),
-
-            # Project Summary
-            "ongoing_projects": ongoing_projects,
-            "completed_projects": completed_projects,
-
-            # Individual Status Counts
-            "enquiry_count": enquiry_count,
-            "quotation_count": quotation_count,
-            "site_visit_count": site_visit_count,
-            "payment_count": payment_count,
-            "design_count": design_count,
-            "material_count": material_count,
-            "execution_count": execution_count,
-            "handover_count": handover_count,
-
-            # JSON Data
-            "all_database_json": all_database_json,
-
-        }
-
-        # print(context)
-
-        return render(request,"owner/projects.html",context)
+    return render(request, "owner/projects.html", context)
 
 
 @login_required(login_url='login')
@@ -1105,10 +1424,17 @@ def client_booking(request):
             )
 
         # Unique project code generate pannuvom
-        project_code = (
-            f"IBK-{timezone.localdate():%y%m%d}-"
-            f"{uuid4().hex[:6].upper()}"
-        )
+        last_project = Project.objects.filter(
+            project_code__startswith="IBK-"
+        ).order_by("-project_id").first()
+
+        if last_project:
+            last_number = int(last_project.project_code.split("-")[1])
+            next_number = max(last_number + 1, 9)
+        else:
+            next_number = 9
+
+        project_code = f"IBK-{next_number:04d}"
 
         project = Project.objects.create(
             project_code=project_code,
