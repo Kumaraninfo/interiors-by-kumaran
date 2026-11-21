@@ -352,7 +352,7 @@
     border: 1px solid #D8B9F5;
 }
 
-.material-pill {
+.material-pill,.material_selection-pill {
     background: #eee0ff;
     color: #7942a7;
 }
@@ -361,7 +361,7 @@
     color: #FFFFFF;
 }
 
-.site-pill {
+.site-pill , .site_visit-pill{
     background: #ffe1d5;
     color: #a94e27;
 }
@@ -703,4 +703,95 @@
     width: 27px;
     height: 27px;
     object-fit: contain;
+}
+.ibk-map-popup {
+    width: 175px;
+    padding: 2px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Project Code */
+.popup-header {
+    margin-bottom: 9px;
+}
+
+.popup-header h3 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+    margin: 0;
+}
+
+/* Client */
+.popup-client {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.client-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #E0E7FF;
+    color: #3730A3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.client-info h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Status */
+.popup-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #C2410C;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #FFFFFF;
+}
+
+/* Divider */
+.popup-divider {
+    height: 1px;
+    background: #E2E8F0;
+    margin: 10px 0;
+}
+
+/* Location & Phone */
+.popup-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: #475569;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.popup-detail i {
+    font-size: 13px;
+    color: #64748B;
+    flex-shrink: 0;
 }

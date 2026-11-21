@@ -1,0 +1,296 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IBK | Project Update</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}">
+  
+    <link rel="stylesheet" href="{% static 'css/projects_update.css' %}">
+    
+</head>
+
+<body>
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    {% include 'includes/sidebar_owner.html' %}
+
+    <main class="main-area">
+
+        <!-- HEADER -->
+        {% include 'includes/header.html' %}
+
+        <!-- ONLY THIS CONTENT AREA SCROLLS -->
+        <section class="page-content project-page">
+
+        <!-- BREADCRUMB -->
+
+       <div class="project-breadcrumb">
+        <a href="{% url 'owner_projects' %}">
+            <i class="bi bi-arrow-left"></i>
+            Back to Projects
+        </a>
+    </div>
+
+
+        <!-- PROJECT BANNER -->
+
+        <section class="project-banner">
+
+          
+            <img
+                src="{% static 'images/banner.png' %}"
+                class="project-banner-image"
+                alt="Interior project living room"
+            >
+
+            <div class="project-banner-info">
+
+                <div class="project-banner-top">
+
+                    <span class="project-code-badge">
+                        {{ project.project_code }}
+                    </span>
+
+                    <span class="project-stage-badge">
+                        {{ project.get_current_status_display }}
+                    </span>
+
+                </div>
+
+                <h2>
+                    {{ project.client.client_name }}
+                </h2>
+
+                <div class="project-banner-meta">
+
+                    <span>
+                        <i class="bi bi-geo-alt"></i>
+                        {{ project.location|default:"Location not added" }}
+                    </span>
+
+                    <span>
+                        <i class="bi bi-house"></i>
+                        {{ project.project_type|default:"Interior Project" }}
+                    </span>
+
+                    <span>
+                        <i class="bi bi-arrows-angle-expand"></i>
+                        {{ project.area_sqft|default:"-" }} Sq.ft
+                    </span>
+
+                    <span>
+                        <i class="bi bi-door-closed"></i>
+                        {{ project.bedroom_count|default:0 }} BHK
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="banner-schedule project-progress">
+
+                <div class="progress-heading">
+                    <h6>Project Progress</h6>
+
+                    <strong class="progress-percentage">72%</strong>
+                </div>
+
+                <div class="progress mb-3">
+                    <div class="progress-bar"
+                        role="progressbar"
+                        style="width: 72%;"
+                        aria-valuenow="72"
+                        aria-valuemin="0"
+                        aria-valuemax="100">
+                    </div>
+                </div>
+
+                <div class="schedule-grid">
+
+                    <div class="schedule-item">
+                        <small>Start Date</small>
+                        <strong>
+                            {{ project.project_start_date|date:"d M Y"|default:"Not set" }}
+                        </strong>
+                    </div>
+
+                    <div class="schedule-item">
+                        <small>Target Handover</small>
+                        <strong>
+                            {{ project.target_handover_date|date:"d M Y"|default:"Not set" }}
+                        </strong>
+                    </div>
+
+                    <div class="schedule-item">
+                        <small>Remaining</small>
+                        <strong class="remaining-days">175 Days</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECT STAGE TIMELINE -->
+
+        <section class="project-timeline">
+
+            <div class="timeline-list">
+
+                {% for value, label in status_choices %}
+
+                <div class="timeline-stage {% if project.current_status == value %}current{% endif %}">
+
+                    <div class="timeline-dot">
+                        {% if project.current_status == value %}
+                            <i class="bi bi-tools"></i>
+                        {% else %}
+                            <i class="bi bi-circle"></i>
+                        {% endif %}
+                    </div>
+
+                    <span>{{ label }}</span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECT NAVIGATION TABS -->
+
+        <ul class="nav nav-pills project-tabs" id="projectTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="pill"
+                        data-bs-target="#overview" type="button" role="tab"
+                        aria-controls="overview" aria-selected="true">
+                    <i class="bi bi-grid me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quotation-tab" data-bs-toggle="pill"
+                        data-bs-target="#quotation" type="button" role="tab"
+                        aria-controls="quotation" aria-selected="false">
+                    <i class="bi bi-file-earmark-text me-2"></i>Quotation
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="payment-tab" data-bs-toggle="pill"
+                        data-bs-target="#payment" type="button" role="tab"
+                        aria-controls="payment" aria-selected="false">
+                    <i class="bi bi-wallet2 me-2"></i>Payment
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="site-visit-tab" data-bs-toggle="pill"
+                        data-bs-target="#site-visit" type="button" role="tab"
+                        aria-controls="site-visit" aria-selected="false">
+                    <i class="bi bi-geo-alt me-2"></i>Site Visit
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="design-tab" data-bs-toggle="pill"
+                        data-bs-target="#design" type="button" role="tab"
+                        aria-controls="design" aria-selected="false">
+                    <i class="bi bi-display me-2"></i>3D Design
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="materials-tab" data-bs-toggle="pill"
+                        data-bs-target="#materials" type="button" role="tab"
+                        aria-controls="materials" aria-selected="false">
+                    <i class="bi bi-layers me-2"></i>Material Selection
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="execution-tab" data-bs-toggle="pill"
+                        data-bs-target="#execution" type="button" role="tab"
+                        aria-controls="execution" aria-selected="false">
+                    <i class="bi bi-tools me-2"></i>Execution
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="handover-tab" data-bs-toggle="pill"
+                        data-bs-target="#handover" type="button" role="tab"
+                        aria-controls="handover" aria-selected="false">
+                    <i class="bi bi-check-circle me-2"></i>Handover
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="documents-tab" data-bs-toggle="pill"
+                        data-bs-target="#documents" type="button" role="tab"
+                        aria-controls="documents" aria-selected="false">
+                    <i class="bi bi-folder me-2"></i>Documents
+                </button>
+            </li>
+        </ul>
+
+
+        <div class="tab-content" id="projectTabContent">
+
+        <section id="overview" class="tab-pane fade show active" role="tabpanel" aria-labelledby="overview-tab">
+            {% include 'includes/project_tabs/overview.html' %}
+        </section>
+
+        <section id="quotation" class="tab-pane fade" role="tabpanel" aria-labelledby="quotation-tab">
+            {% include 'includes/project_tabs/quotation.html' %}
+        </section>
+
+        <section id="payment" class="tab-pane fade" role="tabpanel" aria-labelledby="payment-tab">
+            {% include 'includes/project_tabs/payment.html' %}
+        </section>
+
+        <section id="site-visit" class="tab-pane fade" role="tabpanel" aria-labelledby="site-visit-tab">
+            {% include 'includes/project_tabs/site_visit.html' %}
+        </section>
+
+        <section id="design" class="tab-pane fade" role="tabpanel" aria-labelledby="design-tab">
+            {% include 'includes/project_tabs/design.html' %}
+        </section>
+
+        <section id="materials" class="tab-pane fade" role="tabpanel" aria-labelledby="materials-tab">
+            {% include 'includes/project_tabs/materials.html' %}
+        </section>
+
+        <section id="execution" class="tab-pane fade" role="tabpanel" aria-labelledby="execution-tab">
+            {% include 'includes/project_tabs/execution.html' %}
+        </section>
+
+        <section id="handover" class="tab-pane fade" role="tabpanel" aria-labelledby="handover-tab">
+            {% include 'includes/project_tabs/handover.html' %}
+        </section>
+
+        <section id="documents" class="tab-pane fade" role="tabpanel" aria-labelledby="documents-tab">
+            {% include 'includes/project_tabs/documents.html' %}
+        </section>
+
+        </div><!-- /.tab-content -->
+
+        </section><!-- /.page-content -->
+
+    </main>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+
+

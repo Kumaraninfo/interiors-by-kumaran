@@ -1,6 +1,6 @@
 
 {% load static %}
-
+<!-- 
 <style>
 
 /* =====================================
@@ -286,9 +286,302 @@ body {
 
 }
 
+</style> -->
+
+
+<style>
+
+/* =====================================
+   SIDEBAR BACKGROUND
+===================================== */
+
+.sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+
+    width: 255px !important;
+    height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #111a25 0%,
+        #172331 55%,
+        #101923 100%
+    );
+
+    border-right: 1px solid #293442;
+
+    overflow-y: auto !important;
+    overflow-x: hidden;
+
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+
+    flex-shrink: 0;
+    z-index: 1000;
+}
+
+
+/* =====================================
+   BRAND
+===================================== */
+
+.brand-logo {
+    width: 105px;
+    height: 65px;
+    margin: 0 auto 13px;
+}
+
+.brand h3 {
+    font-size: 19px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.brand p {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    color: #aab3c0;
+    margin-top: 9px;
+}
+
+
+/* =====================================
+   MENU
+===================================== */
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 6px;
+}
+
+.sidebar-menu li a {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 13px 14px;
+    min-height: 44px;
+
+    border-radius: 13px;
+
+    text-decoration: none;
+    color: #e0e5ec;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
+
+    overflow: hidden;
+}
+
+
+/* =====================================
+   ICON
+===================================== */
+
+.sidebar-menu li a i {
+    width: 20px;
+    min-width: 20px;
+
+    font-size: 17px;
+    text-align: center;
+
+    color: #aeb9c7;
+
+    transition:
+        transform .3s ease,
+        color .3s ease;
+}
+
+
+/* =====================================
+   HOVER
+===================================== */
+
+.sidebar-menu li a:not(.active):hover {
+    background: rgba(198, 154, 77, 0.13);
+    color: #e6bd77;
+
+    transform: translateX(3px);
+}
+
+.sidebar-menu li a:not(.active):hover i {
+    color: #d9ad64;
+    transform: translateX(3px);
+}
+
+
+/* =====================================
+   ACTIVE MENU
+===================================== */
+
+.sidebar-menu li a.active {
+    color: #ffffff;
+
+    background: linear-gradient(
+        110deg,
+        #cda45f 0%,
+        #b98b43 55%,
+        #a77a35 100%
+    );
+
+    box-shadow: 0 6px 18px rgba(190, 145, 68, .25);
+
+    animation: activeClick .45s ease;
+}
+
+
+/* ACTIVE LEFT LINE */
+
+.sidebar-menu li a.active::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 20%;
+
+    width: 4px;
+    height: 60%;
+
+    background: #fff4dc;
+    border-radius: 0 5px 5px 0;
+}
+
+
+/* ACTIVE ICON */
+
+.sidebar-menu li a.active i {
+    color: #ffffff;
+    animation: iconClick .5s ease;
+}
+
+
+/* =====================================
+   ANIMATIONS
+===================================== */
+
+@keyframes activeClick {
+    0% {
+        transform: scale(.96);
+        opacity: .7;
+    }
+
+    60% {
+        transform: scale(1.025);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes iconClick {
+    0% {
+        transform: scale(.7) rotate(-15deg);
+    }
+
+    60% {
+        transform: scale(1.2) rotate(8deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0);
+    }
+}
+
+
+/* =====================================
+   SCROLLBAR
+===================================== */
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #455365;
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* =====================================
+   PAGE LAYOUT
+===================================== */
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.app-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+
+.main-area {
+    margin-left: 255px !important;
+
+    width: calc(100% - 255px) !important;
+    min-width: 0;
+
+    height: 100vh;
+
+    overflow-y: auto;
+    overflow-x: auto;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 235px !important;
+    }
+
+    .main-area {
+        margin-left: 235px !important;
+        width: calc(100% - 235px) !important;
+    }
+
+}
+
+
 </style>
-
-
 <aside class="sidebar " style="box-shadow: 8px 0 20px rgba(0, 0, 0, 0.30);">
 
     <!-- BRAND -->
@@ -329,7 +622,7 @@ body {
 
         <li>
             <a href="{% url 'owner_projects' %}"
-            class="{% if request.resolver_match.url_name == 'owner_projects' or request.resolver_match.url_name == 'edit_project' %}active{% endif %}">
+            class="{% if request.resolver_match.url_name == 'owner_projects' or request.resolver_match.url_name == 'edit_project' or request.resolver_match.url_name == 'project_update' %}active{% endif %}">
 
                 <i class="bi bi-folder"></i>
                 <span>Projects</span>

@@ -1,372 +1,9 @@
 
 {% load static %}
-
-<style>
-/* =====================================
-   IBK PREMIUM LAVENDER TOP NAVBAR
-===================================== */
-
-.top-navbar {
-    width: 100%;
-    min-height: 95px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 17px 30px;
-
-    background: linear-gradient(
-        110deg,
-        #ffffff 0%,
-        #fbfaff 55%,
-        #f3f1ff 100%
-    );
-
-    border-bottom: 1px solid #e8e5ff;
-    box-shadow: 0 5px 22px rgba(110,100,180,.07);
-
-    position: relative;
-    z-index: 900;
-
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    box-sizing: border-box;
-}
-
-/* PAGE TITLE */
-
-.header-title h2 {
-    color: #373550;
-    font-size: 27px;
-    font-weight: 800;
-    letter-spacing: -.5px;
-    margin: 0 0 6px;
-}
-
-.header-title p {
-    color: #9996b5;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .3px;
-    margin: 0;
-}
-
-/* RIGHT SIDE */
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-/* SEARCH */
-
-.header-search {
-    width: 300px;
-    height: 48px;
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 0 16px;
-
-    border-radius: 14px;
-
-    background: #f5f4ff;
-    border: 1px solid #e7e4ff;
-
-    transition: all .3s ease;
-}
-
-.header-search i {
-    color: #9692c4;
-    font-size: 19px;
-}
-
-.header-search input {
-    width: 100%;
-    border: none;
-    outline: none;
-
-    background: transparent;
-
-    color: #484663;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.header-search input::placeholder {
-    color: #aaa7c2;
-    font-size: 13px;
-}
-
-.header-search:focus-within {
-    background: #ffffff;
-    border-color: #9695f4;
-
-    box-shadow: 0 0 0 4px rgba(150,149,244,.12);
-
-    transform: translateY(-2px);
-}
-
-/* NOTIFICATION */
-
-.notification-btn {
-    width: 46px;
-    height: 46px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-
-    border: 1px solid #e8e5ff;
-    border-radius: 14px;
-
-    background: #f5f4ff;
-
-    color: #7774c9;
-    font-size: 21px;
-
-    cursor: pointer;
-
-    transition: all .3s ease;
-}
-
-.notification-btn:hover {
-    background: #eae8ff;
-    color: #7773df;
-
-    transform: translateY(-3px);
-    box-shadow: 0 5px 13px rgba(119,115,223,.15);
-}
-
-.notification-dot {
-    width: 9px;
-    height: 9px;
-
-    position: absolute;
-    top: 8px;
-    right: 9px;
-
-    border-radius: 50%;
-
-    background: #f16b91;
-    border: 2px solid white;
-
-    animation: notificationPulse 2s infinite;
-}
-
-@keyframes notificationPulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(241,107,145,.3);
-    }
-    50% {
-        box-shadow: 0 0 0 5px rgba(241,107,145,0);
-    }
-}
-
-/* PROFILE */
-
-.profile-dropdown {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 7px 11px 7px 8px;
-
-    border: 1px solid #e8e5ff;
-    border-radius: 15px;
-
-    background: #ffffff;
-
-    /* transition: all .3s ease; */
-}
-
-.profile-dropdown:hover {
-    border-color: #c9c5ff;
-    box-shadow: 0 5px 15px rgba(119,115,223,.10);
-}
-
-/* PROFILE IMAGE */
-
-.profile-image,
-.default-profile {
-    width: 46px;
-    height: 46px;
-
-    flex-shrink: 0;
-
-    border-radius: 14px;
-    object-fit: cover;
-
-    border: 2px solid #e6e3ff;
-}
-
-.default-profile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: linear-gradient(135deg,#aaa5ff,#7773df);
-
-    color: white;
-    font-size: 22px;
-}
-
-/* PROFILE INFO */
-
-.profile-info {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    min-width: 105px;
-}
-
-.profile-info strong {
-    color: #373550;
-    font-size: 14px;
-    font-weight: 800;
-}
-
-.profile-info span {
-    color: #9692bd;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* PROFILE TOGGLE */
-
-.profile-toggle {
-    width: 32px;
-    height: 32px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: none;
-    border-radius: 10px;
-
-    background: #f0efff;
-    color: #7773df;
-
-    font-size: 14px;
-    cursor: pointer;
-
-    transition: all .3s ease;
-}
-
-.profile-toggle:hover {
-    background: #7773df;
-    color: #ffffff;
-    transform: rotate(180deg);
-}
-
-/* DROPDOWN */
-
-.profile-dropdown .dropdown-menu {
-    margin-top: 12px !important;
-    min-width: 205px;
-
-    padding: 9px;
-
-    border: 1px solid #e9e6ff;
-    border-radius: 14px;
-
-    background: #ffffff;
-
-    box-shadow: 0 12px 30px rgba(70,60,140,.13);
-
-    animation: dropdownShow .25s ease;
-}
-
-/* @keyframes dropdownShow {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-} */
-
-.profile-dropdown .dropdown-item {
-    padding: 12px;
-
-    border-radius: 9px;
-
-    color: #55536f;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    transition: all .2s ease;
-}
-
-.profile-dropdown .dropdown-item:hover {
-    background: #eeedff;
-    color: #7773df;
-    transform: translateX(3px);
-}
-
-.profile-dropdown .dropdown-divider {
-    border-color: #eeedff;
-}
-
-/* RESPONSIVE */
-
-@media(max-width: 992px) {
-    .top-navbar {
-        padding: 15px 18px;
-    }
-
-    .header-search {
-        width: 220px;
-    }
-}
-
-@media(max-width: 768px) {
-    .top-navbar {
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .header-right {
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .header-search {
-        flex: 1;
-        min-width: 150px;
-    }
-}
-
-@media(max-width: 480px) {
-    .profile-info {
-        display: none;
-    }
-
-    .header-title h2 {
-        font-size: 23px;
-    }
-
-    .header-title p {
-        font-size: 11px;
-    }
-}
-</style>
-
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 
 <nav class="top-navbar">
 
-    <!-- PAGE TITLE -->
     <div class="header-title">
 
         <h2>
@@ -377,34 +14,13 @@
 
     </div>
 
-
-    <!-- RIGHT SIDE -->
     <div class="header-right">
 
-        <!-- SEARCH -->
-        <div class="header-search">
-
-            <i class="bi bi-search"></i>
-
-            <input
-                type="text"
-                placeholder="Search project, client or team..."
-            >
-
-        </div>
-
-
-        <!-- NOTIFICATION -->
         <button class="notification-btn" type="button">
-
             <i class="bi bi-bell"></i>
-
             <span class="notification-dot"></span>
-
         </button>
 
-
-        <!-- PROFILE -->
         <div class="profile-dropdown">
 
             {% if request.user.userprofile.profile_image %}
@@ -423,8 +39,6 @@
 
             {% endif %}
 
-
-            <!-- PROFILE INFO -->
             <div class="profile-info">
 
                 <strong>
@@ -432,27 +46,19 @@
                 </strong>
 
                 <span>
-
                     {% if request.user.userprofile.is_owneruser %}
                         Owner
-
                     {% elif request.user.userprofile.is_manageruser %}
                         Manager
-
                     {% elif request.user.userprofile.is_sitemanageruser %}
                         Site Project Manager
-
                     {% elif request.user.userprofile.is_clientuser %}
                         Client
-
                     {% endif %}
-
                 </span>
 
             </div>
 
-
-            <!-- PROFILE DROPDOWN -->
             <div class="dropdown">
 
                 <button
@@ -461,11 +67,8 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                 >
-
                     <i class="bi bi-chevron-down"></i>
-
                 </button>
-
 
                 <ul class="dropdown-menu dropdown-menu-end">
 
@@ -476,30 +79,20 @@
                         </a>
                     </li>
 
+                    <li><hr class="dropdown-divider"></li>
 
                     <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-
-                    <li>
-
                         <form method="POST" action="{% url 'logout' %}">
-
                             {% csrf_token %}
 
                             <button
                                 type="submit"
                                 class="dropdown-item text-danger"
                             >
-
                                 <i class="bi bi-box-arrow-right me-2"></i>
                                 Logout
-
                             </button>
-
                         </form>
-
                     </li>
 
                 </ul>

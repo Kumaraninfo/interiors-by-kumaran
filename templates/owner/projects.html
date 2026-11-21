@@ -188,7 +188,7 @@
 
                                 <th>Project Stage</th>
 
-                                <th>Action</th>
+                                <th class="text-center">Action</th>
 
                             </tr>
 
@@ -286,13 +286,29 @@
 
                                 <!-- ACTION -->
 
+                                
+
+                            <!-- ACTION -->
+
                                 <td>
+                                    <div class="d-flex justify-content-center align-items-center project-action-buttons ">
 
-                                   <a href="{% url 'edit_project' project.project_id %}"
-                                    class="btn btn-sm btn-primary">
-                                        <i class="bi bi-pencil-square"></i> Update
-                                    </a>
+                                        <!-- EDIT PROJECT -->
+                                        <a href="{% url 'edit_project' project.project_id %}"
+                                        class="project-action-btn edit-action"
+                                        title="Edit Project">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
 
+                                        <!-- VIEW PROJECT DETAILS -->
+                                       
+                                        <a href="{% url 'project_update' project.project_id %}"
+                                        class="project-action-btn details-action"
+                                        title="Project Update">
+                                            <i class="bi bi-arrow-up-right-square"></i>
+                                        </a>
+
+                                    </div>
                                 </td>
 
                             </tr>

@@ -1394,7 +1394,7 @@
 
     background: #f3f1ff;
 
-    color: #817ba5;
+    
 
     font-size: 10px;
 
@@ -1623,6 +1623,8 @@
     background: #f0edff;
 
     color: #786fd4;
+    border: none;
+    
 
 }
 
@@ -1633,6 +1635,8 @@
     background: #fff4df;
 
     color: #c48b35;
+    border: none;
+    
 
 }
 
@@ -1643,6 +1647,8 @@
     background: #eaf4ff;
 
     color: #4c8ac4;
+    border: none;
+    
 
 }
 
@@ -1653,6 +1659,8 @@
     background: #e5f7ef;
 
     color: #329b75;
+    border: none;
+    
 
 }
 
@@ -1663,6 +1671,8 @@
     background: #f3eaff;
 
     color: #9864c4;
+    border: none;
+    
 
 }
 
@@ -1673,6 +1683,8 @@
     background: #fff0e7;
 
     color: #d18a56;
+    border: none;
+    
 
 }
 
@@ -1683,6 +1695,8 @@
     background: #e9efff;
 
     color: #567ac1;
+    border: none;
+    
 
 }
 
@@ -1693,6 +1707,8 @@
     background: #e5f8ec;
 
     color: #329b63;
+    border: none;
+    
 
 }
 
@@ -2898,4 +2914,59 @@
         animation-duration: .01ms !important;
         transition-duration: .01ms !important;
     }
+}
+
+
+
+/* PROJECT ACTION BUTTONS */
+
+.project-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.project-action-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+    text-decoration: none;
+
+    font-size: 15px;
+    border: 1px solid transparent;
+
+    transition: all .25s ease;
+}
+
+/* EDIT BUTTON */
+
+.edit-action {
+    background: #fff5e6;
+    color: #b78335;
+    border-color: #f1dfc1;
+}
+
+.edit-action:hover {
+    background: #b78335;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* PROJECT DETAILS BUTTON */
+
+.details-action {
+    background: #eaf0f7;
+    color: #263e56;
+    border-color: #d7e1eb;
+}
+
+.details-action:hover {
+    background: #263e56;
+    color: #ffffff;
+    transform: translateY(-2px);
 }

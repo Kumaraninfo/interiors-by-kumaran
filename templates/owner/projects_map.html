@@ -42,12 +42,7 @@
         <section class="project-map-content">
 
             <!-- PAGE TITLE -->
-            <div class="map-page-heading">
-                <div>
-                    <h2>Project Map</h2>
-                    <p>Owner Dashboard <i class="bi bi-chevron-right"></i> Project Map</p>
-                </div>
-            </div>
+           
 
             <!-- SUMMARY CARDS -->
             <div class="map-stats">
@@ -460,7 +455,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     // 4. DATABASE PROJECT DATA
     // ==========================================
-
+   
     const projects = [
 
         {% for project in projects %}
@@ -471,6 +466,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 id: "{{ project.project_code|escapejs }}",
 
                 client: "{{ project.client.client_name|default:'N/A'|escapejs }}",
+                phone: "{{ project.client.phone|default:'N/A'|escapejs }}",
 
                 location: "{{ project.location|default:'Location not added'|escapejs }}",
 
@@ -479,18 +475,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 lng: Number("{{ project.longitude }}"),
 
                 status: "{{ project.get_current_status_display|escapejs }}",
+                
 
                 statusCode: "{{ project.current_status|escapejs }}"
-
+                
             },
 
             {% endif %}
-
+            
         {% endfor %}
 
     ];
-
-
+    
     // ==========================================
     // 5. MARKER STORAGE
     // ==========================================
@@ -527,31 +523,58 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Project Popup
 
+        
         marker.bindPopup(`
-            <div class="project-map-popup">
+        <div class="ibk-map-popup text-center p-2" style="width:175px;">
 
-                <h6>${project.id}</h6>
+            <!-- Project Code -->
+            <div class="mb-2">
+                <span class="badge rounded-2 px-3 py-2"
+                    style="background:#172554; color:#FFFFFF; font-size:11px;">
+                    ${project.id || "-"}
+                </span>
+            </div>
 
-                <p>
-                    <strong>Client:</strong>
-                    ${project.client}
-                </p>
+            <!-- Client -->
+            <div class="d-flex flex-column align-items-center mb-2">
 
-                <p>
-                    <strong>Status:</strong>
-                    ${project.status}
-                </p>
+                <div class="rounded-circle d-flex align-items-center justify-content-center mb-1"
+                    style="width:34px;height:34px;background:#E0E7FF;color:#3730A3;">
+                    <i class="bi bi-person-fill fs-5"></i>
+                </div>
 
-                <p>
-                    <strong>Location:</strong>
-                    ${project.location}
-                </p>
+                <h6 class="fw-bold text-dark mb-0" style="font-size:13px;">
+                    ${project.client || "-"}
+                </h6>
 
             </div>
-        `);
 
+            <!-- Status -->
+            <div class="mb-2">
+               <span class="badge rounded-pill ${project.statusCode}-pill">
+                    ${project.status || "-"}
+                </span>
+            </div>
 
-        // Store marker using project ID
+            <hr class="my-2">
+
+            <!-- Location -->
+            <div class="d-flex align-items-start gap-2 mb-2 text-secondary text-start"
+             style="font-size:11px;">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>${project.location || "-"}</span>
+            </div>
+
+            <!-- Phone -->
+            <div class="d-flex align-items-center gap-2 text-secondary text-start"
+                style="font-size:11px;">
+                <i class="bi bi-telephone-fill"></i>
+                <span>${project.phone || "-"}</span>
+            </div>
+
+        </div>
+    `);
+            // Store marker using project ID
 
         markers[project.id] = marker;
 
