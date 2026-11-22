@@ -10,7 +10,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}"> -->
   
     <link rel="stylesheet" href="{% static 'css/projects_update.css' %}">
     
@@ -101,38 +101,44 @@
                 <div class="progress-heading">
                     <h6>Project Progress</h6>
 
-                    <strong class="progress-percentage">72%</strong>
+                    <strong class="progress-percentage">
+                        {{ progress|default:0 }}%
+                    </strong>
                 </div>
 
                 <div class="progress mb-3">
-                    <div class="progress-bar"
+                    <div class="progress-bar progress-{{ current_status }}"
                         role="progressbar"
-                        style="width: 72%;"
-                        aria-valuenow="72"
+                        style="width: {{ progress|default:0 }}%;"
+                        aria-valuenow="{{ progress|default:0 }}"
                         aria-valuemin="0"
                         aria-valuemax="100">
                     </div>
                 </div>
 
-                <div class="schedule-grid">
+               <div class="schedule-grid">
 
                     <div class="schedule-item">
                         <small>Start Date</small>
-                        <strong>
-                            {{ project.project_start_date|date:"d M Y"|default:"Not set" }}
+                        <strong id="projectStartDate"
+                            data-date="{{ project.project_start_date|date:'Y-m-d' }}">
+                            {{ project.project_start_date|date:"d M Y"|default:"-" }}
                         </strong>
                     </div>
 
                     <div class="schedule-item">
                         <small>Target Handover</small>
-                        <strong>
-                            {{ project.target_handover_date|date:"d M Y"|default:"Not set" }}
+                        <strong id="targetHandoverDate"
+                            data-date="{{ project.target_handover_date|date:'Y-m-d' }}">
+                            {{ project.target_handover_date|date:"d M Y"|default:"-" }}
                         </strong>
                     </div>
 
                     <div class="schedule-item">
                         <small>Remaining</small>
-                        <strong class="remaining-days">175 Days</strong>
+                        <strong class="remaining-days" id="remainingDays">
+                            Calculating...
+                        </strong>
                     </div>
 
                 </div>
@@ -144,20 +150,17 @@
 
         <!-- PROJECT STAGE TIMELINE -->
 
-        <section class="project-timeline">
+        <section class="project-timeline" id="projectTimeline"
+         data-status="{{ project.current_status }}">
 
             <div class="timeline-list">
 
                 {% for value, label in status_choices %}
 
-                <div class="timeline-stage {% if project.current_status == value %}current{% endif %}">
+                <div class="timeline-stage" data-stage="{{ value }}">
 
                     <div class="timeline-dot">
-                        {% if project.current_status == value %}
-                            <i class="bi bi-tools"></i>
-                        {% else %}
-                            <i class="bi bi-circle"></i>
-                        {% endif %}
+                        <i class="bi bi-circle"></i>
                     </div>
 
                     <span>{{ label }}</span>
@@ -288,7 +291,108 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
 
+    const timeline = document.getElementById("projectTimeline");
+
+    if (!timeline) return;
+
+    const currentStatus = timeline.dataset.status;
+
+    const stages = [
+        "enquiry",
+        "quotation",
+        "site_visit",
+        "payment",
+        "3d_design",
+        "material_selection",
+        "execution",
+        "handover"
+    ];
+
+    const currentIndex = stages.indexOf(currentStatus);
+
+    document.querySelectorAll(".timeline-stage").forEach(function (stage) {
+
+        const stageValue = stage.dataset.stage;
+        const stageIndex = stages.indexOf(stageValue);
+
+        const dot = stage.querySelector(".timeline-dot");
+
+        stage.classList.remove("completed", "current", "pending");
+
+        if (stageIndex < currentIndex) {
+
+            stage.classList.add("completed");
+            dot.innerHTML = '<i class="bi bi-check-lg"></i>';
+
+        } 
+        else if (stageIndex === currentIndex) {
+
+            stage.classList.add("current");
+            dot.innerHTML = '<i class="bi bi-tools"></i>';
+
+        } 
+        else {
+
+            stage.classList.add("pending");
+            dot.innerHTML = '<i class="bi bi-circle"></i>';
+
+        }
+
+    });
+
+});
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const startElement = document.getElementById("projectStartDate");
+    const handoverElement = document.getElementById("targetHandoverDate");
+    const remainingElement = document.getElementById("remainingDays");
+
+    const startDateValue = startElement.dataset.date;
+    const handoverDateValue = handoverElement.dataset.date;
+
+    if (!startDateValue) {
+        remainingElement.textContent = "-";
+        return;
+    }
+
+ 
+    if (!handoverDateValue) {
+        remainingElement.textContent = "-";
+        return;
+    }
+
+    const [year, month, day] = handoverDateValue.split("-").map(Number);
+
+    const handoverDate = new Date(year, month - 1, day);
+
+    // Today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Calculate remaining days
+    const difference = handoverDate - today;
+
+    const remainingDays = Math.round(
+        difference / (1000 * 60 * 60 * 24)
+    );
+
+    if (remainingDays > 0) {
+        remainingElement.textContent = remainingDays + " Days Left";
+    }
+    else if (remainingDays === 0) {
+        remainingElement.textContent = "Today";
+    }
+    else {
+        remainingElement.textContent =
+            Math.abs(remainingDays) + " Days Overdue";
+    }
+
+});
+</script>
 </body>
 </html>
 

@@ -592,215 +592,6 @@ def owner_project_map(request):
 
 
 
-# @login_required(login_url='login')
-# @never_cache
-# def owner_projects(request):
-
-#     profile = request.user.userprofile
-
-#     if not profile.is_owneruser:
-#         return redirect('login')
-
-#     # ==================================
-#     # DATABASE DATA
-#     # ==================================
-
-#     clients = Client.objects.all().order_by("-created_at")
-
-#     employees = Employee.objects.all().order_by("employee_name")
-
-#     projects = (
-#         Project.objects
-#         .select_related("client")
-#         .prefetch_related("details")
-#         .order_by("-created_at")
-#     )
-
-#     project_details = ProjectDetail.objects.all().order_by("-created_at")
-
-#     # ==================================
-#     # DETAIL TYPES
-#     # ==================================
-
-#     detail_key_map = {
-#         "room": "rooms",
-#         "scope": "scope",
-#         "assignment": "assignments",
-#         "status_history": "status_history",
-#         "site_visit": "site_visits",
-#         "quotation": "quotations",
-#         "payment": "payments",
-#         "design": "designs",
-#         "material": "materials",
-#         "execution_task": "execution_tasks",
-#         "document": "documents",
-#         "handover": "handover",
-#         "enquiry": "enquiries",
-#     }
-
-#     # ==================================
-#     # FINAL JSON
-#     # ==================================
-
-#     all_database_json = {}
-
-#     for client in clients:
-
-#         # Unique Client Key
-#         client_key = f"CLI-{client.client_key.hex[:8]}"
-
-#         client_data = {
-#             "client_id": client.client_id,
-#             "name": client.client_name,
-#             "phone": client.phone,
-#             "alternative_phone": client.alternative_phone,
-#             "email": client.email,
-#             "projects": {}
-#         }
-
-#         # Only this client's projects
-#         for project in projects:
-
-#             if project.client_id != client.client_id:
-#                 continue
-
-#             project_data = {
-
-#                 "project_information": {
-#                     "project_type": project.project_type,
-#                     "location": project.location,
-#                     "google_map_link": project.google_map_link,
-#                     "area_sqft": project.area_sqft,
-#                     "bedroom_count": project.bedroom_count,
-#                     "living_room_count": project.living_room_count,
-#                     "kitchen_count": project.kitchen_count,
-#                     "bathroom_count": project.bathroom_count,
-#                     "current_status": project.current_status,
-#                     "enquiry_date": project.enquiry_date,
-#                     "project_start_date": project.project_start_date,
-#                     "target_handover_date": project.target_handover_date,
-#                     "actual_handover_date": project.actual_handover_date,
-#                 },
-
-#                 "rooms": [],
-#                 "scope": [],
-#                 "assignments": [],
-#                 "status_history": [],
-#                 "site_visits": [],
-#                 "quotations": [],
-#                 "payments": [],
-#                 "designs": [],
-#                 "materials": [],
-#                 "execution_tasks": [],
-#                 "documents": [],
-#                 "handover": [],
-#                 "enquiries": [],
-#             }
-
-#             # Get details belonging to this project
-#             for detail in project.details.all():
-
-#                 key = detail_key_map.get(detail.detail_type)
-
-#                 if key:
-#                     project_data[key].append({
-
-#                         "detail_id": detail.detail_id,
-#                         "data": detail.detail_data,
-#                         "created_by_id": detail.created_by_id,
-#                         "created_at": detail.created_at,
-#                         "updated_at": detail.updated_at,
-
-#                     })
-
-#             # Project ID as JSON key
-#             client_data["projects"][project.project_code] = project_data
-
-#         # Random Client Key as parent JSON key
-#         all_database_json[client_key] = client_data
-
-#         # PROJECT STATUS COUNTS
-        
-
-#         total_projects = projects.count()
-
-#         enquiry_count = projects.filter(
-#             current_status="enquiry"
-#         ).count()
-
-#         quotation_count = projects.filter(
-#             current_status="quotation"
-#         ).count()
-
-#         site_visit_count = projects.filter(
-#             current_status="site_visit"
-#         ).count()
-
-#         payment_count = projects.filter(
-#             current_status="payment"
-#         ).count()
-
-#         design_count = projects.filter(
-#             current_status="3d_design"
-#         ).count()
-
-#         material_count = projects.filter(
-#             current_status="material_selection"
-#         ).count()
-
-#         execution_count = projects.filter(
-#             current_status="execution"
-#         ).count()
-
-#         handover_count = projects.filter(
-#             current_status="handover"
-#         ).count()
-        
-
-#         completed_projects = handover_count
-
-#         ongoing_projects = total_projects - completed_projects
-
-#         # ==================================
-#         # DASHBOARD CONTEXT
-#         # ==================================
-
-#         context = {
-
-#             "clients": clients,
-#             "employees": employees,
-#             "projects": projects,
-#             "project_details": project_details,
-
-#             # General Counts
-#             "total_clients": clients.count(),
-#             "total_employees": employees.count(),
-#             "total_projects": total_projects,
-#             "total_details": project_details.count(),
-
-#             # Project Summary
-#             "ongoing_projects": ongoing_projects,
-#             "completed_projects": completed_projects,
-
-#             # Individual Status Counts
-#             "enquiry_count": enquiry_count,
-#             "quotation_count": quotation_count,
-#             "site_visit_count": site_visit_count,
-#             "payment_count": payment_count,
-#             "design_count": design_count,
-#             "material_count": material_count,
-#             "execution_count": execution_count,
-#             "handover_count": handover_count,
-
-#             # JSON Data
-#             "all_database_json": all_database_json,
-
-#         }
-
-#         # print(context)
-
-#         return render(request,"owner/projects.html",context)
-
 
 @login_required(login_url='login')
 @never_cache
@@ -1141,7 +932,7 @@ def update_project_status(request, project_id):
         Project,
         project_id=project_id
     )
-
+    
     # Get new status from HTML form
     new_status = request.POST.get('current_status', '').strip()
 
@@ -1314,7 +1105,21 @@ def project_update(request, project_id):
         Project.objects.select_related("client"),
         project_id=project_id
     )
-
+    progress_map = {
+        "enquiry": 1,
+        "quotation": 8,
+        "site_visit": 25,
+        "payment": 50,
+        "3d_design": 63,
+        "material_selection": 75,
+        "execution": 90,
+        "handover": 100,
+    }
+    current_status = project.current_status
+    progress = progress_map.get(
+            current_status,
+            0
+        )
     # Owner permission
     profile = getattr(request.user, "userprofile", None)
 
@@ -1433,6 +1238,7 @@ def project_update(request, project_id):
 
     context = {
         "project": project,
+        "progress":progress,
         "client": client,
         "enquiry_data": enquiry_data,
         "status_choices": Project.PROJECT_STATUS,

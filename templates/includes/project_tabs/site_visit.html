@@ -1,0 +1,168 @@
+{# Site Visit tab include: templates/includes/project_tabs/site_visit.html #}
+<style>
+.site-visit-page{color:#172331;font-size:13px}
+.site-visit-page .sv-card{background:#fff;border:1px solid #e1e6ed;border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.06);padding:13px;height:100%}
+.site-visit-page .sv-heading{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.site-visit-page .sv-heading>i{font-size:23px;color:#ad690c}
+.site-visit-page .sv-heading h5{font-size:16px;font-weight:750;margin:0;color:#172331}
+.site-visit-page .sv-heading p{font-size:11px;color:#64748b;margin:2px 0 0}
+.site-visit-page .sv-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.site-visit-page .sv-stat{display:flex;align-items:center;gap:9px;padding:10px;border-radius:12px;min-height:64px}
+.site-visit-page .sv-stat.green{background:#eaf8e9}.site-visit-page .sv-stat.amber{background:#fff5df}.site-visit-page .sv-stat.red{background:#ffebeb}.site-visit-page .sv-stat.blue{background:#e8f3ff}
+.site-visit-page .sv-stat-icon{width:36px;height:36px;flex:0 0 36px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.8);font-size:20px}
+.site-visit-page .green .sv-stat-icon,.site-visit-page .green .sv-stat-value{color:#16803a}.site-visit-page .amber .sv-stat-icon,.site-visit-page .amber .sv-stat-value{color:#a56500}.site-visit-page .red .sv-stat-icon,.site-visit-page .red .sv-stat-value{color:#dc2626}.site-visit-page .blue .sv-stat-icon,.site-visit-page .blue .sv-stat-value{color:#0876bd}
+.site-visit-page .sv-stat-label{font-size:10px;color:#475569;font-weight:650;white-space:nowrap}
+.site-visit-page .sv-stat-value{font-size:19px;font-weight:800;line-height:1.2}
+.site-visit-page .sv-btn-dark{background:#172331;color:#fff;border:1px solid #172331;border-radius:9px;padding:7px 11px;font-size:11px;font-weight:650;white-space:nowrap}
+.site-visit-page .sv-btn-light{background:#fff;color:#172331;border:1px solid #cbd5e1;border-radius:9px;padding:6px 10px;font-size:11px;font-weight:650;white-space:nowrap}
+.site-visit-page .sv-table-wrap{overflow-x:auto}
+.site-visit-page .sv-table{min-width:650px;margin:0;font-size:11px;vertical-align:middle}
+.site-visit-page .sv-table thead th{background:#eef0f2;color:#202a36;font-weight:750;padding:8px 7px;white-space:nowrap;border-bottom:1px solid #d8dee7}
+.site-visit-page .sv-table tbody td{padding:7px;border-color:#e6eaf0;white-space:nowrap}
+.site-visit-page .sv-status{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700}
+.site-visit-page .sv-status.completed{background:#d9f5d9;color:#16803b}.site-visit-page .sv-status.scheduled{background:#dceeff;color:#1260a8}.site-visit-page .sv-status.cancelled{background:#ffe1e1;color:#b42323}
+.site-visit-page .sv-person{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.site-visit-page .sv-avatar{width:25px;height:25px;border-radius:50%;background:#e9eef5;display:grid;place-items:center;color:#334155;font-size:11px}
+.site-visit-page .sv-action{border:0;background:transparent;padding:2px 4px;color:#172331;font-size:14px}
+.site-visit-page .sv-action.delete{color:#dc2626}
+.site-visit-page .sv-next-list{display:grid;gap:6px}
+.site-visit-page .sv-next-row{display:flex;align-items:center;gap:9px;font-size:12px}
+.site-visit-page .sv-next-row i{width:17px;color:#475569;text-align:center}
+.site-visit-page .sv-pill{background:#dceeff;color:#1260a8;border-radius:20px;padding:5px 10px;font-size:10px;font-weight:700}
+.site-visit-page .sv-map{height:118px;border-radius:11px;background:linear-gradient(135deg,#e9ece5,#dfe8dd);position:relative;overflow:hidden;display:grid;place-items:center}
+.site-visit-page .sv-map:before,.site-visit-page .sv-map:after{content:"";position:absolute;background:rgba(255,255,255,.85);height:12px;width:140%;transform:rotate(-22deg)}
+.site-visit-page .sv-map:after{transform:rotate(38deg);height:8px}
+.site-visit-page .sv-map-pin{position:relative;z-index:1;color:#dc2626;font-size:30px;filter:drop-shadow(0 2px 2px #888)}
+.site-visit-page .sv-map-label{position:absolute;z-index:2;bottom:7px;left:50%;transform:translateX(-50%);background:#fff;border-radius:7px;padding:5px 9px;font-size:10px;font-weight:650;white-space:nowrap;box-shadow:0 2px 8px #0002}
+.site-visit-page .sv-detail{display:grid;grid-template-columns:100px 12px 1fr;gap:5px;padding:3px 0;font-size:11px;align-items:start}
+.site-visit-page .sv-detail strong{font-weight:650}
+.site-visit-page .sv-checklist{display:flex;gap:8px;flex-wrap:wrap}
+.site-visit-page .sv-check{display:flex;align-items:center;gap:6px;border:1px solid #dce2e9;border-radius:9px;padding:8px 10px;font-size:10px;font-weight:650;flex:1 1 auto}
+.site-visit-page .sv-check i{font-size:18px;color:#159447}
+.site-visit-page .sv-check.pending i{color:#aab2bd}
+.site-visit-page .sv-docs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.site-visit-page .sv-doc{background:#f7f8fa;border:1px solid #e6e9ef;border-radius:9px;padding:7px;text-align:center;min-width:0}
+.site-visit-page .sv-doc i{font-size:24px;color:#dc2626;display:block}
+.site-visit-page .sv-doc small{display:block;font-size:9px;overflow-wrap:anywhere;margin-top:4px}
+.site-visit-page .sv-note{background:#f4f5f7;border-radius:9px;padding:9px;font-size:11px;line-height:1.5}
+.site-visit-page .sv-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.site-visit-page .sv-actions .btn{font-size:11px;font-weight:650;border-radius:9px;padding:9px 6px;white-space:nowrap}
+@media(max-width:1199px){.site-visit-page .sv-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:767px){.site-visit-page .sv-card{padding:11px}.site-visit-page .sv-heading h5{font-size:14px}.site-visit-page .sv-actions{grid-template-columns:1fr}.site-visit-page .sv-detail{grid-template-columns:85px 10px 1fr}}
+</style>
+
+<div class="site-visit-page">
+  <div class="row g-3">
+    <div class="col-xl-5 col-lg-6">
+      <div class="sv-card">
+        <div class="sv-heading"><i class="bi bi-binoculars"></i><div><h5>Site Visit Overview</h5><p>Plan, assign and track site visit details.</p></div></div>
+        <div class="sv-stats">
+          <div class="sv-stat green"><div class="sv-stat-icon"><i class="bi bi-calendar-week"></i></div><div><div class="sv-stat-label">Total Visits</div><div class="sv-stat-value">3</div></div></div>
+          <div class="sv-stat green"><div class="sv-stat-icon"><i class="bi bi-check-circle"></i></div><div><div class="sv-stat-label">Completed</div><div class="sv-stat-value">2</div></div></div>
+          <div class="sv-stat amber"><div class="sv-stat-icon"><i class="bi bi-hourglass-split"></i></div><div><div class="sv-stat-label">Scheduled</div><div class="sv-stat-value">1</div></div></div>
+          <div class="sv-stat red"><div class="sv-stat-icon"><i class="bi bi-x-circle"></i></div><div><div class="sv-stat-label">Cancelled</div><div class="sv-stat-value">0</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6">
+      <div class="sv-card">
+        <div class="d-flex justify-content-between align-items-center mb-2"><div class="sv-heading mb-0"><i class="bi bi-calendar-event"></i><div><h5>Next Site Visit</h5></div></div><span class="sv-pill">Scheduled</span></div>
+        <div class="sv-next-list">
+          <div class="sv-next-row"><i class="bi bi-calendar3"></i><strong>12 Dec 2026 (Fri)</strong></div>
+          <div class="sv-next-row"><i class="bi bi-clock"></i><span>10:00 AM – 12:00 PM</span></div>
+          <div class="sv-next-row"><i class="bi bi-geo-alt"></i><span>Project Site, Trichy</span></div>
+          <div class="sv-next-row"><i class="bi bi-person"></i><span>Assigned To: Arun Kumar (Site PM)</span></div>
+        </div>
+        <div class="text-end mt-2"><button type="button" class="sv-btn-light"><i class="bi bi-pencil me-1"></i>Edit</button></div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-12">
+      <div class="sv-card">
+        <div class="d-flex justify-content-between align-items-center mb-2"><div class="sv-heading mb-0"><i class="bi bi-geo-alt"></i><div><h5>Site Location</h5></div></div><a href="{{ project.google_map_link|default:'#' }}" class="small text-decoration-none fw-semibold">View on Map ↗</a></div>
+        <div class="sv-map"><i class="bi bi-geo-alt-fill sv-map-pin"></i><div class="sv-map-label"><i class="bi bi-file-earmark-text me-1"></i>Project Site – Trichy<br><span class="text-secondary">Lat: 10.7905, Long: 78.7047</span></div></div>
+      </div>
+    </div>
+
+    <div class="col-xl-5 col-lg-7">
+      <div class="sv-card">
+        <div class="d-flex justify-content-between align-items-center gap-2 mb-2"><div class="sv-heading mb-0"><i class="bi bi-calendar3"></i><div><h5>Site Visit Schedule</h5><p>All planned and completed site visits.</p></div></div><button type="button" class="sv-btn-dark"><i class="bi bi-plus-lg me-1"></i>Schedule Site Visit</button></div>
+        <div class="sv-table-wrap">
+          <table class="table sv-table">
+            <thead><tr><th>S.No</th><th>Visit Date &amp; Time</th><th>Visit Type</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="siteVisitRows">
+              <tr><td>1</td><td>06 Nov 2026, 11:00 AM</td><td>Initial Site Visit</td><td><div class="sv-person"><span class="sv-avatar"><i class="bi bi-person-fill"></i></span><span>Arun Kumar<br><small>(Site PM)</small></span></div></td><td><span class="sv-status completed">Completed</span></td><td><button class="sv-action"><i class="bi bi-eye"></i></button><button class="sv-action"><i class="bi bi-pencil"></i></button><button class="sv-action delete sv-delete"><i class="bi bi-trash3"></i></button></td></tr>
+              <tr><td>2</td><td>20 Nov 2026, 02:00 PM</td><td>Measurement Visit</td><td><div class="sv-person"><span class="sv-avatar"><i class="bi bi-person-fill"></i></span><span>Selvam<br><small>(Site PM)</small></span></div></td><td><span class="sv-status completed">Completed</span></td><td><button class="sv-action"><i class="bi bi-eye"></i></button><button class="sv-action"><i class="bi bi-pencil"></i></button><button class="sv-action delete sv-delete"><i class="bi bi-trash3"></i></button></td></tr>
+              <tr><td>3</td><td>12 Dec 2026, 10:00 AM</td><td>Execution Review</td><td><div class="sv-person"><span class="sv-avatar"><i class="bi bi-person-fill"></i></span><span>Arun Kumar<br><small>(Site PM)</small></span></div></td><td><span class="sv-status scheduled">Scheduled</span></td><td><button class="sv-action"><i class="bi bi-eye"></i></button><button class="sv-action"><i class="bi bi-pencil"></i></button><button class="sv-action delete sv-delete"><i class="bi bi-trash3"></i></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-5">
+      <div class="sv-card">
+        <div class="d-flex justify-content-between align-items-center mb-2"><div class="sv-heading mb-0"><i class="bi bi-clipboard2-check"></i><div><h5>Site Visit Details (Selected)</h5></div></div><button class="sv-btn-light" type="button"><i class="bi bi-pencil me-1"></i>Edit</button></div>
+        <div class="sv-detail"><span>Visit Type</span><b>:</b><strong>Execution Review</strong></div>
+        <div class="sv-detail"><span>Visit Date</span><b>:</b><strong>12 Dec 2026</strong></div>
+        <div class="sv-detail"><span>Time</span><b>:</b><strong>10:00 AM – 12:00 PM</strong></div>
+        <div class="sv-detail"><span>Assigned To</span><b>:</b><strong>Arun Kumar (Site PM)</strong></div>
+        <div class="sv-detail"><span>Team Members</span><b>:</b><strong>Mani (Civil), Selvam (Electrical)</strong></div>
+        <div class="sv-detail"><span>Purpose</span><b>:</b><strong>Execution progress &amp; work quality check</strong></div>
+        <div class="sv-detail"><span>Checklist</span><b>:</b><strong><span class="text-success">☑</span> Work Progress<br><span class="text-success">☑</span> Measurement Verification<br><span class="text-success">☑</span> Material Storage<br><span class="text-secondary">☐</span> Client Discussion</strong></div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-12">
+      <div class="sv-card mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2"><div class="sv-heading mb-0"><i class="bi bi-folder"></i><div><h5>Site Visit Documents</h5></div></div><button type="button" class="sv-btn-light"><i class="bi bi-plus-lg me-1"></i>Add</button></div>
+        <div class="sv-docs">
+          <div class="sv-doc"><i class="bi bi-image text-secondary"></i><small>Site_Photo_1.jpg</small></div>
+          <div class="sv-doc"><i class="bi bi-image text-secondary"></i><small>Site_Photo_2.jpg</small></div>
+          <div class="sv-doc"><i class="bi bi-file-earmark-pdf"></i><small>Visit_Report.pdf</small></div>
+        </div>
+      </div>
+      <div class="sv-card">
+        <div class="d-flex justify-content-between align-items-center mb-2"><div class="sv-heading mb-0"><i class="bi bi-journal-text"></i><div><h5>Site Visit Notes</h5></div></div><button type="button" class="sv-btn-light"><i class="bi bi-pencil me-1"></i>Edit</button></div>
+        <div class="sv-note">Civil work 60% completed. Electrical conduit work in progress. Discussed material delivery for next week.</div>
+      </div>
+    </div>
+
+    <div class="col-xl-8 col-lg-12">
+      <div class="sv-card">
+        <div class="sv-heading"><i class="bi bi-clipboard2-check"></i><div><h5>Site Visit Checklist &amp; Status</h5></div></div>
+        <div class="sv-checklist">
+          <div class="sv-check"><i class="bi bi-check-circle-fill"></i>Site Access</div>
+          <div class="sv-check"><i class="bi bi-check-circle-fill"></i>Measurements</div>
+          <div class="sv-check"><i class="bi bi-check-circle-fill"></i>Site Condition</div>
+          <div class="sv-check"><i class="bi bi-check-circle-fill"></i>Client Discussion</div>
+          <div class="sv-check pending"><i class="bi bi-circle"></i>Report Upload</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-12">
+      <div class="sv-card">
+        <div class="sv-heading"><i class="bi bi-layers"></i><div><h5>Actions</h5></div></div>
+        <div class="sv-actions">
+          <button type="button" class="btn sv-btn-dark"><i class="bi bi-calendar-event me-1"></i>Reschedule Visit</button>
+          <button type="button" class="btn sv-btn-light"><i class="bi bi-person-plus me-1"></i>Reassign Team</button>
+          <button type="button" class="btn sv-btn-light"><i class="bi bi-file-earmark-text me-1"></i>Download Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const root = document.currentScript.previousElementSibling;
+  if(!root || !root.classList.contains('site-visit-page')) return;
+  const rows = root.querySelector('#siteVisitRows');
+  rows.addEventListener('click', function(e){
+    const del = e.target.closest('.sv-delete');
+    if(del){ del.closest('tr').remove(); [...rows.rows].forEach((r,i)=>r.cells[0].textContent=i+1); }
+  });
+})();
+</script>

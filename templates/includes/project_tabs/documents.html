@@ -1,0 +1,183 @@
+{# Documents tab include: templates/includes/project_tabs/documents.html #}
+<style>
+.documents-page{color:#172331;font-size:12px}
+.documents-page .d-card{background:#fff;border:1px solid #e1e6ed;border-radius:15px;box-shadow:0 4px 13px rgba(15,23,42,.06);padding:11px;height:100%}
+.documents-page .d-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.documents-page .d-title{display:flex;align-items:center;gap:8px;min-width:0}
+.documents-page .d-title>i{font-size:21px;color:#b56b0b}
+.documents-page .d-title h5{font-size:14px;font-weight:750;margin:0}
+.documents-page .d-title p{font-size:10px;color:#64748b;margin:2px 0 0}
+.documents-page .d-btn-dark{background:#172331;color:#fff;border:1px solid #172331;border-radius:8px;padding:7px 11px;font-size:10px;font-weight:700;white-space:nowrap}
+.documents-page .d-btn-light{background:#fff;color:#172331;border:1px solid #cbd5e1;border-radius:8px;padding:6px 9px;font-size:10px;font-weight:700;white-space:nowrap}
+.documents-page .d-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.documents-page .d-search{position:relative;flex:1;min-width:170px;max-width:330px}
+.documents-page .d-search input{width:100%;border:1px solid #d9dee7;border-radius:10px;padding:8px 32px 8px 11px;font-size:11px;outline:none}
+.documents-page .d-search i{position:absolute;right:10px;top:9px;font-size:14px}
+.documents-page .d-categories{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px}
+.documents-page .d-category{border:1px solid #e0e5ed;background:#fff;border-radius:10px;padding:8px 3px;text-align:center;cursor:pointer;box-shadow:0 2px 5px rgba(15,23,42,.04);min-width:0;color:#172331}
+.documents-page .d-category i{display:block;font-size:23px;margin-bottom:4px;color:var(--cat-color,#2580cf)}
+.documents-page .d-category strong{display:block;font-size:10px;line-height:1.2}
+.documents-page .d-category small{display:block;font-size:9px;color:#64748b;margin-top:3px}
+.documents-page .d-category.active{background:#fff4d2;border-color:#f3c94c}
+.documents-page .d-table-wrap{overflow-x:auto}
+.documents-page .d-table{min-width:600px;margin:0;vertical-align:middle;font-size:10px}
+.documents-page .d-table th{background:#f0f1f3;font-weight:750;white-space:nowrap;padding:7px 6px}
+.documents-page .d-table td{padding:7px 6px;border-color:#edf0f3;white-space:nowrap}
+.documents-page .d-table tbody tr{cursor:pointer}
+.documents-page .d-table tbody tr.selected{background:#fff9e9}
+.documents-page .d-file{display:flex;align-items:center;gap:7px;font-weight:650}
+.documents-page .d-file i{font-size:18px;color:#dc2626}
+.documents-page .d-file i.blue{color:#2563eb}
+.documents-page .d-tag{display:inline-block;border-radius:20px;padding:4px 8px;font-size:9px;font-weight:700;background:#eee8ff;color:#5935a6}
+.documents-page .d-tag.design{background:#ffedc9;color:#925600}.documents-page .d-tag.drawing{background:#dff7dc;color:#16743b}.documents-page .d-tag.material{background:#dceeff;color:#135a9c}.documents-page .d-tag.report{background:#dff2ff;color:#145c8d}.documents-page .d-tag.approval{background:#d9f6f0;color:#087b70}
+.documents-page .d-preview{height:245px;background:#e7e9ed;border-radius:9px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.documents-page .d-preview img{width:100%;height:100%;object-fit:contain;background:#e7e9ed}
+.documents-page .d-preview .preview-placeholder{background:#fff;width:72%;height:90%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:15px;box-shadow:0 2px 12px #0002}
+.documents-page .d-preview .preview-placeholder i{font-size:35px;color:#d22}
+.documents-page .d-preview .preview-placeholder strong{font-size:17px;margin-top:12px}
+.documents-page .d-preview-controls{display:flex;justify-content:center;align-items:center;gap:14px;background:#252a30;color:white;padding:6px;border-radius:0 0 8px 8px;font-size:11px}
+.documents-page .d-detail{display:grid;grid-template-columns:88px 9px minmax(0,1fr);gap:5px;padding:5px 0;border-bottom:1px solid #edf0f3;font-size:10px}
+.documents-page .d-detail:last-child{border:0}
+.documents-page .d-detail strong{font-weight:650;overflow-wrap:anywhere}
+.documents-page .d-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.documents-page .d-quick button{padding:8px 3px;border-radius:8px;font-size:10px;font-weight:650}
+.documents-page .d-view-toggle{display:flex;gap:4px}
+.documents-page .d-view-toggle button{border:1px solid #d9dee7;background:#fff;border-radius:7px;padding:6px 9px}
+.documents-page .d-view-toggle button.active{background:#172331;color:#fff}
+.documents-page .d-empty{text-align:center;padding:22px;color:#64748b}
+@media(max-width:1199px){.documents-page .d-categories{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:767px){.documents-page .d-categories{grid-template-columns:repeat(2,minmax(0,1fr))}.documents-page .d-preview{height:210px}.documents-page .d-quick{grid-template-columns:1fr}}
+</style>
+
+<div class="documents-page">
+ <div class="d-card mb-2">
+  <div class="d-head">
+   <div class="d-title"><i class="bi bi-folder2-open"></i><div><h5>Project Documents</h5><p>Manage and organize all project related documents.</p></div></div>
+   <div class="d-toolbar">
+    <div class="d-search"><input type="search" id="documentSearch" placeholder="Search documents..."><i class="bi bi-search"></i></div>
+    <button class="d-btn-dark" type="button" id="uploadDocumentBtn"><i class="bi bi-plus-lg me-1"></i>Upload Document</button>
+    <input type="file" id="documentFileInput" hidden multiple>
+    <div class="d-view-toggle"><button type="button" class="active" title="Grid view"><i class="bi bi-grid"></i></button><button type="button" title="List view"><i class="bi bi-list"></i></button></div>
+   </div>
+  </div>
+  <div class="d-categories" id="documentCategories">
+   <button class="d-category active" data-category="all" style="--cat-color:#c88720"><i class="bi bi-folder"></i><strong>All Documents</strong><small>32 Files</small></button>
+   <button class="d-category" data-category="Project Info" style="--cat-color:#1684d9"><i class="bi bi-folder"></i><strong>Project Info</strong><small>4 Files</small></button>
+   <button class="d-category" data-category="Quotation" style="--cat-color:#7042e8"><i class="bi bi-folder"></i><strong>Quotations</strong><small>3 Files</small></button>
+   <button class="d-category" data-category="Drawings" style="--cat-color:#24951c"><i class="bi bi-folder"></i><strong>Drawings</strong><small>6 Files</small></button>
+   <button class="d-category" data-category="3D Design" style="--cat-color:#d97706"><i class="bi bi-folder"></i><strong>3D Designs</strong><small>8 Files</small></button>
+   <button class="d-category" data-category="Contracts" style="--cat-color:#e33d54"><i class="bi bi-folder"></i><strong>Contracts</strong><small>2 Files</small></button>
+   <button class="d-category" data-category="Approval" style="--cat-color:#0e8791"><i class="bi bi-folder"></i><strong>Approvals</strong><small>3 Files</small></button>
+   <button class="d-category" data-category="Site Report" style="--cat-color:#1684d9"><i class="bi bi-folder"></i><strong>Site Reports</strong><small>4 Files</small></button>
+   <button class="d-category" data-category="Invoice" style="--cat-color:#4b37df"><i class="bi bi-folder"></i><strong>Invoices</strong><small>2 Files</small></button>
+   <button class="d-category" data-category="Warranty" style="--cat-color:#d97706"><i class="bi bi-shield-check"></i><strong>Warranties</strong><small>2 Files</small></button>
+  </div>
+ </div>
+
+ <div class="row g-2">
+  <div class="col-xl-6 col-lg-7">
+   <div class="d-card">
+    <div class="d-head"><div class="d-title"><i class="bi bi-folder"></i><div><h5 id="documentListTitle">All Documents (32)</h5></div></div><button type="button" class="d-btn-light" id="selectAllDocuments">Select All</button></div>
+    <div class="d-table-wrap">
+     <table class="table d-table">
+      <thead><tr><th><input type="checkbox" id="selectAllCheckbox"></th><th>Document Name</th><th>Category</th><th>Uploaded By</th><th>Uploaded On</th><th>Size</th><th>Actions</th></tr></thead>
+      <tbody id="documentTableBody">
+       <tr data-category="Quotation" data-name="Final Quotation - v3.pdf"><td><input type="checkbox" class="doc-check"></td><td><span class="d-file"><i class="bi bi-file-earmark-pdf-fill"></i>Final Quotation - v3.pdf</span></td><td><span class="d-tag">Quotation</span></td><td>Kumaran</td><td>10 Nov 2026</td><td>1.2 MB</td><td><button class="btn btn-sm p-0 doc-view" title="Preview"><i class="bi bi-eye"></i></button> <button class="btn btn-sm p-0" title="Download"><i class="bi bi-download"></i></button> <button class="btn btn-sm p-0" title="Edit"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger doc-delete" title="Delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr data-category="3D Design" data-name="3D Design - Living Room.pdf"><td><input type="checkbox" class="doc-check"></td><td><span class="d-file"><i class="bi bi-file-earmark-pdf-fill"></i>3D Design - Living Room.pdf</span></td><td><span class="d-tag design">3D Design</span></td><td>Design Team</td><td>12 Nov 2026</td><td>4.8 MB</td><td><button class="btn btn-sm p-0 doc-view"><i class="bi bi-eye"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-download"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger doc-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr data-category="Drawings" data-name="Working Drawing.dwg"><td><input type="checkbox" class="doc-check"></td><td><span class="d-file"><i class="bi bi-file-earmark-binary-fill blue"></i>Working Drawing.dwg</span></td><td><span class="d-tag drawing">Drawings</span></td><td>Design Team</td><td>14 Nov 2026</td><td>6.5 MB</td><td><button class="btn btn-sm p-0 doc-view"><i class="bi bi-eye"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-download"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger doc-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr data-category="Material" data-name="Material Selection.pdf"><td><input type="checkbox" class="doc-check"></td><td><span class="d-file"><i class="bi bi-file-earmark-pdf-fill"></i>Material Selection.pdf</span></td><td><span class="d-tag material">Material</span></td><td>Kumaran</td><td>18 Nov 2026</td><td>2.3 MB</td><td><button class="btn btn-sm p-0 doc-view"><i class="bi bi-eye"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-download"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger doc-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr data-category="Site Report" data-name="Site Visit Report.pdf"><td><input type="checkbox" class="doc-check"></td><td><span class="d-file"><i class="bi bi-file-earmark-pdf-fill"></i>Site Visit Report.pdf</span></td><td><span class="d-tag report">Site Report</span></td><td>Site Manager</td><td>25 Nov 2026</td><td>1.1 MB</td><td><button class="btn btn-sm p-0 doc-view"><i class="bi bi-eye"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-download"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger doc-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr data-category="Approval" data-name="Client Approval.pdf"><td><input type="checkbox" class="doc-check"></td><td><span class="d-file"><i class="bi bi-file-earmark-pdf-fill"></i>Client Approval.pdf</span></td><td><span class="d-tag approval">Approval</span></td><td>Suresh Kumar</td><td>02 Dec 2026</td><td>0.9 MB</td><td><button class="btn btn-sm p-0 doc-view"><i class="bi bi-eye"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-download"></i></button> <button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger doc-delete"><i class="bi bi-trash"></i></button></td></tr>
+      </tbody>
+     </table>
+     <div class="d-empty d-none" id="documentEmpty">No documents found.</div>
+    </div>
+   </div>
+  </div>
+
+  <div class="col-xl-3 col-lg-5">
+   <div class="d-card">
+    <div class="d-head"><div class="d-title"><i class="bi bi-images"></i><div><h5>Document Preview</h5></div></div></div>
+    <div class="d-preview" id="documentPreview">
+     <div class="preview-placeholder"><i class="bi bi-file-earmark-pdf-fill"></i><strong>Final Quotation</strong><small>IBK-1042 · Mr. Suresh Kumar</small><small class="mt-2">Interior Work Quotation</small></div>
+    </div>
+    <div class="d-preview-controls"><i class="bi bi-chevron-left"></i><span id="previewCount">1 / 6</span><i class="bi bi-chevron-right"></i><span class="ms-auto"><i class="bi bi-dash-lg"></i>　<i class="bi bi-plus-lg"></i>　<i class="bi bi-arrows-fullscreen"></i></span></div>
+   </div>
+  </div>
+
+  <div class="col-xl-3 col-lg-12">
+   <div class="d-card mb-2">
+    <div class="d-head"><div class="d-title"><i class="bi bi-file-earmark-text"></i><div><h5>Document Details</h5></div></div><button type="button" class="d-btn-light"><i class="bi bi-pencil me-1"></i>Edit</button></div>
+    <div id="documentDetails">
+     <div class="d-file mb-2"><i class="bi bi-file-earmark-pdf-fill"></i><strong>Final Quotation - v3.pdf</strong></div>
+     <div class="d-detail"><span>Category</span><b>:</b><strong>Quotation</strong></div>
+     <div class="d-detail"><span>Uploaded By</span><b>:</b><strong>Kumaran</strong></div>
+     <div class="d-detail"><span>Uploaded On</span><b>:</b><strong>10 Nov 2026, 04:20 PM</strong></div>
+     <div class="d-detail"><span>File Size</span><b>:</b><strong>1.2 MB</strong></div>
+     <div class="d-detail"><span>Description</span><b>:</b><strong>Updated quotation with final scope and price.</strong></div>
+    </div>
+   </div>
+   <div class="d-card">
+    <div class="d-head"><div class="d-title"><i class="bi bi-lightning-charge"></i><div><h5>Quick Actions</h5></div></div></div>
+    <div class="d-quick">
+     <button type="button" class="d-btn-light"><i class="bi bi-download me-1"></i>Download</button>
+     <button type="button" class="d-btn-light"><i class="bi bi-share me-1"></i>Share</button>
+     <button type="button" class="d-btn-light"><i class="bi bi-folder me-1"></i>Move</button>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<script>
+(function(){
+ const root=document.currentScript.previousElementSibling;
+ if(!root||!root.classList.contains('documents-page'))return;
+ const rows=[...root.querySelectorAll('#documentTableBody tr')];
+ const search=root.querySelector('#documentSearch');
+ const empty=root.querySelector('#documentEmpty');
+ const title=root.querySelector('#documentListTitle');
+ let category='all';
+ function filter(){
+  const q=search.value.toLowerCase();let count=0;
+  rows.forEach(r=>{
+   const okCat=category==='all'||r.dataset.category===category;
+   const okText=r.dataset.name.toLowerCase().includes(q);
+   r.classList.toggle('d-none',!(okCat&&okText));if(okCat&&okText)count++;
+  });
+  title.textContent=(category==='all'?'All Documents':category)+' ('+count+')';
+  empty.classList.toggle('d-none',count!==0);
+ }
+ root.querySelectorAll('.d-category').forEach(btn=>btn.addEventListener('click',()=>{
+  root.querySelectorAll('.d-category').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');category=btn.dataset.category;filter();
+ }));
+ search.addEventListener('input',filter);
+ root.querySelector('#selectAllCheckbox').addEventListener('change',e=>{
+  root.querySelectorAll('.doc-check').forEach(c=>{if(!c.closest('tr').classList.contains('d-none'))c.checked=e.target.checked});
+ });
+ root.querySelector('#selectAllDocuments').addEventListener('click',()=>{
+  const visible=rows.filter(r=>!r.classList.contains('d-none'));
+  const all=visible.every(r=>r.querySelector('.doc-check').checked);
+  visible.forEach(r=>r.querySelector('.doc-check').checked=!all);
+ });
+ root.querySelector('#uploadDocumentBtn').addEventListener('click',()=>root.querySelector('#documentFileInput').click());
+ root.querySelector('#documentFileInput').addEventListener('change',e=>{
+  [...e.target.files].forEach(file=>{
+   const row=document.createElement('tr');row.dataset.category='Uploaded';row.dataset.name=file.name;
+   row.innerHTML='<td><input type="checkbox" class="doc-check"></td><td><span class="d-file"><i class="bi bi-file-earmark"></i>'+file.name.replace(/[&<>"']/g,'')+'</span></td><td><span class="d-tag">Uploaded</span></td><td>Current User</td><td>Today</td><td>'+(file.size/1024/1024).toFixed(1)+' MB</td><td><button class="btn btn-sm p-0 text-danger doc-delete"><i class="bi bi-trash"></i></button></td>';
+   root.querySelector('#documentTableBody').prepend(row);rows.push(row);
+  });filter();
+ });
+ root.querySelector('#documentTableBody').addEventListener('click',e=>{
+  const row=e.target.closest('tr');if(!row)return;
+  if(e.target.closest('.doc-delete')){row.remove();filter();return}
+  if(e.target.closest('.doc-view')||e.target.closest('td:nth-child(2)')){
+   root.querySelectorAll('#documentTableBody tr').forEach(r=>r.classList.remove('selected'));row.classList.add('selected');
+   const name=row.dataset.name,cat=row.dataset.category;
+   root.querySelector('#documentPreview').innerHTML='<div class="preview-placeholder"><i class="bi bi-file-earmark-pdf-fill"></i><strong>'+name.replace(/[&<>"']/g,'')+'</strong><small>'+cat+'</small><small class="mt-2">Preview placeholder</small></div>';
+   root.querySelector('#documentDetails').innerHTML='<div class="d-file mb-2"><i class="bi bi-file-earmark-pdf-fill"></i><strong>'+name.replace(/[&<>"']/g,'')+'</strong></div><div class="d-detail"><span>Category</span><b>:</b><strong>'+cat+'</strong></div><div class="d-detail"><span>Uploaded By</span><b>:</b><strong>'+row.cells[3].textContent+'</strong></div><div class="d-detail"><span>Uploaded On</span><b>:</b><strong>'+row.cells[4].textContent+'</strong></div><div class="d-detail"><span>File Size</span><b>:</b><strong>'+row.cells[5].textContent+'</strong></div>';
+  }
+ });
+})();
+</script>

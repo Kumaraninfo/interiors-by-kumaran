@@ -16,9 +16,7 @@
     <!-- Leaflet Interactive Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     
-    <!-- Existing Sidebar and Header CSS -->
-    <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+
      <!-- Project Map CSS -->
     <link rel="stylesheet" href="{% static 'css/projects_map.css' %}">
 
@@ -109,92 +107,7 @@
                             <i class="bi bi-funnel"></i>
                         </button>
                     </div>
-                    <!-- <div class="project-filters">
-                        <button class="filter-tab active" data-filter="all">All (42)</button>
-                        <button class="filter-tab" data-filter="execution">Execution (17)</button>
-                        <button class="filter-tab" data-filter="design">Design (08)</button>
-                        <button class="filter-tab" data-filter="others">Others</button>
-                    </div> -->
-
-                    <!-- <div class="project-list">
-
-                        <div class="project-list-item"
-                             data-category="execution"
-                             data-lat="10.7905" data-lng="78.7047"
-                             data-id="IBK-1042">
-                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=150" alt="Interior project">
-                            <div class="project-list-info">
-                                <strong>IBK-1042</strong>
-                                <span>Mr. Suresh</span>
-                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Trichy</span>
-                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Arun Kumar</span>
-                            </div>
-                            <span class="stage-pill execution-pill">Execution</span>
-                            <i class="bi bi-chevron-right item-arrow"></i>
-                        </div>
-
-                        <div class="project-list-item"
-                             data-category="design"
-                             data-lat="10.8562" data-lng="78.6935"
-                             data-id="IBK-1041">
-                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=150" alt="Interior project">
-                            <div class="project-list-info">
-                                <strong>IBK-1041</strong>
-                                <span>Mrs. Divya</span>
-                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Srirangam</span>
-                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Raja</span>
-                            </div>
-                            <span class="stage-pill design-pill">3D Design</span>
-                            <i class="bi bi-chevron-right item-arrow"></i>
-                        </div>
-
-                        <div class="project-list-item"
-                             data-category="others"
-                             data-lat="10.7870" data-lng="79.1378"
-                             data-id="IBK-1040">
-                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=150" alt="Interior project">
-                            <div class="project-list-info">
-                                <strong>IBK-1040</strong>
-                                <span>Mr. Karthik</span>
-                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Thanjavur</span>
-                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Praveen</span>
-                            </div>
-                            <span class="stage-pill material-pill">Material Selection</span>
-                            <i class="bi bi-chevron-right item-arrow"></i>
-                        </div>
-
-                        <div class="project-list-item"
-                             data-category="others"
-                             data-lat="10.7900" data-lng="78.7000"
-                             data-id="IBK-1039">
-                            <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=150" alt="Interior project">
-                            <div class="project-list-info">
-                                <strong>IBK-1039</strong>
-                                <span>IT Company</span>
-                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Trichy</span>
-                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Manoj</span>
-                            </div>
-                            <span class="stage-pill site-pill">Site Visit</span>
-                            <i class="bi bi-chevron-right item-arrow"></i>
-                        </div>
-
-                        <div class="project-list-item"
-                             data-category="others"
-                             data-lat="10.3797" data-lng="78.8208"
-                             data-id="IBK-1038">
-                            <img src="https://images.unsplash.com/photo-1600210491369-e753d80a41f3?w=150" alt="Interior project">
-                            <div class="project-list-info">
-                                <strong>IBK-1038</strong>
-                                <span>Mr. Arun</span>
-                                <span class="location-line"><i class="bi bi-geo-alt-fill"></i> Pudukkottai</span>
-                                <span class="manager-line"><i class="bi bi-person"></i> SPM: Saravanan</span>
-                            </div>
-                            <span class="stage-pill quotation-pill">Quotation</span>
-                            <i class="bi bi-chevron-right item-arrow"></i>
-                        </div>
-
-                    </div> -->
-                    <div class="project-filters">
+                   <div class="project-filters">
 
                         <button class="filter-tab active" data-filter="all">
                             All ({{ total_projects }})

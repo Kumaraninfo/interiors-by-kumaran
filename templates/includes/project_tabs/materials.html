@@ -1,1 +1,218 @@
-Material
+{# Material Selection tab include: templates/includes/project_tabs/material_selection.html #}
+<style>
+.material-page{color:#172331;font-size:13px}
+.material-page .m-card{background:#fff;border:1px solid #e1e6ed;border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.06);padding:12px;height:100%}
+.material-page .m-heading{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.material-page .m-heading .step-no{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#7438e8;color:#fff;font-weight:800;font-size:14px;flex:0 0 27px}
+.material-page .m-heading h5{font-size:15px;font-weight:750;margin:0}
+.material-page .m-heading p{font-size:10px;color:#64748b;margin:2px 0 0}
+.material-page .m-room-list{display:grid;gap:0}
+.material-page .m-room{display:grid;grid-template-columns:70px minmax(0,1fr) 22px 12px;align-items:center;gap:8px;padding:7px 5px;border-bottom:1px solid #edf0f3;cursor:pointer;border-radius:9px}
+.material-page .m-room:last-child{border-bottom:0}
+.material-page .m-room.active{background:#fff0bd;outline:1px solid #f4d46b}
+.material-page .m-room img{width:70px;height:47px;object-fit:cover;border-radius:8px}
+.material-page .m-room-name{font-size:12px;font-weight:750}
+.material-page .m-room-check{color:#159447;font-size:20px}
+.material-page .m-room-radio{width:19px;height:19px;border:2px solid #cbd5e1;border-radius:50%}
+.material-page .m-room.active .m-room-radio{border:5px solid #159447}
+.material-page .m-work-list{display:grid;gap:5px}
+.material-page .m-work{display:flex;align-items:center;gap:9px;padding:7px 8px;border:1px solid #e6eaf0;border-radius:9px;min-height:39px;cursor:pointer;background:#fff}
+.material-page .m-work.selected{background:#e6f8e5;border-color:#c7ebc5}
+.material-page .m-work input{width:18px;height:18px;accent-color:#159447;flex:0 0 18px}
+.material-page .m-work i{font-size:19px;width:24px;text-align:center}
+.material-page .m-work span{font-size:12px;font-weight:650}
+.material-page .m-detail-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.material-page .m-detail-title{display:flex;align-items:center;gap:9px}
+.material-page .m-detail-title i{font-size:26px;color:#ad690c}
+.material-page .m-detail-title h5{font-size:17px;font-weight:750;margin:0}
+.material-page .m-room-status{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:650}
+.material-page .m-room-status select{border:1px solid #e6d18e;background:#fff1c4;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700}
+.material-page .m-work-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.material-page .m-work-tab{border:1px solid #e0e5ec;background:#fff;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:7px;box-shadow:0 2px 5px #0000000a}
+.material-page .m-work-tab.active{background:#7040b7;color:#fff;border-color:#7040b7}
+.material-page .m-work-panel{display:none}
+.material-page .m-work-panel.active{display:block}
+.material-page .m-material-card{border:1px solid #e6eaf0;border-radius:11px;padding:9px;display:grid;grid-template-columns:38% minmax(0,1fr);gap:10px;align-items:center;height:100%}
+.material-page .m-material-card img{width:100%;height:125px;object-fit:cover;border-radius:8px}
+.material-page .m-material-card h6{font-size:12px;font-weight:750;margin:0 0 8px}
+.material-page .m-info{display:grid;grid-template-columns:55px 8px minmax(0,1fr);gap:4px;font-size:10px;padding:2px 0}
+.material-page .m-info strong{font-weight:650}
+.material-page .m-swatch{width:44px;height:44px;border-radius:8px;border:1px solid #ddd;float:right;margin-left:6px}
+.material-page .m-edit{display:block;margin:5px 0 0 auto;border:1px solid #d5dce5;background:#fff;border-radius:8px;padding:5px 9px;font-size:10px;font-weight:700}
+.material-page .m-small-material{display:grid;grid-template-columns:105px minmax(0,1fr);gap:9px;align-items:center;border:1px solid #e6eaf0;border-radius:11px;padding:8px;height:100%}
+.material-page .m-small-material img{width:105px;height:78px;object-fit:cover;border-radius:8px}
+.material-page .m-small-material h6{font-size:12px;font-weight:750;margin:0 0 5px}
+.material-page .m-selected{background:#e5f8e4;border:1px solid #c9edc7;border-radius:11px;padding:9px}
+.material-page .m-selected h6{font-size:12px;font-weight:750;margin:0 0 7px}
+.material-page .m-chip{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid #dce8dc;border-radius:7px;padding:5px 7px;margin:2px;font-size:10px;font-weight:650}
+.material-page .m-chip button{border:0;background:none;padding:0;color:#64748b}
+.material-page .m-remark textarea{font-size:11px;border:1px solid #dce2e9;border-radius:9px;min-height:65px}
+.material-page .m-save{background:#172331;color:#fff;border:1px solid #172331;border-radius:9px;padding:11px 14px;font-size:12px;font-weight:700;white-space:nowrap}
+.material-page .m-save:hover{background:#26384c}
+@media(max-width:1199px){.material-page .m-material-card{grid-template-columns:34% minmax(0,1fr)}}
+@media(max-width:767px){.material-page .m-card{padding:10px}.material-page .m-room{grid-template-columns:58px minmax(0,1fr) 20px 10px}.material-page .m-room img{width:58px;height:42px}.material-page .m-material-card{grid-template-columns:1fr}.material-page .m-material-card img{height:150px}.material-page .m-small-material{grid-template-columns:85px minmax(0,1fr)}.material-page .m-small-material img{width:85px;height:70px}}
+</style>
+
+<div class="material-page">
+  <div class="row g-2">
+    <!-- Step 1: Select room -->
+    <div class="col-xl-2 col-lg-4">
+      <div class="m-card">
+        <div class="m-heading"><span class="step-no">1</span><div><h5>Select Room</h5><p>Choose a room to configure works and materials.</p></div></div>
+        <div class="m-room-list" id="materialRoomList">
+          <div class="m-room active" data-room="Living Room"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=240" alt=""><span class="m-room-name">Living Room</span><i class="bi bi-check-circle-fill m-room-check"></i><i class="bi bi-chevron-right"></i></div>
+          <div class="m-room" data-room="Master Bedroom"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=240" alt=""><span class="m-room-name">Master Bedroom</span><i class="m-room-radio"></i><i class="bi bi-chevron-right"></i></div>
+          <div class="m-room" data-room="Bedroom 2"><img src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=240" alt=""><span class="m-room-name">Bedroom 2</span><i class="m-room-radio"></i><i class="bi bi-chevron-right"></i></div>
+          <div class="m-room" data-room="Bedroom 3"><img src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=240" alt=""><span class="m-room-name">Bedroom 3</span><i class="m-room-radio"></i><i class="bi bi-chevron-right"></i></div>
+          <div class="m-room" data-room="Kitchen"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=240" alt=""><span class="m-room-name">Kitchen</span><i class="m-room-radio"></i><i class="bi bi-chevron-right"></i></div>
+          <div class="m-room" data-room="Pooja Room"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=240" alt=""><span class="m-room-name">Pooja Room</span><i class="m-room-radio"></i><i class="bi bi-chevron-right"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Select work scope -->
+    <div class="col-xl-3 col-lg-4">
+      <div class="m-card">
+        <div class="m-heading"><span class="step-no">2</span><div><h5>Select Works for <span id="selectedRoomTitle">Living Room</span></h5><p>Choose only the works required for this room. (You can select one or multiple works)</p></div></div>
+        <div class="m-work-list" id="materialWorkList">
+          <label class="m-work selected"><input type="checkbox" checked value="Painting"><i class="bi bi-paint-roller"></i><span>Painting</span></label>
+          <label class="m-work"><input type="checkbox" value="Wardrobe"><i class="bi bi-door-closed"></i><span>Wardrobe</span></label>
+          <label class="m-work"><input type="checkbox" value="Loft"><i class="bi bi-box"></i><span>Loft</span></label>
+          <label class="m-work selected"><input type="checkbox" checked value="False Ceiling"><i class="bi bi-lamp"></i><span>False Ceiling</span></label>
+          <label class="m-work selected"><input type="checkbox" checked value="TV Unit"><i class="bi bi-display"></i><span>TV Unit</span></label>
+          <label class="m-work"><input type="checkbox" value="Wall Paneling / Cladding"><i class="bi bi-columns"></i><span>Wall Paneling / Cladding</span></label>
+          <label class="m-work"><input type="checkbox" value="Lighting"><i class="bi bi-lightbulb"></i><span>Lighting</span></label>
+          <label class="m-work"><input type="checkbox" value="Curtains & Blinds"><i class="bi bi-window"></i><span>Curtains &amp; Blinds</span></label>
+          <label class="m-work"><input type="checkbox" value="Furniture (Loose)"><i class="bi bi- sofa"></i><span>Furniture (Loose)</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Material details -->
+    <div class="col-xl-7 col-lg-4">
+      <div class="m-card">
+        <div class="m-detail-top">
+          <div class="m-detail-title"><i class="bi bi-house-door"></i><h5><span id="materialRoomHeading">Living Room</span> – Material Selection</h5></div>
+          <label class="m-room-status">Room Status:
+            <select><option>In Progress</option><option>Pending</option><option>Submitted</option><option>Approved</option><option>Revision</option></select>
+          </label>
+        </div>
+
+        <div class="m-work-tabs" id="materialWorkTabs">
+          <button class="m-work-tab active" type="button" data-panel="painting"><i class="bi bi-paint-roller"></i>Painting</button>
+          <button class="m-work-tab" type="button" data-panel="ceiling"><i class="bi bi-lamp"></i>False Ceiling</button>
+          <button class="m-work-tab" type="button" data-panel="tvunit"><i class="bi bi-display"></i>TV Unit</button>
+        </div>
+
+        <div class="m-work-panel active" data-content="painting">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="m-material-card">
+                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=500" alt="Living room paint design">
+                <div><h6>Wall Paint – Main</h6><div class="m-info"><span>Brand</span><b>:</b><strong>Asian Paints</strong></div><div class="m-info"><span>Colour</span><b>:</b><strong>Whispering Smoke</strong></div><div class="m-info"><span>Code</span><b>:</b><strong>8308</strong></div><div class="m-info"><span>Finish</span><b>:</b><strong>Matte</strong></div><button class="m-edit" type="button"><i class="bi bi-pencil me-1"></i>Edit</button></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="m-card h-100 p-2">
+                <div class="d-flex justify-content-between"><h6 class="fw-bold mb-2" style="font-size:12px">Accent Wall</h6><span class="m-swatch" style="background:#b7cbb5"></span></div>
+                <div class="m-info"><span>Brand</span><b>:</b><strong>Nippon Paint</strong></div><div class="m-info"><span>Colour</span><b>:</b><strong>Soft Marion</strong></div><div class="m-info"><span>Code</span><b>:</b><strong>OW 1045P</strong></div><div class="m-info"><span>Finish</span><b>:</b><strong>Matte</strong></div><button class="m-edit" type="button"><i class="bi bi-pencil me-1"></i>Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-work-panel" data-content="ceiling">
+          <div class="m-small-material"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400" alt="False ceiling"><div><h6>False Ceiling Details</h6><div class="m-info"><span>Type</span><b>:</b><strong>Gypsum</strong></div><div class="m-info"><span>Design</span><b>:</b><strong>Cove + LED</strong></div><div class="m-info"><span>Colour</span><b>:</b><strong>Warm White</strong></div><div class="m-info"><span>Area</span><b>:</b><strong>280 Sq.ft</strong></div></div></div>
+        </div>
+
+        <div class="m-work-panel" data-content="tvunit">
+          <div class="m-small-material"><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=400" alt="TV unit"><div><h6>TV Unit Details</h6><div class="m-info"><span>Material</span><b>:</b><strong>Laminate</strong></div><div class="m-info"><span>Finish</span><b>:</b><strong>Matt</strong></div><div class="m-info"><span>Colour</span><b>:</b><strong>Walnut + Off White</strong></div><div class="m-info"><span>Size</span><b>:</b><strong>10' (W) × 8' (H)</strong></div></div></div>
+        </div>
+
+        <div class="row g-2 mt-2 align-items-stretch">
+          <div class="col-lg-5">
+            <div class="m-selected h-100">
+              <h6><i class="bi bi-check-circle me-1 text-success"></i>Selected Works (<span id="selectedWorkCount">3</span>)</h6>
+              <div id="selectedWorkChips">
+                <span class="m-chip">Painting <button type="button" aria-label="Remove">×</button></span>
+                <span class="m-chip">False Ceiling <button type="button" aria-label="Remove">×</button></span>
+                <span class="m-chip">TV Unit <button type="button" aria-label="Remove">×</button></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="m-remark h-100">
+              <label class="fw-bold mb-1" style="font-size:12px"><i class="bi bi-file-text me-1"></i>Room Remark</label>
+              <textarea class="form-control" placeholder="Add notes for this room..."></textarea>
+            </div>
+          </div>
+          <div class="col-lg-3 d-flex align-items-end">
+            <button type="button" class="m-save w-100">Save &amp; Next Room <i class="bi bi-arrow-right ms-1"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const root = document.currentScript.previousElementSibling;
+  if(!root || !root.classList.contains('material-page')) return;
+
+  const roomItems = [...root.querySelectorAll('.m-room')];
+  const roomTitle = root.querySelector('#selectedRoomTitle');
+  const roomHeading = root.querySelector('#materialRoomHeading');
+  const workList = root.querySelector('#materialWorkList');
+  const chips = root.querySelector('#selectedWorkChips');
+  const count = root.querySelector('#selectedWorkCount');
+  const tabs = [...root.querySelectorAll('.m-work-tab')];
+  const panels = [...root.querySelectorAll('.m-work-panel')];
+
+  function refreshWorks(){
+    const checked = [...workList.querySelectorAll('input:checked')];
+    workList.querySelectorAll('.m-work').forEach(label=>label.classList.toggle('selected',label.querySelector('input').checked));
+    count.textContent = checked.length;
+    chips.innerHTML = '';
+    checked.forEach(input=>{
+      const chip = document.createElement('span');
+      chip.className = 'm-chip';
+      chip.append(document.createTextNode(input.value+' '));
+      const remove = document.createElement('button');
+      remove.type = 'button'; remove.textContent = '×'; remove.setAttribute('aria-label','Remove '+input.value);
+      remove.addEventListener('click',()=>{input.checked=false;refreshWorks();});
+      chip.appendChild(remove); chips.appendChild(chip);
+    });
+    const allowed = checked.map(x=>x.value.toLowerCase().replaceAll(' ',''));
+    tabs.forEach(tab=>{
+      const match = tab.dataset.panel === 'painting' ? allowed.includes('painting') :
+                    tab.dataset.panel === 'ceiling' ? allowed.includes('falseceiling') :
+                    tab.dataset.panel === 'tvunit' ? allowed.includes('tvunit') : false;
+      tab.hidden = !match;
+    });
+    if(!tabs.some(t=>!t.hidden && t.classList.contains('active'))){
+      tabs.forEach(t=>t.classList.remove('active'));
+      panels.forEach(p=>p.classList.remove('active'));
+      const first=tabs.find(t=>!t.hidden);
+      if(first){first.classList.add('active');root.querySelector('[data-content="'+first.dataset.panel+'"]').classList.add('active');}
+    }
+  }
+  workList.addEventListener('change',refreshWorks);
+  roomItems.forEach(item=>item.addEventListener('click',()=>{
+    roomItems.forEach(room=>{
+      room.classList.remove('active');
+      const mark=room.querySelector('.m-room-check,.m-room-radio');
+      mark.className=room===item?'bi bi-check-circle-fill m-room-check':'m-room-radio';
+    });
+    item.classList.add('active');
+    roomTitle.textContent=item.dataset.room;
+    roomHeading.textContent=item.dataset.room;
+  }));
+  tabs.forEach(tab=>tab.addEventListener('click',()=>{
+    if(tab.hidden)return;
+    tabs.forEach(t=>t.classList.toggle('active',t===tab));
+    panels.forEach(p=>p.classList.toggle('active',p.dataset.content===tab.dataset.panel));
+  }));
+  refreshWorks();
+})();
+</script>

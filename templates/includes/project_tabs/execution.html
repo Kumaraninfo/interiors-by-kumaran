@@ -1,0 +1,183 @@
+{# Execution tab include: templates/includes/project_tabs/execution.html #}
+<style>
+.execution-page{color:#172331;font-size:12px}
+.execution-page .e-card{background:#fff;border:1px solid #e1e6ed;border-radius:15px;box-shadow:0 4px 13px rgba(15,23,42,.06);padding:11px;height:100%}
+.execution-page .e-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.execution-page .e-title{display:flex;align-items:center;gap:8px;min-width:0}
+.execution-page .e-title>i{font-size:22px;color:#a9650b}
+.execution-page .e-title h5{font-size:14px;font-weight:750;margin:0}
+.execution-page .e-title p{font-size:10px;color:#64748b;margin:2px 0 0}
+.execution-page .e-btn-dark{background:#172331;color:#fff;border:1px solid #172331;border-radius:8px;padding:6px 10px;font-size:10px;font-weight:700;white-space:nowrap}
+.execution-page .e-btn-light{background:#fff;color:#172331;border:1px solid #cbd5e1;border-radius:8px;padding:5px 9px;font-size:10px;font-weight:700;white-space:nowrap}
+.execution-page .e-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.execution-page .e-stat{display:flex;align-items:center;gap:7px;padding:8px;border-radius:10px;min-height:55px}
+.execution-page .e-stat.green{background:#e7f8e7;color:#15803d}.execution-page .e-stat.blue{background:#e5f2ff;color:#0876bd}.execution-page .e-stat.amber{background:#fff3d8;color:#b77908}.execution-page .e-stat.red{background:#ffe8e9;color:#dc2626}
+.execution-page .e-stat i{font-size:21px}.execution-page .e-stat small{display:block;font-size:9px;color:#475569;font-weight:650}.execution-page .e-stat strong{font-size:18px;font-weight:800;line-height:1.1}
+.execution-page .e-timeline{display:flex;align-items:flex-start;justify-content:space-between;position:relative;padding:2px 5px 0;gap:3px}
+.execution-page .e-timeline:before{content:"";position:absolute;left:5%;right:5%;top:13px;height:3px;background:linear-gradient(to right,#159447 0 60%,#cbd0d8 60%);z-index:0}
+.execution-page .e-milestone{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;text-align:center;min-width:0}
+.execution-page .e-milestone .dot{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#159b43;color:#fff;border:2px solid #e2f7e5;font-size:12px}
+.execution-page .e-milestone.current .dot{background:#ffc928;color:#172331;box-shadow:0 0 0 5px #fff0c4}
+.execution-page .e-milestone.pending .dot{background:#fff;border:2px solid #cbd0d8;color:#cbd0d8}
+.execution-page .e-milestone b{font-size:10px;line-height:1.15}.execution-page .e-milestone small{font-size:9px;color:#64748b}
+.execution-page .e-table-wrap{overflow-x:auto}
+.execution-page .e-table{min-width:600px;margin:0;vertical-align:middle;font-size:10px}
+.execution-page .e-table th{background:#eef0f2;font-weight:750;white-space:nowrap;padding:7px 6px}
+.execution-page .e-table td{padding:6px;border-color:#e8ebef;white-space:nowrap}
+.execution-page .e-progress{height:8px;background:#e5e7eb;border-radius:20px;min-width:65px;overflow:hidden}
+.execution-page .e-progress span{height:100%;display:block;background:linear-gradient(90deg,#16a34a,#008b28);border-radius:20px}
+.execution-page .e-badge{display:inline-block;border-radius:20px;padding:4px 7px;font-size:9px;font-weight:700}
+.execution-page .e-badge.done{background:#d8f6d9;color:#16803b}.execution-page .e-badge.doing{background:#fff0c4;color:#9a6500}.execution-page .e-badge.pending{background:#ffe3e5;color:#b42323}
+.execution-page .e-room{display:grid;grid-template-columns:49px minmax(0,1fr) 80px 26px;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid #edf0f3}
+.execution-page .e-room:last-child{border:0}
+.execution-page .e-room img{width:49px;height:34px;object-fit:cover;border-radius:6px}
+.execution-page .e-room strong{font-size:10px;display:block}.execution-page .e-room small{font-size:9px;color:#64748b}
+.execution-page .e-site-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.execution-page .e-site-photos img{width:100%;height:70px;object-fit:cover;border-radius:8px}
+.execution-page .e-photo-date{text-align:center;font-size:9px;margin-top:3px}
+.execution-page .e-note{font-size:10px;line-height:1.45;padding-left:16px;margin:0}
+.execution-page .e-material-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.execution-page .e-material{border-radius:10px;padding:8px;background:#f0f2f5}
+.execution-page .e-material:nth-child(2){background:#e5f8e4}.execution-page .e-material:nth-child(3){background:#fff2d8}
+.execution-page .e-material small{display:block;font-size:9px}.execution-page .e-material strong{font-size:14px;font-weight:800}
+.execution-page .e-team{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.execution-page .e-member{border:1px solid #e8ebef;border-radius:9px;padding:6px 3px;text-align:center}
+.execution-page .e-avatar{width:28px;height:28px;border-radius:50%;background:#e8edf3;display:grid;place-items:center;margin:0 auto 4px;font-size:14px}
+.execution-page .e-member strong{display:block;font-size:9px}.execution-page .e-member small{font-size:8px;color:#64748b}
+.execution-page .e-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.execution-page .e-actions button{font-size:10px;font-weight:650;border-radius:8px;padding:8px 4px;white-space:nowrap}
+@media(max-width:1199px){.execution-page .e-team{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:767px){.execution-page .e-stats{grid-template-columns:repeat(2,1fr)}.execution-page .e-timeline{overflow-x:auto;min-width:520px}.execution-page .e-actions{grid-template-columns:1fr}.execution-page .e-room{grid-template-columns:45px minmax(0,1fr) 70px 22px}}
+</style>
+
+<div class="execution-page">
+ <div class="row g-2">
+  <div class="col-xl-4 col-lg-6">
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-tools"></i><div><h5>Execution Overview</h5><p>On-site work progress and status.</p></div></div></div>
+    <div class="e-stats">
+     <div class="e-stat green"><i class="bi bi-arrow-repeat"></i><div><small>Overall Progress</small><strong>72%</strong></div></div>
+     <div class="e-stat blue"><i class="bi bi-shield-check"></i><div><small>Completed</small><strong>12</strong></div></div>
+     <div class="e-stat amber"><i class="bi bi-stopwatch"></i><div><small>In Progress</small><strong>4</strong></div></div>
+     <div class="e-stat red"><i class="bi bi-person-exclamation"></i><div><small>Pending</small><strong>2</strong></div></div>
+    </div>
+   </div>
+  </div>
+  <div class="col-xl-8 col-lg-6">
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-calendar-range"></i><div><h5>Execution Timeline</h5></div></div><a href="#" class="small text-decoration-none fw-semibold">View All →</a></div>
+    <div class="e-timeline">
+     <div class="e-milestone"><span class="dot"><i class="bi bi-check-lg"></i></span><b>Site Handover</b><small>06 Nov</small></div>
+     <div class="e-milestone"><span class="dot"><i class="bi bi-check-lg"></i></span><b>Initial Work</b><small>10 Nov</small></div>
+     <div class="e-milestone"><span class="dot"><i class="bi bi-check-lg"></i></span><b>Civil Work</b><small>25 Nov</small></div>
+     <div class="e-milestone current"><span class="dot"><i class="bi bi-circle-fill"></i></span><b>Interior Work</b><small>15 Dec</small></div>
+     <div class="e-milestone pending"><span class="dot"></span><b>Finishing</b><small>15 Mar</small></div>
+     <div class="e-milestone pending"><span class="dot"></span><b>Handover</b><small>30 Apr</small></div>
+    </div>
+   </div>
+  </div>
+
+  <div class="col-xl-4 col-lg-6">
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-layers"></i><div><h5>Room-wise Execution Progress</h5></div></div></div>
+    <div class="e-table-wrap">
+     <table class="table e-table">
+      <thead><tr><th>Room / Area</th><th>Scope of Work</th><th>Progress</th><th>%</th></tr></thead>
+      <tbody>
+       <tr><td><div class="e-room"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=160" alt=""><strong>Living Room</strong></div></td><td>Painting, False Ceiling, TV Unit</td><td><div class="e-progress"><span style="width:85%"></span></div></td><td>85%</td></tr>
+       <tr><td><div class="e-room"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=160" alt=""><strong>Master Bedroom</strong></div></td><td>Wardrobe, Loft, Painting, FC</td><td><div class="e-progress"><span style="width:70%"></span></div></td><td>70%</td></tr>
+       <tr><td><div class="e-room"><img src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=160" alt=""><strong>Bedroom 2</strong></div></td><td>Wardrobe, Loft, Painting</td><td><div class="e-progress"><span style="width:60%"></span></div></td><td>60%</td></tr>
+       <tr><td><div class="e-room"><img src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=160" alt=""><strong>Bedroom 3</strong></div></td><td>Wardrobe, Loft, Painting</td><td><div class="e-progress"><span style="width:60%"></span></div></td><td>60%</td></tr>
+       <tr><td><div class="e-room"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=160" alt=""><strong>Kitchen</strong></div></td><td>Modular Kitchen, Tiles, Painting</td><td><div class="e-progress"><span style="width:75%"></span></div></td><td>75%</td></tr>
+       <tr><td><div class="e-room"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=160" alt=""><strong>Pooja Room</strong></div></td><td>Pooja Unit, Lighting, Painting</td><td><div class="e-progress"><span style="width:100%"></span></div></td><td>100%</td></tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+  </div>
+
+  <div class="col-xl-4 col-lg-6">
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-card-checklist"></i><div><h5>Execution Task List</h5></div></div><button class="e-btn-dark" type="button" id="addExecutionTask"><i class="bi bi-plus-lg me-1"></i>Add Task</button></div>
+    <div class="e-table-wrap">
+     <table class="table e-table">
+      <thead><tr><th>S.No</th><th>Task / Work Item</th><th>Assigned To</th><th>Start</th><th>End</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="executionTasks">
+       <tr><td>1</td><td>Civil Preparation</td><td>Arun (Civil)</td><td>06 Nov</td><td>12 Nov</td><td><span class="e-badge done">Completed</span></td><td><button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger e-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr><td>2</td><td>Electrical Wiring</td><td>Selvam (Electrical)</td><td>13 Nov</td><td>20 Nov</td><td><span class="e-badge done">Completed</span></td><td><button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger e-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr><td>3</td><td>False Ceiling Work</td><td>Mani (Carpenter)</td><td>21 Nov</td><td>05 Dec</td><td><span class="e-badge doing">In Progress</span></td><td><button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger e-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr><td>4</td><td>Wardrobe Work</td><td>Mani (Carpenter)</td><td>06 Dec</td><td>20 Dec</td><td><span class="e-badge doing">In Progress</span></td><td><button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger e-delete"><i class="bi bi-trash"></i></button></td></tr>
+       <tr><td>5</td><td>Painting Work</td><td>Ravi (Painting)</td><td>21 Dec</td><td>10 Jan</td><td><span class="e-badge pending">Pending</span></td><td><button class="btn btn-sm p-0"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm p-0 text-danger e-delete"><i class="bi bi-trash"></i></button></td></tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+  </div>
+
+  <div class="col-xl-4 col-lg-6">
+   <div class="e-card mb-2">
+    <div class="e-head"><div class="e-title"><i class="bi bi-camera"></i><div><h5>Site Updates</h5></div></div><a href="#" class="small text-decoration-none fw-semibold">View All →</a></div>
+    <div class="e-site-photos">
+     <div><img src="https://images.unsplash.com/photo-1503387762-592duce5994f?w=300" alt="Site update 1"><div class="e-photo-date">08 Dec 2026</div></div>
+     <div><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=300" alt="Site update 2"><div class="e-photo-date">10 Dec 2026</div></div>
+     <div><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=300" alt="Site update 3"><div class="e-photo-date">12 Dec 2026</div></div>
+    </div>
+   </div>
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-file-earmark-text"></i><div><h5>Site Notes / Daily Report</h5></div></div><button type="button" class="e-btn-light"><i class="bi bi-pencil me-1"></i>Edit</button></div>
+    <ul class="e-note"><li>False ceiling framing – 80% completed.</li><li>Wardrobe installation – in progress.</li><li>Painting material delivered to site.</li><li>Next: Painting work to start from 21 Dec.</li></ul>
+   </div>
+  </div>
+
+  <div class="col-xl-4 col-lg-6">
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-box-seam"></i><div><h5>Material Consumption (Execution)</h5></div></div></div>
+    <div class="e-material-stats">
+     <div class="e-material"><small>Total Material</small><strong>₹ 14,80,000</strong></div>
+     <div class="e-material"><small>Consumed</small><strong>₹ 10,65,000</strong></div>
+     <div class="e-material"><small>Remaining</small><strong>₹ 4,15,000</strong></div>
+    </div>
+   </div>
+  </div>
+  <div class="col-xl-4 col-lg-6">
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-people"></i><div><h5>Site Team &amp; Assignment</h5></div></div><button type="button" class="e-btn-light">Manage Team</button></div>
+    <div class="e-team">
+     <div class="e-member"><span class="e-avatar"><i class="bi bi-person-fill"></i></span><strong>Arun Kumar</strong><small>Site PM</small></div>
+     <div class="e-member"><span class="e-avatar"><i class="bi bi-person-fill"></i></span><strong>Selvam</strong><small>Electrical</small></div>
+     <div class="e-member"><span class="e-avatar"><i class="bi bi-person-fill"></i></span><strong>Mani</strong><small>Carpentry</small></div>
+     <div class="e-member"><span class="e-avatar"><i class="bi bi-person-fill"></i></span><strong>Ravi</strong><small>Painting</small></div>
+    </div>
+   </div>
+  </div>
+  <div class="col-xl-4 col-lg-12">
+   <div class="e-card">
+    <div class="e-head"><div class="e-title"><i class="bi bi-lightning-charge"></i><div><h5>Actions</h5></div></div></div>
+    <div class="e-actions">
+     <button type="button" class="e-btn-dark"><i class="bi bi-graph-up-arrow me-1"></i>Update Progress</button>
+     <button type="button" class="e-btn-light"><i class="bi bi-camera me-1"></i>Add Site Update</button>
+     <button type="button" class="e-btn-light"><i class="bi bi-file-earmark-text me-1"></i>Generate Report</button>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<script>
+(function(){
+ const root=document.currentScript.previousElementSibling;
+ if(!root||!root.classList.contains('execution-page'))return;
+ const body=root.querySelector('#executionTasks');
+ root.querySelector('#addExecutionTask').addEventListener('click',()=>{
+   const n=body.rows.length+1;
+   const row=body.insertRow();
+   row.innerHTML='<td>'+n+'</td><td>New Work Item</td><td>Not Assigned</td><td>—</td><td>—</td><td><span class="e-badge pending">Pending</span></td><td><button class="btn btn-sm p-0 text-danger e-delete"><i class="bi bi-trash"></i></button></td>';
+ });
+ body.addEventListener('click',e=>{
+   if(e.target.closest('.e-delete')){
+     e.target.closest('tr').remove();
+     [...body.rows].forEach((r,i)=>r.cells[0].textContent=i+1);
+   }
+ });
+})();
+</script>

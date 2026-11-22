@@ -1,1 +1,195 @@
-Hiiiii
+{# Overview tab content only. Include inside the Overview .tab-pane in project_update.html #}
+<style>
+/* IBK Overview */
+.ibk-overview{display:flex;flex-direction:column;gap:12px;color:#172331;font-size:13px}
+.ibk-overview .ov-card{background:#fff;border:1px solid #e1e5eb;border-radius:17px;padding:15px 17px;box-shadow:0 4px 13px rgba(20,32,48,.06);min-width:0;height:100%}
+.ibk-overview .ov-top-grid{display:grid;grid-template-columns:1.25fr 1.08fr 1fr;gap:12px}
+.ibk-overview .ov-bottom-grid{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:12px}
+.ibk-overview .ov-card-head{display:flex;align-items:flex-start;gap:11px;padding-bottom:10px;margin-bottom:9px;border-bottom:1px solid #edf0f3}
+.ibk-overview .ov-card-head>i{font-size:25px;color:#b7791f;line-height:1}
+.ibk-overview .ov-card-head h6{font-size:15px;font-weight:750;margin:0 0 3px;color:#172331}
+.ibk-overview .ov-card-head p{font-size:11px;color:#64748b;margin:0}
+.ibk-overview .ov-details{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+.ibk-overview .ov-detail-col+.ov-detail-col{border-left:1px solid #e5e7eb;padding-left:14px}
+.ibk-overview .ov-detail{display:flex;align-items:center;gap:11px;min-height:43px;border-bottom:1px solid #edf0f3;padding:5px 0}
+.ibk-overview .ov-detail:last-child{border-bottom:0}
+.ibk-overview .ov-detail>i{width:23px;text-align:center;font-size:19px;color:#b7791f;flex-shrink:0}
+.ibk-overview .ov-detail small{display:block;font-size:10px;color:#64748b;line-height:1.25}
+.ibk-overview .ov-detail strong{display:block;font-size:12px;font-weight:700;color:#172331;line-height:1.35;overflow-wrap:anywhere}
+.ibk-overview .ov-status-layout{display:flex;align-items:center;gap:17px;min-height:125px}
+.ibk-overview .ov-donut{--progress:0%;width:124px;height:124px;border-radius:50%;background:conic-gradient(#159b35 var(--progress),#e5e7eb var(--progress));display:grid;place-items:center;flex-shrink:0;position:relative}
+.ibk-overview .ov-donut:before{content:"";position:absolute;inset:12px;background:#fff;border-radius:50%}
+.ibk-overview .ov-donut-inner{position:relative;text-align:center}
+.ibk-overview .ov-donut-inner strong{display:block;font-size:26px;line-height:1.1;color:#111827}
+.ibk-overview .ov-donut-inner span{font-size:11px;color:#475569}
+.ibk-overview .ov-status-list{flex:1;min-width:0}
+.ibk-overview .ov-status-row{display:grid;grid-template-columns:20px 1fr auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #edf0f3;font-size:11px}
+.ibk-overview .ov-status-row:last-child{border-bottom:0}
+.ibk-overview .ov-status-row i{font-size:17px;color:#159b35}
+.ibk-overview .ov-status-row .active-dot{color:#f5b400}
+.ibk-overview .ov-status-row .pending-dot{color:#aab2bd}
+.ibk-overview .ov-status-row strong{font-size:11px;white-space:nowrap}
+.ibk-overview .ov-value-row{display:flex;justify-content:space-between;gap:8px;padding:8px 9px;border-bottom:1px solid #edf0f3;font-size:12px;border-radius:7px}
+.ibk-overview .ov-value-row strong{white-space:nowrap;font-size:12px}
+.ibk-overview .ov-value-row.total{background:#fff0c7;font-weight:700}
+.ibk-overview .ov-value-row.paid{background:#e7f8df}
+.ibk-overview .ov-value-row.balance{background:#ffe5e5;color:#a21c1c;border:0}
+.ibk-overview .ov-scope-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ibk-overview .ov-scope-item{min-height:72px;border:1px solid #e4e8ee;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:7px;background:linear-gradient(180deg,#fff,#fbfcfe)}
+.ibk-overview .ov-scope-item i{font-size:23px;color:#b7791f}
+.ibk-overview .ov-scope-item span{font-size:11px;font-weight:650;line-height:1.2}
+.ibk-overview .ov-milestone{display:grid;grid-template-columns:18px 1fr auto;align-items:center;gap:9px;min-height:25px;font-size:11px;border-bottom:1px solid #f0f2f5}
+.ibk-overview .ov-milestone:last-child{border:0}
+.ibk-overview .ov-milestone i{font-size:16px;color:#159b35}
+.ibk-overview .ov-milestone.current i{color:#f0ae00}
+.ibk-overview .ov-milestone.pending i{color:#aab2bd}
+.ibk-overview .ov-milestone time{white-space:nowrap;color:#475569;font-size:10px}
+.ibk-overview .ov-update{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #edf0f3}
+.ibk-overview .ov-update:last-child{border-bottom:0}
+.ibk-overview .ov-update-icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#e8f8e9;color:#159b35;font-size:18px;flex-shrink:0}
+.ibk-overview .ov-update:nth-child(3) .ov-update-icon{background:#f0eaff;color:#7046c8}
+.ibk-overview .ov-update:nth-child(4) .ov-update-icon{background:#e5f4ff;color:#1682c4}
+.ibk-overview .ov-update strong{display:block;font-size:11px;line-height:1.35}
+.ibk-overview .ov-update small{display:block;font-size:10px;color:#64748b;margin-top:2px}
+.ibk-overview .ov-view-all{margin-left:auto;color:#172331;text-decoration:none;font-size:11px;font-weight:700;white-space:nowrap}
+.ibk-overview .ov-view-all:hover{color:#b7791f}
+@media(max-width:1100px){.ibk-overview .ov-top-grid{grid-template-columns:1fr 1fr}.ibk-overview .ov-top-grid>.ov-card:last-child{grid-column:1/-1}.ibk-overview .ov-bottom-grid{grid-template-columns:1fr 1fr}.ibk-overview .ov-bottom-grid>.ov-card:last-child{grid-column:1/-1}}
+@media(max-width:650px){.ibk-overview .ov-top-grid,.ibk-overview .ov-bottom-grid{grid-template-columns:1fr}.ibk-overview .ov-top-grid>.ov-card:last-child,.ibk-overview .ov-bottom-grid>.ov-card:last-child{grid-column:auto}.ibk-overview .ov-status-layout{justify-content:center}.ibk-overview .ov-details{column-gap:8px}.ibk-overview .ov-detail-col+.ov-detail-col{padding-left:8px}}
+</style>
+
+<div class="ibk-overview">
+    <!-- TOP ROW -->
+    <div class="ov-top-grid">
+        <!-- Project Overview -->
+        <div class="ov-card">
+            <div class="ov-card-head">
+                <i class="bi bi-info-circle"></i>
+                <div><h6>Project Overview</h6><p>Key details, scope and current status of the project.</p></div>
+            </div>
+            <div class="ov-details">
+                <div class="ov-detail-col">
+                    <div class="ov-detail"><i class="bi bi-grid"></i><div><small>Project Code</small><strong>{{ project.project_code|default:"-" }}</strong></div></div>
+                    <div class="ov-detail"><i class="bi bi-person"></i><div><small>Client Name</small><strong>{{ project.client.client_name|default:"-" }}</strong></div></div>
+                    <div class="ov-detail"><i class="bi bi-house"></i><div><small>Project Type</small><strong>{{ project.project_type|default:"-" }}</strong></div></div>
+                    <div class="ov-detail"><i class="bi bi-geo-alt"></i><div><small>Location</small><strong>{{ project.location|default:"-" }}</strong></div></div>
+                </div>
+                <div class="ov-detail-col">
+                    <div class="ov-detail"><i class="bi bi-arrows-angle-expand"></i><div><small>Built-up Area</small><strong>{{ project.area_sqft|default:"-" }} Sq.ft</strong></div></div>
+                    <div class="ov-detail"><i class="bi bi-door-closed"></i><div><small>Configuration</small><strong>{{ project.bedroom_count|default:"-" }} BHK</strong></div></div>
+                    <div class="ov-detail"><i class="bi bi-calendar"></i><div><small>Start Date</small><strong>{{ project.project_start_date|date:"d M Y"|default:"-" }}</strong></div></div>
+                    <div class="ov-detail"><i class="bi bi-calendar-check"></i><div><small>Target Handover</small><strong>{{ project.target_handover_date|date:"d M Y"|default:"-" }}</strong></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Status -->
+        <div class="ov-card">
+            <div class="ov-card-head">
+                <i class="bi bi-bullseye"></i>
+                <div><h6>Project Status</h6><p>Current stage and overall progress.</p></div>
+            </div>
+            <div class="ov-status-layout">
+                <div class="ov-donut" id="overviewProgressDonut" style="--progress: {{ project.progress|default:0 }}%;">
+                    <div class="ov-donut-inner"><strong>{{ project.progress|default:0 }}%</strong><span>Completed</span></div>
+                </div>
+                <div class="ov-status-list">
+                    <div class="ov-status-row"><i class="bi bi-check-circle-fill"></i><span>Completed Stages</span><strong id="completedStageCount">-</strong></div>
+                    <div class="ov-status-row"><i class="bi bi-circle-fill active-dot"></i><span>Current Stage</span><strong>{{ project.get_current_status_display|default:project.current_status|default:"-" }}</strong></div>
+                    <div class="ov-status-row"><i class="bi bi-circle pending-dot"></i><span>Remaining Stages</span><strong id="remainingStageCount">-</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Value: replace sample figures with your actual model fields when available -->
+        <div class="ov-card">
+            <div class="ov-card-head">
+                <i class="bi bi-database"></i>
+                <div><h6>Project Value</h6><p>Quotation &amp; cost summary.</p></div>
+            </div>
+            <div class="ov-value-row"><span>Quoted Amount</span><strong>₹ 18,50,000</strong></div>
+            <div class="ov-value-row"><span>Additional / Variations</span><strong>₹ 2,75,000</strong></div>
+            <div class="ov-value-row total"><span>Total Project Value</span><strong>₹ 21,25,000</strong></div>
+            <div class="ov-value-row paid"><span>Amount Paid</span><strong>₹ 15,30,000</strong></div>
+            <div class="ov-value-row balance"><span>Balance Amount</span><strong>₹ 5,95,000</strong></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="ov-bottom-grid">
+        <!-- Scope of Work: sample work categories; replace with project scope loop if available -->
+        <div class="ov-card">
+            <div class="ov-card-head"><i class="bi bi-layers"></i><div><h6>Scope of Work</h6><p>Work packages included in this project.</p></div></div>
+            <div class="ov-scope-grid">
+                <div class="ov-scope-item"><i class="bi bi-bricks"></i><span>Civil Work</span></div>
+                <div class="ov-scope-item"><i class="bi bi-lightning-charge"></i><span>Electrical</span></div>
+                <div class="ov-scope-item"><i class="bi bi-cloud"></i><span>False Ceiling</span></div>
+                <div class="ov-scope-item"><i class="bi bi-door-closed"></i><span>Carpentry<br>(Wardrobe)</span></div>
+                <div class="ov-scope-item"><i class="bi bi-paint-roller"></i><span>Painting</span></div>
+                <div class="ov-scope-item"><i class="bi bi-armchair"></i><span>Installation</span></div>
+            </div>
+        </div>
+
+        <!-- Key Milestones -->
+        <div class="ov-card">
+            <div class="ov-card-head"><i class="bi bi-flag"></i><div><h6>Key Milestones</h6><p>Important project milestones and dates.</p></div></div>
+            <div class="ov-milestone-list" id="overviewMilestones">
+                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Enquiry</span><time>-</time></div>
+                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Quotation</span><time>-</time></div>
+                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Site Visit</span><time>-</time></div>
+                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Payment</span><time>-</time></div>
+                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>3D Design</span><time>-</time></div>
+                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Material Selection</span><time>-</time></div>
+                <div class="ov-milestone current"><i class="bi bi-circle-fill"></i><span>Execution (In Progress)</span><time>{{ project.project_start_date|date:"d M Y"|default:"-" }}</time></div>
+                <div class="ov-milestone pending"><i class="bi bi-circle"></i><span>Handover (Planned)</span><time>{{ project.target_handover_date|date:"d M Y"|default:"-" }}</time></div>
+            </div>
+        </div>
+
+        <!-- Recent Updates: sample content until activity model is connected -->
+        <div class="ov-card">
+            <div class="ov-card-head"><i class="bi bi-bell"></i><div><h6>Recent Updates</h6><p>Latest activity and notes.</p></div><a class="ov-view-all" href="#execution">View All <i class="bi bi-arrow-right"></i></a></div>
+            <div class="ov-update"><div class="ov-update-icon"><i class="bi bi-image"></i></div><div><strong>Execution work started at site</strong><small>06 Dec 2026, 10:30 AM</small></div></div>
+            <div class="ov-update"><div class="ov-update-icon"><i class="bi bi-people"></i></div><div><strong>Electrical &amp; lighting points completed</strong><small>10 Nov 2026, 04:15 PM</small></div></div>
+            <div class="ov-update"><div class="ov-update-icon"><i class="bi bi-box"></i></div><div><strong>False ceiling frame work completed</strong><small>20 Nov 2026, 11:20 AM</small></div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const status = "{{ project.current_status|default:''|escapejs }}";
+    const stages = ["enquiry", "quotation", "site_visit", "payment", "3d_design", "material_selection", "execution", "handover"];
+    const index = stages.indexOf(status);
+    const completed = index < 0 ? 0 : index;
+    const remaining = index < 0 ? stages.length : stages.length - index - 1;
+    const completedEl = document.getElementById("completedStageCount");
+    const remainingEl = document.getElementById("remainingStageCount");
+    if (completedEl) completedEl.textContent = completed + " / " + stages.length;
+    if (remainingEl) remainingEl.textContent = remaining;
+
+    const donut = document.getElementById("overviewProgressDonut");
+    if (donut) {
+        const rawProgress = Number("{{ project.progress|default:0 }}");
+        const safeProgress = Number.isFinite(rawProgress) ? Math.max(0, Math.min(100, rawProgress)) : 0;
+        donut.style.setProperty("--progress", safeProgress + "%");
+    }
+
+    const milestoneList = document.getElementById("overviewMilestones");
+    if (milestoneList && index >= 0) {
+        milestoneList.querySelectorAll(".ov-milestone").forEach(function (item, i) {
+            item.classList.remove("current", "pending");
+            const icon = item.querySelector("i");
+            if (i < index) {
+                icon.className = "bi bi-check-circle-fill";
+            } else if (i === index) {
+                item.classList.add("current");
+                icon.className = "bi bi-circle-fill";
+                const label = item.querySelector("span");
+                if (label && !label.textContent.includes("In Progress")) label.textContent += " (In Progress)";
+            } else {
+                item.classList.add("pending");
+                icon.className = "bi bi-circle";
+            }
+        });
+    }
+});
+</script>

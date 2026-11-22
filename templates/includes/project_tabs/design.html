@@ -1,0 +1,152 @@
+{# 3D Design tab include: templates/includes/project_tabs/design_3d.html #}
+<style>
+.design3d-page{color:#172331;font-size:13px}
+.design3d-page .d3-card{background:#fff;border:1px solid #e1e6ed;border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.06);padding:13px;height:100%}
+.design3d-page .d3-heading{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.design3d-page .d3-heading>i{font-size:22px;color:#ad690c}
+.design3d-page .d3-heading h5{font-size:15px;font-weight:750;margin:0;color:#172331}
+.design3d-page .d3-heading p{font-size:11px;color:#64748b;margin:2px 0 0}
+.design3d-page .d3-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.design3d-page .d3-stat{border-radius:12px;padding:10px 7px;text-align:center;min-width:0}
+.design3d-page .d3-stat.green{background:#eaf8e9;color:#16803a}.design3d-page .d3-stat.blue{background:#e8f3ff;color:#0876bd}.design3d-page .d3-stat.amber{background:#fff5df;color:#a56500}.design3d-page .d3-stat.red{background:#ffebeb;color:#dc2626}
+.design3d-page .d3-stat i{display:block;font-size:20px;margin-bottom:4px}
+.design3d-page .d3-stat-label{font-size:10px;font-weight:650;color:#475569;white-space:nowrap}
+.design3d-page .d3-stat-value{font-size:19px;font-weight:800;line-height:1.25}
+.design3d-page .d3-btn-dark{background:#172331;color:#fff;border:1px solid #172331;border-radius:9px;padding:7px 11px;font-size:11px;font-weight:650;white-space:nowrap}
+.design3d-page .d3-btn-light{background:#fff;color:#172331;border:1px solid #cbd5e1;border-radius:9px;padding:6px 10px;font-size:11px;font-weight:650;white-space:nowrap}
+.design3d-page .d3-pill{display:inline-block;border-radius:20px;padding:5px 10px;font-size:10px;font-weight:700;white-space:nowrap}
+.design3d-page .d3-pill.approved{background:#d9f5d9;color:#16803b}.design3d-page .d3-pill.review{background:#dceeff;color:#1260a8}.design3d-page .d3-pill.revision{background:#fff0c4;color:#996000}.design3d-page .d3-room-list{display:grid;gap:0}
+.design3d-page .d3-room{display:grid;grid-template-columns:70px minmax(0,1fr) auto auto;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid #edf0f3}
+.design3d-page .d3-room:last-child{border-bottom:0}
+.design3d-page .d3-room-thumb{width:70px;height:42px;object-fit:cover;border-radius:8px;background:#eef0f2}
+.design3d-page .d3-room-name{font-size:11px;font-weight:750;line-height:1.3}
+.design3d-page .d3-room-size{font-size:10px;color:#64748b}
+.design3d-page .d3-icon-btn{border:0;background:transparent;color:#172331;padding:3px;font-size:14px}
+.design3d-page .d3-viewer-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px;flex-wrap:wrap}
+.design3d-page .d3-viewer-title{display:flex;align-items:center;gap:8px}
+.design3d-page .d3-viewer-title i{font-size:21px;color:#ad690c}
+.design3d-page .d3-viewer-title h5{font-size:15px;font-weight:750;margin:0}
+.design3d-page .d3-version{background:#e4f8e3;color:#16803b;border:0;border-radius:20px;padding:6px 10px;font-size:11px;font-weight:700}
+.design3d-page .d3-main-image{height:350px;border-radius:12px;overflow:hidden;position:relative;background:#e8e4dc}
+.design3d-page .d3-main-image img{width:100%;height:100%;object-fit:cover;display:block}
+.design3d-page .d3-image-control{position:absolute;top:10px;right:10px;width:34px;height:34px;border:0;border-radius:9px;background:#fff;color:#172331;font-size:17px;box-shadow:0 2px 8px #0002}
+.design3d-page .d3-image-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:50%;background:rgba(20,28,38,.72);color:#fff;font-size:20px}
+.design3d-page .d3-image-arrow.prev{left:10px}.design3d-page .d3-image-arrow.next{right:10px}
+.design3d-page .d3-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.design3d-page .d3-thumb{height:68px;border:2px solid transparent;border-radius:9px;overflow:hidden;padding:0;background:#eee}
+.design3d-page .d3-thumb.active{border-color:#e6a817}
+.design3d-page .d3-thumb img{width:100%;height:100%;object-fit:cover}
+.design3d-page .d3-detail{display:grid;grid-template-columns:100px 10px minmax(0,1fr);gap:5px;padding:4px 0;font-size:11px;align-items:start}
+.design3d-page .d3-detail strong{font-weight:650}
+.design3d-page .d3-history-row{display:grid;grid-template-columns:36px 1fr auto 18px;gap:7px;align-items:center;padding:7px 0;border-bottom:1px solid #edf0f3;font-size:11px}
+.design3d-page .d3-history-row:last-child{border-bottom:0}
+.design3d-page .d3-history-row strong{font-size:11px}
+.design3d-page .d3-history-row small{display:block;color:#64748b;font-size:10px}
+.design3d-page .d3-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.design3d-page .d3-action-grid .btn{font-size:11px;font-weight:650;border-radius:9px;padding:9px 7px;white-space:nowrap}
+.design3d-page .d3-action-grid .wide{grid-column:1/-1}
+@media(max-width:1199px){.design3d-page .d3-main-image{height:300px}}
+@media(max-width:767px){.design3d-page .d3-card{padding:11px}.design3d-page .d3-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.design3d-page .d3-main-image{height:240px}.design3d-page .d3-room{grid-template-columns:58px minmax(0,1fr) auto auto}.design3d-page .d3-room-thumb{width:58px;height:40px}.design3d-page .d3-detail{grid-template-columns:85px 9px minmax(0,1fr)}}
+</style>
+
+<div class="design3d-page">
+  <div class="row g-2">
+    <!-- Left column -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="d3-card mb-2">
+        <div class="d3-heading"><i class="bi bi-clipboard-data"></i><div><h5>3D Design Overview</h5><p>Project 3D design status, rooms and approvals.</p></div></div>
+        <div class="d3-stats">
+          <div class="d3-stat green"><i class="bi bi-layers"></i><div class="d3-stat-label">Rooms</div><div class="d3-stat-value">6</div></div>
+          <div class="d3-stat blue"><i class="bi bi-display"></i><div class="d3-stat-label">Designs</div><div class="d3-stat-value">6</div></div>
+          <div class="d3-stat green"><i class="bi bi-check-circle"></i><div class="d3-stat-label">Approved</div><div class="d3-stat-value">4</div></div>
+          <div class="d3-stat amber"><i class="bi bi-clock"></i><div class="d3-stat-label">In Review</div><div class="d3-stat-value">1</div></div>
+          <div class="d3-stat red"><i class="bi bi-pencil"></i><div class="d3-stat-label">Revisions</div><div class="d3-stat-value">1</div></div>
+        </div>
+      </div>
+
+      <div class="d3-card">
+        <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+          <div class="d3-heading mb-0"><i class="bi bi-building"></i><div><h5>Room-wise 3D Design</h5></div></div>
+          <button type="button" class="d3-btn-dark"><i class="bi bi-plus-lg me-1"></i>Add Room Design</button>
+        </div>
+        <div class="d3-room-list">
+          <div class="d3-room"><img class="d3-room-thumb" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=240" alt="Living room"><div><div class="d3-room-name">Living Room</div><div class="d3-room-size">(16' × 18')</div></div><span class="d3-pill approved">Approved</span><div><button class="d3-icon-btn"><i class="bi bi-eye"></i></button><button class="d3-icon-btn"><i class="bi bi-pencil"></i></button></div></div>
+          <div class="d3-room"><img class="d3-room-thumb" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=240" alt="Master bedroom"><div><div class="d3-room-name">Master Bedroom</div><div class="d3-room-size">(12' × 16')</div></div><span class="d3-pill review">In Review</span><div><button class="d3-icon-btn"><i class="bi bi-eye"></i></button><button class="d3-icon-btn"><i class="bi bi-pencil"></i></button></div></div>
+          <div class="d3-room"><img class="d3-room-thumb" src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=240" alt="Bedroom 2"><div><div class="d3-room-name">Bedroom 2</div><div class="d3-room-size">(11' × 14')</div></div><span class="d3-pill approved">Approved</span><div><button class="d3-icon-btn"><i class="bi bi-eye"></i></button><button class="d3-icon-btn"><i class="bi bi-pencil"></i></button></div></div>
+          <div class="d3-room"><img class="d3-room-thumb" src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=240" alt="Bedroom 3"><div><div class="d3-room-name">Bedroom 3</div><div class="d3-room-size">(11' × 14')</div></div><span class="d3-pill approved">Approved</span><div><button class="d3-icon-btn"><i class="bi bi-eye"></i></button><button class="d3-icon-btn"><i class="bi bi-pencil"></i></button></div></div>
+          <div class="d3-room"><img class="d3-room-thumb" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=240" alt="Kitchen"><div><div class="d3-room-name">Kitchen</div><div class="d3-room-size">(10' × 12')</div></div><span class="d3-pill revision">Revision</span><div><button class="d3-icon-btn"><i class="bi bi-eye"></i></button><button class="d3-icon-btn"><i class="bi bi-pencil"></i></button></div></div>
+          <div class="d3-room"><img class="d3-room-thumb" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=240" alt="Pooja room"><div><div class="d3-room-name">Pooja Room</div><div class="d3-room-size">(5' × 6')</div></div><span class="d3-pill approved">Approved</span><div><button class="d3-icon-btn"><i class="bi bi-eye"></i></button><button class="d3-icon-btn"><i class="bi bi-pencil"></i></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main 3D preview -->
+    <div class="col-xl-5 col-lg-7">
+      <div class="d3-card">
+        <div class="d3-viewer-top">
+          <div class="d3-viewer-title"><i class="bi bi-house-gear"></i><h5>3D Design - Living Room</h5></div>
+          <div class="d-flex align-items-center gap-2"><select class="d3-version"><option>v3 (Current)</option><option>v2</option><option>v1</option></select><button type="button" class="d3-btn-light" title="Fullscreen"><i class="bi bi-arrows-fullscreen"></i></button></div>
+        </div>
+        <div class="d3-main-image" id="design3dMain">
+          <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200" alt="Living room 3D design preview" id="design3dMainImage">
+          <button class="d3-image-control" type="button" title="Expand"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="d3-image-arrow prev" type="button" aria-label="Previous image"><i class="bi bi-chevron-left"></i></button>
+          <button class="d3-image-arrow next" type="button" aria-label="Next image"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div class="d3-thumbs" id="design3dThumbs">
+          <button class="d3-thumb active" type="button"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=400" alt="Living room angle 1"></button>
+          <button class="d3-thumb" type="button"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400" alt="Living room angle 2"></button>
+          <button class="d3-thumb" type="button"><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=400" alt="Living room angle 3"></button>
+          <button class="d3-thumb" type="button"><img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400" alt="Living room angle 4"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="col-xl-3 col-lg-12">
+      <div class="d3-card mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-2"><div class="d3-heading mb-0"><i class="bi bi-clipboard2-data"></i><div><h5>Design Details</h5></div></div><button type="button" class="d3-btn-light"><i class="bi bi-pencil me-1"></i>Edit</button></div>
+        <div class="d3-detail"><i class="bi bi-house"></i><span>Room</span><b>:</b><strong>Living Room</strong></div>
+        <div class="d3-detail"><i class="bi bi-calendar3"></i><span>Design Version</span><b>:</b><strong>v3 (Current)</strong></div>
+        <div class="d3-detail"><i class="bi bi-clock"></i><span>Last Updated</span><b>:</b><strong>10 Nov 2026, 04:20 PM</strong></div>
+        <div class="d3-detail"><i class="bi bi-person"></i><span>Designed By</span><b>:</b><strong>Design Team</strong></div>
+        <div class="d3-detail"><i class="bi bi-check-circle"></i><span>Status</span><b>:</b><strong><span class="d3-pill approved">Approved</span></strong></div>
+        <div class="d3-detail"><i class="bi bi-person-check"></i><span>Approval By</span><b>:</b><strong>Mr. Suresh Kumar (Client)</strong></div>
+        <div class="d3-detail"><i class="bi bi-journal-text"></i><span>Remarks</span><b>:</b><strong>Final design approved.</strong></div>
+      </div>
+
+      <div class="d3-card mb-2">
+        <div class="d3-heading"><i class="bi bi-clock-history"></i><div><h5>Version History</h5></div></div>
+        <div class="d3-history-row"><strong>+ v3</strong><span>10 Nov 2026</span><span class="d3-pill approved">Approved</span><i class="bi bi-download"></i></div>
+        <div class="d3-history-row"><strong>+ v2</strong><span>05 Nov 2026</span><span class="d3-pill revision">Revision</span><i class="bi bi-download"></i></div>
+        <div class="d3-history-row"><strong>+ v1</strong><span>01 Nov 2026</span><span class="d3-pill review">Submitted</span><i class="bi bi-download"></i></div>
+      </div>
+
+      <div class="d3-card">
+        <div class="d3-heading"><i class="bi bi-layers"></i><div><h5>Actions</h5></div></div>
+        <div class="d3-action-grid">
+          <button type="button" class="btn d3-btn-dark"><i class="bi bi-cloud-arrow-up me-1"></i>Upload New Version</button>
+          <button type="button" class="btn d3-btn-light"><i class="bi bi-share me-1"></i>Share with Client</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const root = document.currentScript.previousElementSibling;
+  if(!root || !root.classList.contains('design3d-page')) return;
+  const main = root.querySelector('#design3dMainImage');
+  const thumbs = [...root.querySelectorAll('.d3-thumb')];
+  let active = 0;
+  function show(index){
+    active = (index + thumbs.length) % thumbs.length;
+    main.src = thumbs[active].querySelector('img').src.replace('w=400','w=1200');
+    thumbs.forEach((thumb,i)=>thumb.classList.toggle('active',i===active));
+  }
+  thumbs.forEach((thumb,i)=>thumb.addEventListener('click',()=>show(i)));
+  root.querySelector('.d3-image-arrow.prev').addEventListener('click',()=>show(active-1));
+  root.querySelector('.d3-image-arrow.next').addEventListener('click',()=>show(active+1));
+})();
+</script>
