@@ -34,10 +34,28 @@
 .ibk-overview .ov-value-row.total{background:#fff0c7;font-weight:700}
 .ibk-overview .ov-value-row.paid{background:#e7f8df}
 .ibk-overview .ov-value-row.balance{background:#ffe5e5;color:#a21c1c;border:0}
-.ibk-overview .ov-scope-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.ibk-overview .ov-scope-item{min-height:72px;border:1px solid #e4e8ee;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:7px;background:linear-gradient(180deg,#fff,#fbfcfe)}
-.ibk-overview .ov-scope-item i{font-size:23px;color:#b7791f}
-.ibk-overview .ov-scope-item span{font-size:11px;font-weight:650;line-height:1.2}
+.ibk-overview .ov-works-scroll{max-height:310px;overflow-y:auto;overflow-x:hidden;padding:2px 5px 2px 1px;scrollbar-width:thin;scrollbar-color:#cbd5e1 #f1f5f9}
+.ibk-overview .ov-works-scroll::-webkit-scrollbar{width:6px}
+.ibk-overview .ov-works-scroll::-webkit-scrollbar-track{background:#f1f5f9;border-radius:10px}
+.ibk-overview .ov-works-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+.ibk-overview .ov-room-box{border:1px solid #e6eaf0;border-radius:13px;padding:10px;margin-bottom:9px;background:linear-gradient(145deg,#fff,#fafbfd)}
+.ibk-overview .ov-room-box:last-child{margin-bottom:0}
+.ibk-overview .ov-room-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.ibk-overview .ov-room-title{display:flex;align-items:center;gap:8px;min-width:0}
+.ibk-overview .ov-room-title>i{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#fff4df;color:#b7791f;font-size:16px;flex-shrink:0}
+.ibk-overview .ov-room-title strong{display:block;font-size:12px;font-weight:750;color:#172331;overflow-wrap:anywhere}
+.ibk-overview .ov-room-title small{display:block;color:#64748b;font-size:10px;margin-top:2px}
+.ibk-overview .ov-room-count{font-size:10px;font-weight:700;color:#64748b;background:#f1f5f9;border-radius:20px;padding:4px 8px;white-space:nowrap}
+.ibk-overview .ov-work-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.ibk-overview .ov-work-box{border:1px solid #e8edf2;border-radius:10px;padding:8px;background:#fff;min-width:0}
+.ibk-overview .ov-work-box strong{display:block;font-size:11px;font-weight:700;color:#243244;overflow-wrap:anywhere;line-height:1.35}
+.ibk-overview .ov-work-meta{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:6px}
+.ibk-overview .ov-work-meta small{font-size:9px;color:#64748b}
+.ibk-overview .ov-work-status{font-size:9px;font-weight:700;border-radius:20px;padding:3px 7px;background:#f1f5f9;color:#475569;white-space:nowrap}
+.ibk-overview .ov-work-status.completed{background:#e7f8ed;color:#16803d}
+.ibk-overview .ov-work-status.in_progress{background:#fff4d8;color:#9a6700}
+.ibk-overview .ov-work-empty,.ibk-overview .ov-empty{padding:17px 10px;text-align:center;border:1px dashed #d8dee7;border-radius:11px;color:#64748b;font-size:11px;background:#fafbfd}
+.ibk-overview .ov-work-empty i,.ibk-overview .ov-empty i{display:block;font-size:20px;color:#a0aaba;margin-bottom:5px}
 .ibk-overview .ov-milestone{display:grid;grid-template-columns:18px 1fr auto;align-items:center;gap:9px;min-height:25px;font-size:11px;border-bottom:1px solid #f0f2f5}
 .ibk-overview .ov-milestone:last-child{border:0}
 .ibk-overview .ov-milestone i{font-size:16px;color:#159b35}
@@ -89,8 +107,8 @@
                 <div><h6>Project Status</h6><p>Current stage and overall progress.</p></div>
             </div>
             <div class="ov-status-layout">
-                <div class="ov-donut" id="overviewProgressDonut" style="--progress: {{ project.progress|default:0 }}%;">
-                    <div class="ov-donut-inner"><strong>{{ project.progress|default:0 }}%</strong><span>Completed</span></div>
+                <div class="ov-donut" id="overviewProgressDonut" style="--progress: {{ progress|default:0 }}%;">
+                    <div class="ov-donut-inner"><strong>{{ progress|default:0 }}%</strong><span>Completed</span></div>
                 </div>
                 <div class="ov-status-list">
                     <div class="ov-status-row"><i class="bi bi-check-circle-fill"></i><span>Completed Stages</span><strong id="completedStageCount">-</strong></div>
@@ -116,16 +134,58 @@
 
     <!-- BOTTOM ROW -->
     <div class="ov-bottom-grid">
-        <!-- Scope of Work: sample work categories; replace with project scope loop if available -->
+        <!-- Planned Works: dynamic ProjectRoom + RoomWork data -->
         <div class="ov-card">
-            <div class="ov-card-head"><i class="bi bi-layers"></i><div><h6>Scope of Work</h6><p>Work packages included in this project.</p></div></div>
-            <div class="ov-scope-grid">
-                <div class="ov-scope-item"><i class="bi bi-bricks"></i><span>Civil Work</span></div>
-                <div class="ov-scope-item"><i class="bi bi-lightning-charge"></i><span>Electrical</span></div>
-                <div class="ov-scope-item"><i class="bi bi-cloud"></i><span>False Ceiling</span></div>
-                <div class="ov-scope-item"><i class="bi bi-door-closed"></i><span>Carpentry<br>(Wardrobe)</span></div>
-                <div class="ov-scope-item"><i class="bi bi-paint-roller"></i><span>Painting</span></div>
-                <div class="ov-scope-item"><i class="bi bi-armchair"></i><span>Installation</span></div>
+            <div class="ov-card-head">
+                <i class="bi bi-tools"></i>
+                <div>
+                    <h6>Planned Works</h6>
+                    <p>Room-wise works planned for this project.</p>
+                </div>
+                <span class="ov-room-count">{{ total_works|default:0 }} Works</span>
+            </div>
+
+            <div class="ov-works-scroll">
+                {% for room in project_rooms_data %}
+                    <div class="ov-room-box">
+                        <div class="ov-room-head">
+                            <div class="ov-room-title">
+                                <i class="bi bi-house-door"></i>
+                                <div>
+                                    <strong>{{ room.room_name|default:room.room_type|default:"Room" }}</strong>
+                                    <small>{{ room.room_type|cut:"_"|title }}{% if room.area_sqft %} · {{ room.area_sqft }} Sq.ft{% endif %}</small>
+                                </div>
+                            </div>
+                            <span class="ov-room-count">{{ room.works_count }} Works</span>
+                        </div>
+
+                        {% if room.works %}
+                            <div class="ov-work-grid">
+                                {% for work in room.works %}
+                                    <div class="ov-work-box">
+                                        <strong>{{ work.work_name|cut:"_"|title }}</strong>
+                                        {% if work.work_description %}
+                                            <small class="d-block text-muted mt-1">{{ work.work_description }}</small>
+                                        {% endif %}
+                                        <div class="ov-work-meta">
+                                            <small>{{ work.area_sqft|default:"0" }} Sq.ft</small>
+                                            <span class="ov-work-status {{ work.status }}">
+                                                {{ work.status|cut:"_"|title }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="ov-work-empty"><i class="bi bi-inbox"></i>No works added for this room yet.</div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <div class="ov-empty">
+                        <i class="bi bi-houses"></i>
+                        No rooms or works have been added to this project yet.
+                    </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -133,14 +193,30 @@
         <div class="ov-card">
             <div class="ov-card-head"><i class="bi bi-flag"></i><div><h6>Key Milestones</h6><p>Important project milestones and dates.</p></div></div>
             <div class="ov-milestone-list" id="overviewMilestones">
-                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Enquiry</span><time>-</time></div>
-                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Quotation</span><time>-</time></div>
-                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Site Visit</span><time>-</time></div>
-                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Payment</span><time>-</time></div>
-                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>3D Design</span><time>-</time></div>
-                <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Material Selection</span><time>-</time></div>
-                <div class="ov-milestone current"><i class="bi bi-circle-fill"></i><span>Execution (In Progress)</span><time>{{ project.project_start_date|date:"d M Y"|default:"-" }}</time></div>
-                <div class="ov-milestone pending"><i class="bi bi-circle"></i><span>Handover (Planned)</span><time>{{ project.target_handover_date|date:"d M Y"|default:"-" }}</time></div>
+                {% if stage_milestones %}
+                    {% for milestone in stage_milestones %}
+                        <div class="ov-milestone{% if milestone.is_current %} current{% elif not milestone.is_completed %} pending{% endif %}" data-stage="{{ milestone.stage }}">
+                            {% if milestone.is_completed %}
+                                <i class="bi bi-check-circle-fill"></i>
+                            {% elif milestone.is_current %}
+                                <i class="bi bi-circle-fill"></i>
+                            {% else %}
+                                <i class="bi bi-circle"></i>
+                            {% endif %}
+                            <span>{{ milestone.label }}</span>
+                            <time>{% if milestone.changed_at %}{{ milestone.changed_at|date:"d M Y" }}{% else %}-{% endif %}</time>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Enquiry</span><time>{{ project.created_at|date:"d M Y"|default:"-" }}</time></div>
+                    <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Quotation</span><time>-</time></div>
+                    <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Site Visit</span><time>-</time></div>
+                    <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Payment</span><time>-</time></div>
+                    <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>3D Design</span><time>-</time></div>
+                    <div class="ov-milestone"><i class="bi bi-check-circle-fill"></i><span>Material Selection</span><time>-</time></div>
+                    <div class="ov-milestone current"><i class="bi bi-circle-fill"></i><span>Execution (In Progress)</span><time>{{ project.project_start_date|date:"d M Y"|default:"-" }}</time></div>
+                    <div class="ov-milestone pending"><i class="bi bi-circle"></i><span>Handover (Planned)</span><time>{{ project.target_handover_date|date:"d M Y"|default:"-" }}</time></div>
+                {% endif %}
             </div>
         </div>
 
@@ -168,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const donut = document.getElementById("overviewProgressDonut");
     if (donut) {
-        const rawProgress = Number("{{ project.progress|default:0 }}");
+        const rawProgress = Number("{{ progress|default:0 }}");
         const safeProgress = Number.isFinite(rawProgress) ? Math.max(0, Math.min(100, rawProgress)) : 0;
         donut.style.setProperty("--progress", safeProgress + "%");
     }
@@ -176,11 +252,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const milestoneList = document.getElementById("overviewMilestones");
     if (milestoneList && index >= 0) {
         milestoneList.querySelectorAll(".ov-milestone").forEach(function (item, i) {
+            const stageValue = item.dataset.stage;
+            const itemIndex = stageValue ? stages.indexOf(stageValue) : i;
+            if (stageValue) return; // History-backed rows already have their correct state.
             item.classList.remove("current", "pending");
             const icon = item.querySelector("i");
-            if (i < index) {
+            if (itemIndex < index) {
                 icon.className = "bi bi-check-circle-fill";
-            } else if (i === index) {
+            } else if (itemIndex === index) {
                 item.classList.add("current");
                 icon.className = "bi bi-circle-fill";
                 const label = item.querySelector("span");

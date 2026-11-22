@@ -32,12 +32,24 @@
 
         <!-- BREADCRUMB -->
 
-       <div class="project-breadcrumb">
-        <a href="{% url 'owner_projects' %}">
-            <i class="bi bi-arrow-left"></i>
-            Back to Projects
-        </a>
-    </div>
+       <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <!-- LEFT SIDE -->
+            <div class="project-breadcrumb">
+                <a href="{% url 'owner_projects' %}">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Projects
+                </a>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <a class="project-breadcrumb" href="{% url 'edit_project' project.project_id %}"
+            class="btn btn-primary">
+               
+                Edit Project
+            </a>
+
+        </div>
 
 
         <!-- PROJECT BANNER -->

@@ -10,11 +10,11 @@ from django.db import transaction
 from django.utils import timezone
 from decimal import Decimal, InvalidOperation
 from uuid import uuid4
-from .models import (UserProfile,Client,Employee,Project,ProjectDetail)
+from .models import (UserProfile,Client,Employee,Project,ProjectDetail, ProjectRoom,RoomWork,ProjectStageHistory,)
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 from django.utils.dateparse import parse_date
-
+import json
 
 def home(request):
     return render(request, "home.html")
@@ -972,16 +972,17 @@ def edit_project(request, project_id):
         project_id=project_id
     )
 
-    # Owner permission
     profile = getattr(request.user, "userprofile", None)
 
     if not profile or not profile.is_owneruser:
-        messages.error(request, "You don't have permission to edit this project.")
+        messages.error(
+            request,
+            "You don't have permission to edit this project."
+        )
         return redirect("login")
 
     client = project.client
 
-    # Latest enquiry details
     enquiry = (
         project.details
         .filter(detail_type="enquiry")
@@ -994,38 +995,82 @@ def edit_project(request, project_id):
     if request.method == "POST":
 
         try:
+
             with transaction.atomic():
 
-                # CLIENT DETAILS
-                client.client_name = request.POST.get("client_name", "").strip()
-                client.phone = request.POST.get("phone", "").strip()
-                client.alternative_phone = request.POST.get("alternative_phone", "").strip()
-                client.email = request.POST.get("email", "").strip() or None
+                # ==================================
+                # 01 CLIENT INFORMATION
+                # ==================================
+
+                client.client_name = request.POST.get(
+                    "client_name", ""
+                ).strip()
+
+                client.phone = request.POST.get(
+                    "phone", ""
+                ).strip()
+
+                client.alternative_phone = request.POST.get(
+                    "alternative_phone", ""
+                ).strip()
+
+                client.email = request.POST.get(
+                    "email", ""
+                ).strip() or None
 
                 if not client.client_name or not client.phone:
-                    raise ValueError("Client name and phone are required.")
+                    raise ValueError(
+                        "Client name and phone are required."
+                    )
 
                 client.save()
 
-                # PROJECT DETAILS
-                project.project_code = request.POST.get(
-                    "project_code", project.project_code
+                # ==================================
+                # 02 PROJECT INFORMATION
+                # ==================================
+
+                old_status = project.current_status
+
+                project.location = request.POST.get(
+                    "location", ""
                 ).strip()
 
-                project.location = request.POST.get("location", "").strip()
-                project.google_map_link = request.POST.get("google_map_link", "").strip()
-                project.project_type = request.POST.get("project_type", "").strip()
+                project.google_map_link = request.POST.get(
+                    "google_map_link", ""
+                ).strip()
 
-                area = request.POST.get("area_sqft", "").strip()
+                project.project_type = request.POST.get(
+                    "project_type", ""
+                ).strip()
+
+                area = request.POST.get(
+                    "area_sqft", ""
+                ).strip()
+
                 project.area_sqft = Decimal(area) if area else None
 
                 # ROOM COUNTS
-                project.bedroom_count = int(request.POST.get("bedroom_count") or 0)
-                project.living_room_count = int(request.POST.get("living_room_count") or 0)
-                project.kitchen_count = int(request.POST.get("kitchen_count") or 0)
-                project.bathroom_count = int(request.POST.get("bathroom_count") or 0)
 
-                # PROJECT STATUS
+                project.bedroom_count = int(
+                    request.POST.get("bedroom_count") or 0
+                )
+
+                project.living_room_count = int(
+                    request.POST.get("living_room_count") or 0
+                )
+
+                project.kitchen_count = int(
+                    request.POST.get("kitchen_count") or 0
+                )
+
+                project.bathroom_count = int(
+                    request.POST.get("bathroom_count") or 0
+                )
+
+                # ==================================
+                # 03 PROJECT STATUS
+                # ==================================
+
                 status = request.POST.get("current_status")
 
                 valid_statuses = dict(Project.PROJECT_STATUS)
@@ -1035,9 +1080,14 @@ def edit_project(request, project_id):
 
                 project.current_status = status
 
-                # PROJECT DATES
+                # ==================================
+                # 04 PROJECT DATES
+                # ==================================
+
                 project.enquiry_date = (
-                    parse_date(request.POST.get("enquiry_date", ""))
+                    parse_date(
+                        request.POST.get("enquiry_date", "")
+                    )
                     or project.enquiry_date
                 )
 
@@ -1053,28 +1103,80 @@ def edit_project(request, project_id):
                     request.POST.get("actual_handover_date", "")
                 )
 
-                # MAP COORDINATES
-                latitude = request.POST.get("latitude", "").strip()
-                longitude = request.POST.get("longitude", "").strip()
+                # ==================================
+                # 05 MAP COORDINATES
+                # ==================================
 
-                project.latitude = Decimal(latitude) if latitude else None
-                project.longitude = Decimal(longitude) if longitude else None
+                latitude = request.POST.get(
+                    "latitude", ""
+                ).strip()
+
+                longitude = request.POST.get(
+                    "longitude", ""
+                ).strip()
+
+                project.latitude = (
+                    Decimal(latitude) if latitude else None
+                )
+
+                project.longitude = (
+                    Decimal(longitude) if longitude else None
+                )
+
+                # SAVE PROJECT
+                # Project.save() automatically creates
+                # ProjectStageHistory when stage changes.
 
                 project.save()
 
-                # ENQUIRY DETAILS - JSON
-                enquiry_data = enquiry.detail_data.copy() if enquiry else {}
+                # Save changed user in stage history
+
+                if old_status != status:
+
+                    history = (
+                        project.stage_history
+                        .order_by("-history_id")
+                        .first()
+                    )
+
+                    if history and history.stage == status:
+
+                        history.changed_by = request.user
+                        history.save(
+                            update_fields=["changed_by"]
+                        )
+
+                # ==================================
+                # 06 ENQUIRY DETAILS
+                # ==================================
+
+                enquiry_data = (
+                    enquiry.detail_data.copy()
+                    if enquiry else {}
+                )
 
                 enquiry_data.update({
-                    "property_type": request.POST.get("property_type", ""),
-                    "budget": request.POST.get("budget", ""),
-                    "message": request.POST.get("message", ""),
+                    "property_type": request.POST.get(
+                        "property_type", ""
+                    ),
+                    "budget": request.POST.get(
+                        "budget", ""
+                    ),
+                    "message": request.POST.get(
+                        "message", ""
+                    ),
                 })
 
                 if enquiry:
+
                     enquiry.detail_data = enquiry_data
+                    enquiry.created_by = (
+                        enquiry.created_by or request.user
+                    )
                     enquiry.save()
+
                 else:
+
                     ProjectDetail.objects.create(
                         project=project,
                         detail_type="enquiry",
@@ -1082,20 +1184,220 @@ def edit_project(request, project_id):
                         created_by=request.user
                     )
 
-            messages.success(request, "Project updated successfully!")
+                # ==================================
+                # 07 ROOM & WORK MANAGEMENT
+                # ==================================
+
+                rooms_json = request.POST.get(
+                    "rooms_json", "[]"
+                )
+
+                rooms_data = json.loads(rooms_json)
+
+                if not isinstance(rooms_data, list):
+                    raise ValueError("Invalid room data.")
+
+                for room_data in rooms_data:
+
+                    room_name = room_data.get(
+                        "room_name", ""
+                    ).strip()
+
+                    if not room_name:
+                        raise ValueError("Room name is required.")
+
+                    room_sqft = room_data.get(
+                        "area_sqft", 0
+                    ) or 0
+
+                    room_id = room_data.get("room_id")
+
+                    if room_id:
+
+                        room = get_object_or_404(
+                            ProjectRoom,
+                            room_id=room_id,
+                            project=project
+                        )
+
+                        room.room_name = room_name
+
+                        room.room_type = room_data.get(
+                            "room_type", ""
+                        )
+
+                        room.area_sqft = Decimal(
+                            str(room_sqft)
+                        )
+
+                        room.floor = room_data.get(
+                            "floor", ""
+                        )
+
+                        room.description = room_data.get(
+                            "description", ""
+                        )
+
+                        room.save()
+
+                    else:
+
+                        room = ProjectRoom.objects.create(
+                            project=project,
+                            room_name=room_name,
+                            room_type=room_data.get(
+                                "room_type", ""
+                            ),
+                            area_sqft=Decimal(
+                                str(room_sqft)
+                            ),
+                            floor=room_data.get("floor", ""),
+                            description=room_data.get(
+                                "description", ""
+                            )
+                        )
+
+                    # ==================================
+                    # ROOM WORKS
+                    # ==================================
+
+                    works_data = room_data.get("works", [])
+
+                    if not isinstance(works_data, list):
+                        raise ValueError("Invalid room work data.")
+
+                    for work_data in works_data:
+
+                        work_name = work_data.get(
+                            "work_name", ""
+                        ).strip()
+
+                        if not work_name:
+                            raise ValueError(
+                                f"Work name is required in {room_name}."
+                            )
+
+                        work_status = work_data.get(
+                            "status", "not_started"
+                        )
+
+                        valid_work_status = dict(
+                            RoomWork.WORK_STATUS
+                        )
+
+                        if work_status not in valid_work_status:
+                            raise ValueError(
+                                "Invalid room work status."
+                            )
+
+                        work_sqft = work_data.get(
+                            "area_sqft", 0
+                        ) or 0
+
+                        work_id = work_data.get("work_id")
+
+                        if work_id:
+
+                            work = get_object_or_404(
+                                RoomWork,
+                                work_id=work_id,
+                                room=room
+                            )
+
+                            work.work_name = work_name
+
+                            work.work_description = work_data.get(
+                                "work_description", ""
+                            )
+
+                            work.area_sqft = Decimal(
+                                str(work_sqft)
+                            )
+
+                            work.status = work_status
+
+                            work.start_date = parse_date(
+                                work_data.get("start_date", "")
+                            )
+
+                            work.completed_date = parse_date(
+                                work_data.get("completed_date", "")
+                            )
+
+                            work.remarks = work_data.get(
+                                "remarks", ""
+                            )
+
+                            work.save()
+
+                        else:
+
+                            RoomWork.objects.create(
+                                room=room,
+                                work_name=work_name,
+                                work_description=work_data.get(
+                                    "work_description", ""
+                                ),
+                                area_sqft=Decimal(
+                                    str(work_sqft)
+                                ),
+                                status=work_status,
+                                start_date=parse_date(
+                                    work_data.get("start_date", "")
+                                ),
+                                completed_date=parse_date(
+                                    work_data.get("completed_date", "")
+                                ),
+                                remarks=work_data.get(
+                                    "remarks", ""
+                                )
+                            )
+
+            messages.success(
+                request,
+                "Project updated successfully!"
+            )
+
             return redirect("owner_projects")
 
-        except (ValueError, InvalidOperation, TypeError) as error:
-            messages.error(request, f"Unable to update project: {error}")
+        except (
+            ValueError,
+            InvalidOperation,
+            TypeError
+        ) as error:
+
+            messages.error(
+                request,
+                f"Unable to update project: {error}"
+            )
+
+    # ==================================
+    # GET DATA
+    # ==================================
+
+    rooms = (
+        ProjectRoom.objects
+        .filter(project=project)
+        .prefetch_related("works")
+        .order_by("room_id")
+    )
+
+    stage_history = (
+        project.stage_history
+        .select_related("changed_by")
+        .order_by("changed_at", "history_id")
+    )
 
     context = {
         "project": project,
         "client": client,
         "enquiry_data": enquiry_data,
         "status_choices": Project.PROJECT_STATUS,
+        "rooms": rooms,
+        "stage_history": stage_history,
     }
 
-    return render(request, "owner/edit_project.html", context)
+    return render(request,"owner/edit_project.html",context)
 
 
 @login_required
@@ -1105,6 +1407,24 @@ def project_update(request, project_id):
         Project.objects.select_related("client"),
         project_id=project_id
     )
+
+    # ----------------------------------------
+    # OWNER PERMISSION
+    # ----------------------------------------
+    profile = getattr(request.user, "userprofile", None)
+
+    if not profile or not profile.is_owneruser:
+        messages.error(
+            request,
+            "You don't have permission to edit this project."
+        )
+        return redirect("login")
+
+    client = project.client
+
+    # ----------------------------------------
+    # PROJECT PROGRESS
+    # ----------------------------------------
     progress_map = {
         "enquiry": 1,
         "quotation": 8,
@@ -1115,21 +1435,10 @@ def project_update(request, project_id):
         "execution": 90,
         "handover": 100,
     }
-    current_status = project.current_status
-    progress = progress_map.get(
-            current_status,
-            0
-        )
-    # Owner permission
-    profile = getattr(request.user, "userprofile", None)
 
-    if not profile or not profile.is_owneruser:
-        messages.error(request, "You don't have permission to edit this project.")
-        return redirect("login")
-
-    client = project.client
-
-    # Latest enquiry details
+    # ----------------------------------------
+    # LATEST ENQUIRY DETAILS
+    # ----------------------------------------
     enquiry = (
         project.details
         .filter(detail_type="enquiry")
@@ -1137,21 +1446,37 @@ def project_update(request, project_id):
         .first()
     )
 
-    enquiry_data = enquiry.detail_data if enquiry else {}
+    enquiry_data = (
+        enquiry.detail_data.copy()
+        if enquiry and enquiry.detail_data
+        else {}
+    )
 
+    # ----------------------------------------
+    # POST UPDATE
+    # ----------------------------------------
     if request.method == "POST":
-
         try:
             with transaction.atomic():
 
                 # CLIENT DETAILS
-                client.client_name = request.POST.get("client_name", "").strip()
-                client.phone = request.POST.get("phone", "").strip()
-                client.alternative_phone = request.POST.get("alternative_phone", "").strip()
-                client.email = request.POST.get("email", "").strip() or None
+                client.client_name = request.POST.get(
+                    "client_name", ""
+                ).strip()
+                client.phone = request.POST.get(
+                    "phone", ""
+                ).strip()
+                client.alternative_phone = request.POST.get(
+                    "alternative_phone", ""
+                ).strip()
+                client.email = request.POST.get(
+                    "email", ""
+                ).strip() or None
 
                 if not client.client_name or not client.phone:
-                    raise ValueError("Client name and phone are required.")
+                    raise ValueError(
+                        "Client name and phone are required."
+                    )
 
                 client.save()
 
@@ -1159,23 +1484,35 @@ def project_update(request, project_id):
                 project.project_code = request.POST.get(
                     "project_code", project.project_code
                 ).strip()
-
-                project.location = request.POST.get("location", "").strip()
-                project.google_map_link = request.POST.get("google_map_link", "").strip()
-                project.project_type = request.POST.get("project_type", "").strip()
+                project.location = request.POST.get(
+                    "location", ""
+                ).strip()
+                project.google_map_link = request.POST.get(
+                    "google_map_link", ""
+                ).strip()
+                project.project_type = request.POST.get(
+                    "project_type", ""
+                ).strip()
 
                 area = request.POST.get("area_sqft", "").strip()
                 project.area_sqft = Decimal(area) if area else None
 
                 # ROOM COUNTS
-                project.bedroom_count = int(request.POST.get("bedroom_count") or 0)
-                project.living_room_count = int(request.POST.get("living_room_count") or 0)
-                project.kitchen_count = int(request.POST.get("kitchen_count") or 0)
-                project.bathroom_count = int(request.POST.get("bathroom_count") or 0)
+                project.bedroom_count = int(
+                    request.POST.get("bedroom_count") or 0
+                )
+                project.living_room_count = int(
+                    request.POST.get("living_room_count") or 0
+                )
+                project.kitchen_count = int(
+                    request.POST.get("kitchen_count") or 0
+                )
+                project.bathroom_count = int(
+                    request.POST.get("bathroom_count") or 0
+                )
 
                 # PROJECT STATUS
                 status = request.POST.get("current_status")
-
                 valid_statuses = dict(Project.PROJECT_STATUS)
 
                 if status not in valid_statuses:
@@ -1188,15 +1525,12 @@ def project_update(request, project_id):
                     parse_date(request.POST.get("enquiry_date", ""))
                     or project.enquiry_date
                 )
-
                 project.project_start_date = parse_date(
                     request.POST.get("project_start_date", "")
                 )
-
                 project.target_handover_date = parse_date(
                     request.POST.get("target_handover_date", "")
                 )
-
                 project.actual_handover_date = parse_date(
                     request.POST.get("actual_handover_date", "")
                 )
@@ -1208,11 +1542,16 @@ def project_update(request, project_id):
                 project.latitude = Decimal(latitude) if latitude else None
                 project.longitude = Decimal(longitude) if longitude else None
 
+                # Save project. Your Project.save() stage-history logic
+                # should create a history row when current_status changes.
                 project.save()
 
-                # ENQUIRY DETAILS - JSON
-                enquiry_data = enquiry.detail_data.copy() if enquiry else {}
-
+                # ENQUIRY JSON DETAILS
+                enquiry_data = (
+                    enquiry.detail_data.copy()
+                    if enquiry and enquiry.detail_data
+                    else {}
+                )
                 enquiry_data.update({
                     "property_type": request.POST.get("property_type", ""),
                     "budget": request.POST.get("budget", ""),
@@ -1234,18 +1573,127 @@ def project_update(request, project_id):
             return redirect("owner_projects")
 
         except (ValueError, InvalidOperation, TypeError) as error:
-            messages.error(request, f"Unable to update project: {error}")
+            messages.error(
+                request,
+                f"Unable to update project: {error}"
+            )
+
+    # ----------------------------------------
+    # PROJECT ROOMS + ROOM WORKS
+    # ----------------------------------------
+    rooms = (
+        project.rooms
+        .prefetch_related("works")
+        .order_by("room_id")
+    )
+
+    project_rooms_data = []
+
+    for room in rooms:
+        room_works_data = []
+
+        for work in room.works.all():
+            room_works_data.append({
+                "work_id": work.work_id,
+                "work_name": work.work_name,
+                "work_name_display": (work.work_name or "").replace("_", " ").title(),
+                "work_description": work.work_description,
+                "area_sqft": (
+                    str(work.area_sqft)
+                    if work.area_sqft is not None else "0"
+                ),
+                "status": work.status,
+                "start_date": (
+                    work.start_date.isoformat()
+                    if work.start_date else None
+                ),
+                "completed_date": (
+                    work.completed_date.isoformat()
+                    if work.completed_date else None
+                ),
+                "remarks": work.remarks,
+            })
+
+        project_rooms_data.append({
+            "room_id": room.room_id,
+            "room_name": room.room_name,
+            "room_type": room.room_type,
+            "area_sqft": (
+                str(room.area_sqft)
+                if room.area_sqft is not None else "0"
+            ),
+            "floor": room.floor,
+            "description": room.description,
+            "works_count": len(room_works_data),
+            "completed_works": sum(
+                1 for work in room_works_data
+                if work["status"] == "completed"
+            ),
+            "works": room_works_data,
+        })
+
+    # ----------------------------------------
+    # PROJECT STAGE HISTORY + KEY MILESTONES
+    # ----------------------------------------
+    stage_history = list(
+        project.stage_history.order_by("changed_at")
+    )
+
+    # Keep the latest changed_at for each stage.
+    stage_date_map = {}
+    for history in stage_history:
+        stage_date_map[history.stage] = history.changed_at
+
+    stage_milestones = []
+
+    for stage_value, stage_label in Project.PROJECT_STATUS:
+        # Enquiry always uses the project's creation timestamp.
+        if stage_value == "enquiry":
+            changed_at = project.created_at
+        else:
+            # Every other stage uses its actual history timestamp only.
+            changed_at = stage_date_map.get(stage_value)
+
+        stage_milestones.append({
+            "stage": stage_value,
+            "label": stage_label,
+            "changed_at": changed_at,
+            "is_current": stage_value == project.current_status,
+            "is_completed": (
+                changed_at is not None
+                and stage_value != project.current_status
+            ),
+        })
+
+    # ----------------------------------------
+    # FINAL CONTEXT
+    # ----------------------------------------
+    progress = progress_map.get(project.current_status, 0)
 
     context = {
         "project": project,
-        "progress":progress,
         "client": client,
+        "progress": progress,
         "enquiry_data": enquiry_data,
         "status_choices": Project.PROJECT_STATUS,
+
+        # Project -> Rooms -> Works
+        "project_rooms_data": project_rooms_data,
+        "total_rooms": len(project_rooms_data),
+        "total_works": sum(
+            len(room["works"]) for room in project_rooms_data
+        ),
+
+        # Stage history and milestones
+        "stage_history": stage_history,
+        "stage_milestones": stage_milestones,
     }
 
-    return render(request, "owner/project_update.html", context)
-
+    return render(
+        request,
+        "owner/project_update.html",
+        context
+    )
 
 @login_required(login_url='login')
 @never_cache

@@ -1,11 +1,15 @@
 
 from django.contrib import admin
+
 from .models import (
     UserProfile,
     Client,
     Employee,
     Project,
-    ProjectDetail
+    ProjectDetail,
+    ProjectRoom,
+    RoomWork,
+    ProjectStageHistory
 )
 
 
@@ -127,3 +131,75 @@ class ProjectDetailAdmin(admin.ModelAdmin):
     list_filter = ("detail_type",)
 
     search_fields = ("project__project_code",)
+
+
+# ==================================
+# PROJECT ROOM ADMIN
+# ==================================
+
+@admin.register(ProjectRoom)
+class ProjectRoomAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "room_id",
+        "project",
+        "room_name",
+        "room_type",
+        "area_sqft",
+    )
+
+    search_fields = (
+        "room_name",
+        "project__project_code",
+    )
+
+
+# ==================================
+# ROOM WORK ADMIN
+# ==================================
+
+@admin.register(RoomWork)
+class RoomWorkAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "work_id",
+        "room",
+        "work_name",
+        "area_sqft",
+        "status",
+        "start_date",
+        "completed_date",
+    )
+
+    list_filter = ("status",)
+
+    search_fields = (
+        "work_name",
+        "room__room_name",
+        "room__project__project_code",
+    )
+
+
+# ==================================
+# PROJECT STAGE HISTORY ADMIN
+# ==================================
+
+@admin.register(ProjectStageHistory)
+class ProjectStageHistoryAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "history_id",
+        "project",
+        "stage",
+        "changed_at",
+        "changed_by",
+    )
+
+    list_filter = ("stage", "changed_at")
+
+    search_fields = (
+        "project__project_code",
+        "remarks",
+    )
+
+    readonly_fields = ("changed_at",)

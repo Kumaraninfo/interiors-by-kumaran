@@ -1,813 +1,2291 @@
-
 {% load static %}
 
+
+
 <!DOCTYPE html>
+
 <html lang="en">
 
+
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
 
     <title>IBK | Edit Project</title>
 
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<!-- 
-    <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}"> -->
+
+<link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+
+
 
     <style>
-       
+
+
+
 /* ==========================================
+
    EDIT PROJECT - MODERN UI
+
 ========================================== */
 
+
+
 .edit-project-wrapper {
+
     padding: 22px 25px;
+
     max-width: 1500px;
+
     margin: auto;
+
 }
+
+
 
 /* PAGE HEADER */
 
+
+
 .edit-heading {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
     gap: 15px;
+
     margin-bottom: 22px;
+
 }
+
+
 
 .edit-heading h4 {
+
     font-size: 22px;
+
     font-weight: 750;
+
     letter-spacing: -0.5px;
+
     color: #192b4b;
+
     margin: 0 0 5px;
+
 }
+
+
 
 .edit-heading p {
+
     font-size: 13px;
+
     color: #8b95a7;
+
     margin: 0;
+
 }
+
+
 
 .back-btn {
+
     display: inline-flex;
+
     align-items: center;
+
     gap: 7px;
+
     color: #68758b;
+
     font-size: 12px;
+
     font-weight: 600;
+
     text-decoration: none;
+
     margin-bottom: 10px;
+
     transition: .2s ease;
+
 }
+
+
 
 .back-btn:hover {
+
     color: #304b91;
+
     transform: translateX(-3px);
+
 }
 
+
+
 .edit-heading .badge {
+
     background: #eaf0ff !important;
+
     color: #344e91 !important;
+
     font-size: 12px;
+
     font-weight: 700;
+
     padding: 9px 15px !important;
+
     border-radius: 7px;
+
     border: 1px solid #dce5ff;
+
 }
+
+
 
 /* MAIN FORM CONTAINER */
 
+
+
 .edit-form-container {
+
     background: #ffffff;
+
     border: 1px solid #e8edf4;
+
     border-radius: 13px;
+
     padding: 25px;
+
     box-shadow: 0 5px 25px rgba(29, 48, 83, 0.045);
+
 }
+
+
 
 /* SECTION */
 
+
+
 .form-section {
+
     margin-bottom: 20px;
+
 }
+
+
 
 .section-heading {
+
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     color: #263d70;
+
     font-size: 14px;
+
     font-weight: 750;
+
     letter-spacing: .1px;
+
     margin-bottom: 17px;
+
 }
+
+
 
 .section-heading i {
+
     width: 32px;
+
     height: 32px;
+
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
+
     background: #edf2ff;
+
     color: #405b9c;
+
     border-radius: 8px;
+
     font-size: 15px;
+
 }
 
+
+
 .section-divider {
+
     border: 0;
+
     border-top: 1px solid #edf0f5;
+
     margin: 20px 0;
+
     opacity: 1;
+
 }
+
+
 
 /* LABELS */
 
+
+
 .form-label {
+
     display: block;
+
     font-size: 12px;
+
     font-weight: 650;
+
     color: #475569;
+
     margin-bottom: 7px;
+
 }
 
+
+
 .required {
+
     color: #e05252;
+
     font-weight: 700;
+
 }
+
+
 
 /* INPUTS */
 
+
+
 .form-control,
+
 .form-select {
+
     width: 100%;
+
     min-height: 40px;
+
     padding: 9px 12px;
+
     font-size: 12.5px;
+
     color: #344054;
+
     background-color: #fbfcfe;
+
     border: 1px solid #e0e5ed;
+
     border-radius: 7px;
+
     transition: all .2s ease;
+
 }
+
+
 
 .form-control:hover,
+
 .form-select:hover {
+
     border-color: #c4cee0;
+
     background: #fff;
+
 }
+
+
 
 .form-control:focus,
+
 .form-select:focus {
+
     background: #fff;
+
     border-color: #536dfe;
+
     box-shadow: 0 0 0 3px rgba(83, 109, 254, .10);
+
     outline: none;
+
 }
+
+
 
 .form-control::placeholder {
+
     color: #a5afbf;
+
     font-size: 12px;
+
 }
 
+
+
 textarea.form-control {
+
     min-height: 75px;
+
     resize: vertical;
+
     line-height: 1.5;
+
 }
+
+
 
 /* PROJECT CODE */
 
+
+
 .project-code {
+
     background: #f0f3fa !important;
+
     color: #344e91 !important;
+
     font-weight: 750;
+
     border-color: #e2e8f4;
+
     letter-spacing: .3px;
+
 }
+
+
 
 /* ALERT MESSAGES */
 
+
+
 .edit-alert {
+
     font-size: 13px;
+
     padding: 12px 15px;
+
     border-radius: 8px;
+
     margin-bottom: 16px;
+
     border: 1px solid transparent;
+
 }
+
+
 
 .edit-alert.alert-success {
+
     background: #edf9f1;
+
     color: #247447;
+
     border-color: #d6f0df;
+
 }
+
+
 
 .edit-alert.alert-danger {
+
     background: #fff1f1;
+
     color: #b63838;
+
     border-color: #f6d9d9;
+
 }
 
+
+
 .edit-alert.alert-warning {
+
     background: #fff8e9;
+
     color: #91651c;
+
     border-color: #f5e8c6;
+
 }
+
+
 
 /* ACTION BUTTONS */
 
+
+
 .form-actions {
+
     display: flex;
+
     justify-content: flex-end;
+
     align-items: center;
+
     gap: 10px;
+
     padding-top: 20px;
+
     margin-top: 10px;
+
     border-top: 1px solid #edf0f5;
+
 }
+
+
 
 .cancel-btn,
+
 .save-btn {
+
     min-height: 40px;
+
     padding: 9px 20px;
+
     border-radius: 7px;
+
     font-size: 12px;
+
     font-weight: 650;
+
     text-decoration: none;
+
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
+
     gap: 7px;
+
     transition: all .2s ease;
+
 }
+
+
 
 .cancel-btn {
+
     color: #596579;
+
     background: #fff;
+
     border: 1px solid #dfe4ec;
+
 }
+
+
 
 .cancel-btn:hover {
+
     background: #f4f6fa;
+
     border-color: #cbd4e2;
+
     color: #293e83;
+
 }
+
+
 
 .save-btn {
+
     color: #fff;
+
     background: linear-gradient(135deg, #304b91, #263b79);
+
     border: 1px solid #304b91;
+
     box-shadow: 0 3px 9px rgba(48, 75, 145, .16);
+
 }
 
+
+
 .save-btn:hover {
+
     background: linear-gradient(135deg, #263e7d, #1e3067);
+
     color: #fff;
+
     transform: translateY(-1px);
+
     box-shadow: 0 5px 13px rgba(48, 75, 145, .22);
+
 }
+
+
 
 /* SELECT ARROW */
 
+
+
 .form-select {
+
     cursor: pointer;
+
 }
+
+
 
 /* RESPONSIVE */
 
+
+
 @media (min-width: 1400px) {
+
     .edit-project-wrapper {
+
         padding: 25px 30px;
+
     }
+
+
 
     .edit-form-container {
+
         padding: 28px;
+
     }
+
 }
 
+
+
 @media (max-width: 991px) {
+
     .edit-project-wrapper {
+
         padding: 18px;
+
     }
 
+
+
+    .edit-form-container {
+
+        padding: 20px;
+
+    }
+
+}
+
+
+
+@media (max-width: 768px) {
+
+    .edit-project-wrapper {
+
+        padding: 12px;
+
+    }
+
+
+
+    .edit-heading {
+
+        align-items: flex-start;
+
+    }
+
+
+
+    .edit-heading h4 {
+
+        font-size: 19px;
+
+    }
+
+
+
+    .edit-form-container {
+
+        padding: 16px;
+
+        border-radius: 10px;
+
+    }
+
+
+
+    .section-heading {
+
+        margin-bottom: 13px;
+
+    }
+
+
+
+    .section-divider {
+
+        margin: 16px 0;
+
+    }
+
+
+
+    .form-actions {
+
+        flex-direction: column-reverse;
+
+    }
+
+
+
+    .cancel-btn,
+
+    .save-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+
+
+@media (max-width: 480px) {
+
+    .edit-heading .badge {
+
+        font-size: 10px;
+
+    }
+
+
+
+    .edit-form-container {
+
+        padding: 13px;
+
+    }
+
+
+
+    .form-control,
+
+    .form-select {
+
+        min-height: 39px;
+
+    }
+
+}
+
+
+
+/* =====================================
+
+   PROJECT STATUS & TIMELINE
+
+===================================== */
+
+
+
+.status-timeline-section {
+
+    width: 100%;
+
+    min-width: 0;
+
+}
+
+
+
+.status-timeline-grid {
+
+    width: 100%;
+
+    align-items: end;
+
+}
+
+
+
+.status-timeline-grid > div {
+
+    min-width: 0;
+
+}
+
+
+
+.status-timeline-grid .form-control,
+
+.status-timeline-grid .form-select {
+
+    width: 100%;
+
+    min-width: 0;
+
+}
+
+
+
+
+
+    
+
+/* ==========================================
+   ROOM & WORK MANAGEMENT - ALIGNMENT
+========================================== */
+
+.edit-project-wrapper {
+    width: 100%;
+    max-width: 1500px;
+    padding: 22px 24px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.edit-form-container {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.edit-form-container .form-section {
+    width: 100%;
+    min-width: 0;
+}
+
+.edit-form-container .row {
+    --bs-gutter-x: 16px;
+    --bs-gutter-y: 14px;
+}
+
+.edit-form-container .form-label {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    line-height: 1.35;
+}
+
+.edit-form-container .form-control,
+.edit-form-container .form-select {
+    width: 100%;
+    min-width: 0;
+    min-height: 41px;
+    box-sizing: border-box;
+}
+
+/* Room cards */
+#roomsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.room-card {
+    width: 100%;
+    margin: 0 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(31, 48, 80, .045);
+    overflow: hidden;
+}
+
+.room-card > .card-body {
+    padding: 20px;
+}
+
+.room-card .room-number {
+    display: flex;
+    align-items: center;
+    color: #263d70;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.room-card .room-number i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    color: #405b9c;
+    background: #edf2ff;
+}
+
+.room-card .badge {
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.room-card .section-divider,
+.room-card hr {
+    margin: 20px 0;
+    border-color: #e9edf4;
+    opacity: 1;
+}
+
+/* Work rows */
+.work-row {
+    width: 100%;
+    padding: 15px !important;
+    border: 1px solid #e5eaf2 !important;
+    border-radius: 9px !important;
+    background: #f9fbfe;
+}
+
+.work-row .row {
+    align-items: end;
+    --bs-gutter-x: 12px;
+    --bs-gutter-y: 12px;
+}
+
+.work-row .form-label {
+    min-height: 16px;
+    font-size: 11.5px;
+    font-weight: 650;
+    color: #536176;
+}
+
+.work-row .form-control,
+.work-row .form-select {
+    min-height: 39px;
+    font-size: 12px;
+}
+
+.work-row textarea.form-control {
+    min-height: 68px;
+}
+
+/* Section heading and buttons */
+#addRoomBtn,
+.add-work-btn {
+    min-height: 37px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+/* Stage history */
+.stage-history-list {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #e7ebf2;
+    border-radius: 11px;
+    background: #fbfcfe;
+}
+
+.stage-history-item {
+    position: relative;
+    width: 100%;
+    padding-bottom: 15px;
+    margin-bottom: 15px !important;
+    border-bottom: 1px solid #e9edf3;
+}
+
+.stage-history-item:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0 !important;
+    border-bottom: 0;
+}
+
+.stage-history-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: #304b91;
+    border-radius: 50%;
+}
+
+.stage-history-item .flex-grow-1 {
+    min-width: 0;
+}
+
+/* Form actions */
+.form-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: rgba(255,255,255,.97);
+}
+
+@media (max-width: 991.98px) {
+    .edit-project-wrapper {
+        padding: 18px 14px;
+    }
     .edit-form-container {
         padding: 20px;
     }
+    .room-card > .card-body {
+        padding: 16px;
+    }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
     .edit-project-wrapper {
-        padding: 12px;
+        padding: 12px 8px;
     }
-
     .edit-heading {
         align-items: flex-start;
     }
-
-    .edit-heading h4 {
-        font-size: 19px;
-    }
-
     .edit-form-container {
-        padding: 16px;
+        padding: 15px;
         border-radius: 10px;
     }
-
-    .section-heading {
-        margin-bottom: 13px;
-    }
-
-    .section-divider {
-        margin: 16px 0;
-    }
-
-    .form-actions {
-        flex-direction: column-reverse;
-    }
-
-    .cancel-btn,
-    .save-btn {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .edit-heading .badge {
-        font-size: 10px;
-    }
-
-    .edit-form-container {
+    .room-card > .card-body {
         padding: 13px;
     }
-
-    .form-control,
-    .form-select {
-        min-height: 39px;
+    .work-row {
+        padding: 11px !important;
+    }
+    .stage-history-list {
+        padding: 14px;
+    }
+    .stage-history-item {
+        gap: 10px !important;
     }
 }
 
-/* =====================================
-   PROJECT STATUS & TIMELINE
-===================================== */
-
-.status-timeline-section {
-    width: 100%;
-    min-width: 0;
+@media (max-width: 575.98px) {
+    .edit-heading {
+        flex-direction: column;
+    }
+    .edit-heading > .badge {
+        align-self: flex-start;
+    }
+    .room-card .d-flex.justify-content-between {
+        align-items: flex-start !important;
+    }
+    .form-actions {
+        flex-direction: column-reverse;
+        gap: 9px;
+    }
+    .form-actions .cancel-btn,
+    .form-actions .save-btn {
+        width: 100%;
+    }
+    .stage-history-item .d-flex.justify-content-between {
+        align-items: flex-start !important;
+    }
 }
 
-.status-timeline-grid {
-    width: 100%;
-    align-items: end;
-}
+</style>
 
-.status-timeline-grid > div {
-    min-width: 0;
-}
-
-.status-timeline-grid .form-control,
-.status-timeline-grid .form-select {
-    width: 100%;
-    min-width: 0;
-}
-
-
-    </style>
 </head>
+
+
 
 <body>
 
+
+
 <div class="app-layout">
 
+
+
     <!-- SIDEBAR -->
+
     {% include 'includes/sidebar_owner.html' %}
+
+
 
     <main class="main-area">
 
+
+
         <!-- HEADER -->
+
         {% include 'includes/header.html' %}
+
+
 
         <section class="page-content p-2">
 
+
+
             <div class="edit-project-wrapper">
 
+
+
                 <!-- PAGE HEADER -->
+
                 <div class="edit-heading">
 
+
+
                     <div>
+
                         <a href="{% url 'owner_projects' %}" class="back-btn">
+
                             <i class="bi bi-arrow-left"></i>
+
                             Back to Projects
+
                         </a>
 
+
+
                         <h4>Edit Project</h4>
+
                         <p>Update client and project information</p>
+
                     </div>
 
+
+
                     <span class="badge bg-primary-subtle text-primary px-3 py-2">
+
                         {{ project.project_code }}
+
                     </span>
+
+
 
                 </div>
 
+
+
                 <!-- SUCCESS / ERROR MESSAGES -->
+
                 {% if messages %}
+
                     {% for message in messages %}
 
+
+
                         <div class="alert
+
                             {% if message.tags == 'success' %}alert-success
+
                             {% elif message.tags == 'error' %}alert-danger
+
                             {% elif message.tags == 'warning' %}alert-warning
+
                             {% else %}alert-info{% endif %}
+
                             alert-dismissible fade show edit-alert"
+
                             role="alert">
 
+
+
                             <i class="bi
+
                                 {% if message.tags == 'success' %}bi-check-circle-fill
+
                                 {% elif message.tags == 'error' %}bi-exclamation-circle-fill
+
                                 {% else %}bi-info-circle-fill{% endif %} me-2">
+
                             </i>
+
+
 
                             {{ message }}
 
+
+
                             <button type="button"
+
                                     class="btn-close"
+
                                     data-bs-dismiss="alert">
+
                             </button>
+
+
 
                         </div>
 
+
+
                     {% endfor %}
+
                 {% endif %}
 
 
+
+
+
                 <!-- ONE FORM -->
+
                 <form method="POST" class="edit-form-container">
+
+
 
                     {% csrf_token %}
 
+                    <input type="hidden" name="rooms_json" id="roomsJson">
+
+
+
                     <!-- 01 CLIENT INFORMATION -->
+
                     <div class="form-section">
 
+
+
                         <div class="section-heading">
+
                             <i class="bi bi-person"></i>
+
                             Client Information
+
                         </div>
+
+
 
                         <div class="row g-2">
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">
+
                                     Client Name <span class="required">*</span>
+
                                 </label>
+
                                 <input type="text"
+
                                        name="client_name"
+
                                        class="form-control"
+
                                        value="{{ client.client_name }}"
+
                                        maxlength="150"
+
                                        required>
+
                             </div>
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">
+
                                     Phone Number <span class="required">*</span>
+
                                 </label>
+
                                 <input type="tel"
+
                                        name="phone"
+
                                        class="form-control"
+
                                        value="{{ client.phone }}"
+
                                        maxlength="15"
+
                                        required>
+
                             </div>
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">Alternative Phone</label>
+
                                 <input type="tel"
+
                                        name="alternative_phone"
+
                                        class="form-control"
+
                                        value="{{ client.alternative_phone|default:'' }}"
+
                                        maxlength="15">
+
                             </div>
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">Email Address</label>
+
                                 <input type="email"
+
                                        name="email"
+
                                        class="form-control"
+
                                        value="{{ client.email|default:'' }}">
+
                             </div>
+
+
 
                         </div>
+
                     </div>
 
+
+
                     <hr class="section-divider">
+
+
+
 
 
                     <!-- 02 PROPERTY DETAILS -->
+
                     <div class="form-section">
 
+
+
                         <div class="section-heading">
+
                             <i class="bi bi-building"></i>
+
                             Property Details
+
                         </div>
+
+
 
                         <div class="row g-2">
 
-                            <div class="col-md-4">
-                                <label class="form-label">Project Code</label>
-                                <input type="text"
-                                       class="form-control project-code"
-                                       value="{{ project.project_code }}"
-                                       readonly>
-                            </div>
+
 
                             <div class="col-md-4">
+
+                                <label class="form-label">Project Code</label>
+
+                                <input type="text"
+
+                                       class="form-control project-code"
+
+                                       value="{{ project.project_code }}"
+
+                                       readonly>
+
+                            </div>
+
+
+
+                            <div class="col-md-4">
+
                                 <label class="form-label">Project Type</label>
+
                                 <select name="project_type" class="form-select" required>
+
                                     <option value="">Select project type</option>
 
+
+
                                     {% for type in project_types %}
+
                                         <option value="{{ type }}"
+
                                             {% if project.project_type == type %}selected{% endif %}>
+
                                             {{ type }}
+
                                         </option>
+
                                     {% endfor %}
 
+
+
                                     <option value="Full Home Interior" {% if project.project_type == "Full Home Interior" %}selected{% endif %}>Full Home Interior</option>
+
                                     <option value="Apartment Interior" {% if project.project_type == "Apartment Interior" %}selected{% endif %}>Apartment Interior</option>
+
                                     <option value="Villa Interior" {% if project.project_type == "Villa Interior" %}selected{% endif %}>Villa Interior</option>
+
                                     <option value="Kitchen Interior" {% if project.project_type == "Kitchen Interior" %}selected{% endif %}>Kitchen Interior</option>
+
                                     <option value="Bedroom Interior" {% if project.project_type == "Bedroom Interior" %}selected{% endif %}>Bedroom Interior</option>
+
                                     <option value="Commercial Interior" {% if project.project_type == "Commercial Interior" %}selected{% endif %}>Commercial Interior</option>
+
                                     <option value="Renovation" {% if project.project_type == "Renovation" %}selected{% endif %}>Renovation</option>
+
                                     <option value="Other" {% if project.project_type == "Other" %}selected{% endif %}>Other</option>
+
                                 </select>
+
                             </div>
+
+
 
                             <div class="col-md-4">
+
                                 <label class="form-label">Property Type</label>
+
                                 <select name="property_type" class="form-select">
+
                                     <option value="">Select property</option>
+
                                     <option value="Apartment" {% if enquiry_data.property_type == "Apartment" %}selected{% endif %}>Apartment</option>
+
                                     <option value="Individual House" {% if enquiry_data.property_type == "Individual House" %}selected{% endif %}>Individual House</option>
+
                                     <option value="Villa" {% if enquiry_data.property_type == "Villa" %}selected{% endif %}>Villa</option>
+
                                     <option value="Office" {% if enquiry_data.property_type == "Office" %}selected{% endif %}>Office</option>
+
                                     <option value="Other" {% if enquiry_data.property_type == "Other" %}selected{% endif %}>Other</option>
+
                                 </select>
+
                             </div>
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">Project Location</label>
+
                                 <input type="text"
+
                                        name="location"
+
                                        class="form-control"
+
                                        value="{{ project.location }}">
+
                             </div>
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">Property Area (Sq.ft)</label>
+
                                 <input type="number"
+
                                        name="area_sqft"
+
                                        class="form-control"
+
                                        min="0"
+
                                        step="0.01"
+
                                        value="{{ project.area_sqft|default_if_none:'' }}">
+
                             </div>
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">Google Maps Link</label>
+
                                 <input type="url"
+
                                        name="google_map_link"
+
                                        class="form-control"
+
                                        value="{{ project.google_map_link }}"
+
                                        placeholder="Paste Google Maps link">
+
                             </div>
 
+
+
                             <div class="col-md-6">
+
                                 <label class="form-label">Approximate Budget</label>
+
                                 <select name="budget" class="form-select">
+
                                     <option value="">Select budget</option>
+
                                     <option value="Below 5 Lakhs" {% if enquiry_data.budget == "Below 5 Lakhs" %}selected{% endif %}>Below ₹5 Lakhs</option>
+
                                     <option value="5-10 Lakhs" {% if enquiry_data.budget == "5-10 Lakhs" %}selected{% endif %}>₹5–10 Lakhs</option>
+
                                     <option value="10-15 Lakhs" {% if enquiry_data.budget == "10-15 Lakhs" %}selected{% endif %}>₹10–15 Lakhs</option>
+
                                     <option value="15-25 Lakhs" {% if enquiry_data.budget == "15-25 Lakhs" %}selected{% endif %}>₹15–25 Lakhs</option>
+
                                     <option value="Above 25 Lakhs" {% if enquiry_data.budget == "Above 25 Lakhs" %}selected{% endif %}>Above ₹25 Lakhs</option>
+
                                     <option value="Not Decided" {% if enquiry_data.budget == "Not Decided" %}selected{% endif %}>Not Decided</option>
+
                                 </select>
+
                             </div>
+
+
 
                         </div>
+
                     </div>
 
+
+
                     <hr class="section-divider">
+
+
+
 
 
                     <!-- 03 ROOM REQUIREMENTS -->
+
                     <div class="form-section">
 
+
+
                         <div class="section-heading">
+
                             <i class="bi bi-door-open"></i>
+
                             Room Requirements
+
                         </div>
+
+
 
                         <div class="row g-2">
 
+
+
                             <div class="col-md-3 col-6">
+
                                 <label class="form-label">Bedrooms</label>
+
                                 <input type="number"
+
                                        name="bedroom_count"
+
                                        class="form-control"
+
                                        value="{{ project.bedroom_count }}"
+
                                        min="0" max="50">
+
                             </div>
 
+
+
                             <div class="col-md-3 col-6">
+
                                 <label class="form-label">Living Rooms</label>
+
                                 <input type="number"
+
                                        name="living_room_count"
+
                                        class="form-control"
+
                                        value="{{ project.living_room_count }}"
+
                                        min="0" max="50">
+
                             </div>
 
+
+
                             <div class="col-md-3 col-6">
+
                                 <label class="form-label">Kitchens</label>
+
                                 <input type="number"
+
                                        name="kitchen_count"
+
                                        class="form-control"
+
                                        value="{{ project.kitchen_count }}"
+
                                        min="0" max="50">
+
                             </div>
 
+
+
                             <div class="col-md-3 col-6">
+
                                 <label class="form-label">Bathrooms</label>
+
                                 <input type="number"
+
                                        name="bathroom_count"
+
                                        class="form-control"
+
                                        value="{{ project.bathroom_count }}"
+
                                        min="0" max="50">
+
                             </div>
+
+
 
                             <div class="col-12">
+
                                 <label class="form-label">Additional Requirements</label>
+
                                 <textarea name="message"
+
                                           class="form-control"
+
                                           rows="2"
+
                                           placeholder="Enter additional requirements">{{ enquiry_data.message|default:'' }}</textarea>
+
                             </div>
 
+
+
                         </div>
+
                     </div>
+
+
 
                     <hr class="section-divider">
 
+                    <!-- 04 ROOM & WORK MANAGEMENT -->
 
-                    
-                    
-                    <!-- 04 PROJECT STATUS & TIMELINE -->
+                    <div class="form-section">
+                        <div class="section-heading">
+                            <i class="bi bi-door-open"></i>
+                            Room & Work Management
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                            <div>
+                                <h6 class="mb-1 fw-bold">Project Rooms</h6>
+                                <small class="text-muted">Add rooms and manage individual works with area and status.</small>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" id="addRoomBtn">
+                                <i class="bi bi-plus-lg me-1"></i> Add Room
+                            </button>
+                        </div>
+
+                        <div id="roomsContainer">
+                            {% for room in rooms %}
+                            <div class="card room-card mb-3" data-room-id="{{ room.room_id }}">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="fw-bold room-number mb-0">
+                                            <i class="bi bi-house-door me-2"></i>Room {{ forloop.counter }}
+                                        </h6>
+                                        <span class="badge bg-primary-subtle text-primary">{{ room.works.count }} Works</span>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Room Name <span class="required">*</span></label>
+                                            <input type="text" class="form-control" data-field="room_name" value="{{ room.room_name }}" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Room Type</label>
+                                            <select class="form-select" data-field="room_type">
+                                                <option value="">Select room type</option>
+                                                <option value="Living Room" {% if room.room_type == "Living Room" %}selected{% endif %}>Living Room</option>
+                                                <option value="Master Bedroom" {% if room.room_type == "Master Bedroom" %}selected{% endif %}>Master Bedroom</option>
+                                                <option value="Bedroom" {% if room.room_type == "Bedroom" %}selected{% endif %}>Bedroom</option>
+                                                <option value="Guest Bedroom" {% if room.room_type == "Guest Bedroom" %}selected{% endif %}>Guest Bedroom</option>
+                                                <option value="Kids Bedroom" {% if room.room_type == "Kids Bedroom" %}selected{% endif %}>Kids Bedroom</option>
+                                                <option value="Kitchen" {% if room.room_type == "Kitchen" %}selected{% endif %}>Kitchen</option>
+                                                <option value="Dining Room" {% if room.room_type == "Dining Room" %}selected{% endif %}>Dining Room</option>
+                                                <option value="Pooja Room" {% if room.room_type == "Pooja Room" %}selected{% endif %}>Pooja Room</option>
+                                                <option value="Bathroom" {% if room.room_type == "Bathroom" %}selected{% endif %}>Bathroom</option>
+                                                <option value="Balcony" {% if room.room_type == "Balcony" %}selected{% endif %}>Balcony</option>
+                                                <option value="Utility Room" {% if room.room_type == "Utility Room" %}selected{% endif %}>Utility Room</option>
+                                                <option value="Study Room" {% if room.room_type == "Study Room" %}selected{% endif %}>Study Room</option>
+                                                <option value="Office" {% if room.room_type == "Office" %}selected{% endif %}>Office</option>
+                                                <option value="Other" {% if room.room_type == "Other" %}selected{% endif %}>Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Room Area (Sq.ft)</label>
+                                            <input type="number" class="form-control" data-field="area_sqft" value="{{ room.area_sqft }}" min="0" step="0.01">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Floor</label>
+                                            <input type="text" class="form-control" data-field="floor" value="{{ room.floor }}" placeholder="Eg: Ground Floor">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Description</label>
+                                            <input type="text" class="form-control" data-field="description" value="{{ room.description }}">
+                                        </div>
+                                    </div>
+
+                                    <hr class="section-divider">
+
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                                        <h6 class="fw-bold mb-0"><i class="bi bi-tools me-2"></i>Room Works</h6>
+                                        <button type="button" class="btn btn-outline-primary btn-sm add-work-btn">
+                                            <i class="bi bi-plus-lg me-1"></i> Add Work
+                                        </button>
+                                    </div>
+
+                                    <div class="works-container">
+                                        {% for work in room.works.all %}
+                                        <div class="work-row border rounded p-3 mb-2" data-work-id="{{ work.work_id }}">
+                                            <div class="row g-2">
+                                                <div class="col-lg-3 col-md-6">
+                                                    <label class="form-label">Work Name <span class="required">*</span></label>
+                                                    <select class="form-select" data-field="work_name" required>
+                                                        <option value="">Select Work</option>
+                                                        <option value="wardrobe" {% if work.work_name == "wardrobe" or work.work_name == "Wardrobe" %}selected{% endif %}>Wardrobe</option>
+                                                        <option value="loft" {% if work.work_name == "loft" or work.work_name == "Loft" %}selected{% endif %}>Loft</option>
+                                                        <option value="false_ceiling" {% if work.work_name == "false_ceiling" or work.work_name == "False Ceiling" %}selected{% endif %}>False Ceiling</option>
+                                                        <option value="tv_unit" {% if work.work_name == "tv_unit" or work.work_name == "TV Unit" %}selected{% endif %}>TV Unit</option>
+                                                        <option value="tv_back_panel" {% if work.work_name == "tv_back_panel" or work.work_name == "TV Back Panel" %}selected{% endif %}>TV Back Panel</option>
+                                                        <option value="modular_kitchen" {% if work.work_name == "modular_kitchen" or work.work_name == "Modular Kitchen" %}selected{% endif %}>Modular Kitchen</option>
+                                                        <option value="crockery_unit" {% if work.work_name == "crockery_unit" or work.work_name == "Crockery Unit" %}selected{% endif %}>Crockery Unit</option>
+                                                        <option value="wardrobe_with_loft" {% if work.work_name == "wardrobe_with_loft" or work.work_name == "Wardrobe with Loft" %}selected{% endif %}>Wardrobe with Loft</option>
+                                                        <option value="bed_unit" {% if work.work_name == "bed_unit" or work.work_name == "Bed Unit" %}selected{% endif %}>Bed Unit</option>
+                                                        <option value="dressing_unit" {% if work.work_name == "dressing_unit" or work.work_name == "Dressing Unit" %}selected{% endif %}>Dressing Unit</option>
+                                                        <option value="study_table" {% if work.work_name == "study_table" or work.work_name == "Study Table" %}selected{% endif %}>Study Table</option>
+                                                        <option value="pooja_unit" {% if work.work_name == "pooja_unit" or work.work_name == "Pooja Unit" %}selected{% endif %}>Pooja Unit</option>
+                                                        <option value="shoe_rack" {% if work.work_name == "shoe_rack" or work.work_name == "Shoe Rack" %}selected{% endif %}>Shoe Rack</option>
+                                                        <option value="partition" {% if work.work_name == "partition" or work.work_name == "Partition" %}selected{% endif %}>Partition</option>
+                                                        <option value="wall_panelling" {% if work.work_name == "wall_panelling" or work.work_name == "Wall Panelling" %}selected{% endif %}>Wall Panelling</option>
+                                                        <option value="painting" {% if work.work_name == "painting" or work.work_name == "Painting" %}selected{% endif %}>Painting</option>
+                                                        <option value="electrical_work" {% if work.work_name == "electrical_work" or work.work_name == "Electrical Work" %}selected{% endif %}>Electrical Work</option>
+                                                        <option value="plumbing_work" {% if work.work_name == "plumbing_work" or work.work_name == "Plumbing Work" %}selected{% endif %}>Plumbing Work</option>
+                                                        <option value="flooring" {% if work.work_name == "flooring" or work.work_name == "Flooring" %}selected{% endif %}>Flooring</option>
+                                                        <option value="wallpaper" {% if work.work_name == "wallpaper" or work.work_name == "Wallpaper" %}selected{% endif %}>Wallpaper</option>
+                                                        <option value="curtains_blinds" {% if work.work_name == "curtains_blinds" or work.work_name == "Curtains / Blinds" %}selected{% endif %}>Curtains / Blinds</option>
+                                                        <option value="glass_work" {% if work.work_name == "glass_work" or work.work_name == "Glass Work" %}selected{% endif %}>Glass Work</option>
+                                                        <option value="other" {% if work.work_name == "other" or work.work_name == "Other" %}selected{% endif %}>Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2 col-md-6">
+                                                    <label class="form-label">Sq.ft</label>
+                                                    <input type="number" class="form-control" data-field="area_sqft" value="{{ work.area_sqft }}" min="0" step="0.01">
+                                                </div>
+                                                <div class="col-lg-3 col-md-6">
+                                                    <label class="form-label">Status</label>
+                                                    <select class="form-select" data-field="status">
+                                                        <option value="not_started" {% if work.status == "not_started" %}selected{% endif %}>Not Started</option>
+                                                        <option value="in_progress" {% if work.status == "in_progress" %}selected{% endif %}>In Progress</option>
+                                                        <option value="completed" {% if work.status == "completed" %}selected{% endif %}>Completed</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2 col-md-6">
+                                                    <label class="form-label">Start Date</label>
+                                                    <input type="date" class="form-control" data-field="start_date" value="{{ work.start_date|date:'Y-m-d' }}">
+                                                </div>
+                                                <div class="col-lg-2 col-md-6">
+                                                    <label class="form-label">Completed Date</label>
+                                                    <input type="date" class="form-control" data-field="completed_date" value="{{ work.completed_date|date:'Y-m-d' }}">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Work Description</label>
+                                                    <textarea class="form-control" data-field="work_description" rows="2">{{ work.work_description }}</textarea>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Remarks</label>
+                                                    <input type="text" class="form-control" data-field="remarks" value="{{ work.remarks }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% empty %}
+                                        <p class="text-muted small no-works-message mb-0">No works added for this room yet. Click Add Work.</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center text-muted border rounded p-4" id="emptyRoomsMessage">
+                                <i class="bi bi-door-open fs-3"></i>
+                                <p class="mb-0 mt-2">No rooms added yet. Click Add Room to get started.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+                    <!-- 05 PROJECT STATUS & TIMELINE -->
+
+
 
                     <div class="form-section status-timeline-section">
 
+
+
                         <div class="section-heading">
+
                             <i class="bi bi-kanban"></i>
+
                             Project Status & Timeline
+
                         </div>
+
+
 
                         <div class="row g-3 status-timeline-grid">
 
+
+
                             <!-- CURRENT PROJECT STAGE -->
 
+
+
                             <div class="col-12 col-md-6">
+
                                 <label class="form-label">Current Project Stage</label>
+
+
 
                                 <select name="current_status" class="form-select" required>
 
+
+
                                     {% for value, label in status_choices %}
 
+
+
                                         <option value="{{ value }}"
+
                                             {% if project.current_status == value %}selected{% endif %}>
+
                                             {{ label }}
+
                                         </option>
+
+
 
                                     {% endfor %}
 
+
+
                                 </select>
+
                             </div>
+
+
+
 
 
                             <!-- PROJECT START DATE -->
 
+
+
                             <div class="col-12 col-md-6">
+
                                 <label class="form-label">Project Start Date</label>
 
+
+
                                 <input
+
                                     type="date"
+
                                     name="project_start_date"
+
                                     class="form-control"
+
                                     value="{{ project.project_start_date|date:'Y-m-d' }}"
+
                                 >
+
                             </div>
+
+
+
 
 
                             <!-- TARGET HANDOVER DATE -->
 
+
+
                             <div class="col-12 col-md-6">
+
                                 <label class="form-label">Target Handover Date</label>
 
+
+
                                 <input
+
                                     type="date"
+
                                     name="target_handover_date"
+
                                     class="form-control"
+
                                     value="{{ project.target_handover_date|date:'Y-m-d' }}"
+
                                 >
+
                             </div>
+
+
+
 
 
                             <!-- ACTUAL HANDOVER DATE -->
 
+
+
                             <div class="col-12 col-md-6">
+
                                 <label class="form-label">Actual Handover Date</label>
 
+
+
                                 <input
+
                                     type="date"
+
                                     name="actual_handover_date"
+
                                     class="form-control"
+
                                     value="{{ project.actual_handover_date|date:'Y-m-d' }}"
+
                                 >
+
                             </div>
+
+
 
                         </div>
 
+
+
                     </div>
+
+
+
 
 
                     <hr class="section-divider">
 
+                    <!-- PROJECT STAGE HISTORY -->
+                    <hr class="section-divider">
 
-                    <!-- 05 MAP COORDINATES -->
+                    <div class="form-section">
+                        <div class="section-heading">
+                            <i class="bi bi-clock-history"></i>
+                            Project Stage History
+                        </div>
+
+                        <div class="stage-history-list">
+                            {% for history in stage_history %}
+                            <div class="stage-history-item d-flex align-items-start gap-3 mb-3">
+                                <div class="stage-history-icon">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                        <strong>{{ history.get_stage_display }}</strong>
+                                        <small class="text-muted">{{ history.changed_at|date:"d M Y, h:i A" }}</small>
+                                    </div>
+                                    <small class="text-muted">
+                                        Changed by:
+                                        {% if history.changed_by %}{{ history.changed_by.username }}{% else %}System / Not recorded{% endif %}
+                                    </small>
+                                    {% if history.remarks %}<p class="small mb-0 mt-1">{{ history.remarks }}</p>{% endif %}
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center text-muted border rounded p-4">
+                                <i class="bi bi-clock-history fs-3"></i>
+                                <p class="small mb-0 mt-2">No stage history available.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <!-- 07 MAP COORDINATES -->
+
                     <div class="form-section">
 
+
+
                         <div class="section-heading">
+
                             <i class="bi bi-geo-alt"></i>
+
                             Map Coordinates
+
                         </div>
+
+
 
                         <div class="row g-2">
 
-                            <div class="col-md-6">
-                                <label class="form-label">Latitude</label>
-                                <input type="number"
-                                       name="latitude"
-                                       class="form-control"
-                                       step="any"
-                                       min="-90"
-                                       max="90"
-                                       value="{{ project.latitude|default_if_none:'' }}">
-                            </div>
+
 
                             <div class="col-md-6">
-                                <label class="form-label">Longitude</label>
+
+                                <label class="form-label">Latitude</label>
+
                                 <input type="number"
-                                       name="longitude"
+
+                                       name="latitude"
+
                                        class="form-control"
+
                                        step="any"
-                                       min="-180"
-                                       max="180"
-                                       value="{{ project.longitude|default_if_none:'' }}">
+
+                                       min="-90"
+
+                                       max="90"
+
+                                       value="{{ project.latitude|default_if_none:'' }}">
+
                             </div>
+
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">Longitude</label>
+
+                                <input type="number"
+
+                                       name="longitude"
+
+                                       class="form-control"
+
+                                       step="any"
+
+                                       min="-180"
+
+                                       max="180"
+
+                                       value="{{ project.longitude|default_if_none:'' }}">
+
+                            </div>
+
+
 
                         </div>
+
                     </div>
+
+
+
 
 
                     <!-- FORM ACTIONS -->
+
                     <div class="form-actions">
 
+
+
                         <a href="{% url 'owner_projects' %}" class="cancel-btn">
+
                             Cancel
+
                         </a>
 
+
+
                         <button type="submit" class="save-btn">
+
                             <i class="bi bi-check-circle me-1"></i>
+
                             Save Changes
+
                         </button>
+
+
 
                     </div>
 
+
+
                 </form>
+
+
 
             </div>
 
+
+
         </section>
+
+
 
     </main>
 
+
+
 </div>
+
+
+
+
+
+<!-- ROOM & WORK TEMPLATES -->
+<template id="roomTemplate">
+    <div class="card room-card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold room-number mb-0"><i class="bi bi-house-door me-2"></i>New Room</h6>
+                <span class="badge bg-primary-subtle text-primary">New Room</span>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Room Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" data-field="room_name" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Room Type</label>
+                    <select class="form-select" data-field="room_type">
+                        <option value="">Select room type</option>
+                        <option value="Living Room">Living Room</option>
+                        <option value="Master Bedroom">Master Bedroom</option>
+                        <option value="Bedroom">Bedroom</option>
+                        <option value="Guest Bedroom">Guest Bedroom</option>
+                        <option value="Kids Bedroom">Kids Bedroom</option>
+                        <option value="Kitchen">Kitchen</option>
+                        <option value="Dining Room">Dining Room</option>
+                        <option value="Pooja Room">Pooja Room</option>
+                        <option value="Bathroom">Bathroom</option>
+                        <option value="Balcony">Balcony</option>
+                        <option value="Utility Room">Utility Room</option>
+                        <option value="Study Room">Study Room</option>
+                        <option value="Office">Office</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Room Area (Sq.ft)</label>
+                    <input type="number" class="form-control" data-field="area_sqft" min="0" step="0.01" value="0">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Floor</label>
+                    <input type="text" class="form-control" data-field="floor">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-control" data-field="description">
+                </div>
+            </div>
+            <hr class="section-divider">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0"><i class="bi bi-tools me-2"></i>Room Works</h6>
+                <button type="button" class="btn btn-outline-primary btn-sm add-work-btn"><i class="bi bi-plus-lg me-1"></i>Add Work</button>
+            </div>
+            <div class="works-container">
+                <p class="text-muted small no-works-message mb-0">No works added yet. Click Add Work.</p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="workTemplate">
+    <div class="work-row border rounded p-3 mb-2">
+        <div class="row g-2">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Work Name <span class="required">*</span></label>
+                <select class="form-select" data-field="work_name" required>
+                    <option value="" selected>Select Work</option>
+                    <option value="wardrobe">Wardrobe</option>
+                    <option value="loft">Loft</option>
+                    <option value="false_ceiling">False Ceiling</option>
+                    <option value="tv_unit">TV Unit</option>
+                    <option value="tv_back_panel">TV Back Panel</option>
+                    <option value="modular_kitchen">Modular Kitchen</option>
+                    <option value="crockery_unit">Crockery Unit</option>
+                    <option value="wardrobe_with_loft">Wardrobe with Loft</option>
+                    <option value="bed_unit">Bed Unit</option>
+                    <option value="dressing_unit">Dressing Unit</option>
+                    <option value="study_table">Study Table</option>
+                    <option value="pooja_unit">Pooja Unit</option>
+                    <option value="shoe_rack">Shoe Rack</option>
+                    <option value="partition">Partition</option>
+                    <option value="wall_panelling">Wall Panelling</option>
+                    <option value="painting">Painting</option>
+                    <option value="electrical_work">Electrical Work</option>
+                    <option value="plumbing_work">Plumbing Work</option>
+                    <option value="flooring">Flooring</option>
+                    <option value="wallpaper">Wallpaper</option>
+                    <option value="curtains_blinds">Curtains / Blinds</option>
+                    <option value="glass_work">Glass Work</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Sq.ft</label>
+                <input type="number" class="form-control" data-field="area_sqft" min="0" step="0.01" value="0">
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Status</label>
+                <select class="form-select" data-field="status">
+                    <option value="not_started" selected>Not Started</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-control" data-field="start_date">
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Completed Date</label>
+                <input type="date" class="form-control" data-field="completed_date">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Work Description</label>
+                <textarea class="form-control" data-field="work_description" rows="2"></textarea>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Remarks</label>
+                <input type="text" class="form-control" data-field="remarks">
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const roomsContainer = document.getElementById("roomsContainer");
+    const addRoomBtn = document.getElementById("addRoomBtn");
+    const roomTemplate = document.getElementById("roomTemplate");
+    const workTemplate = document.getElementById("workTemplate");
+    const form = document.querySelector(".edit-form-container");
+    const roomsJson = document.getElementById("roomsJson");
+
+    if (!roomsContainer || !addRoomBtn || !form || !roomsJson) return;
+
+    function updateRoomNumbers() {
+        roomsContainer.querySelectorAll(".room-card").forEach(function (room, index) {
+            const heading = room.querySelector(".room-number");
+            if (heading) {
+                heading.innerHTML = '<i class="bi bi-house-door me-2"></i>Room ' + (index + 1);
+            }
+        });
+    }
+
+    addRoomBtn.addEventListener("click", function () {
+        const emptyMessage = document.getElementById("emptyRoomsMessage");
+        if (emptyMessage) emptyMessage.remove();
+        roomsContainer.appendChild(roomTemplate.content.cloneNode(true));
+        updateRoomNumbers();
+    });
+
+    roomsContainer.addEventListener("click", function (event) {
+        const button = event.target.closest(".add-work-btn");
+        if (!button) return;
+        const roomCard = button.closest(".room-card");
+        const worksContainer = roomCard.querySelector(".works-container");
+        const emptyMessage = worksContainer.querySelector(".no-works-message");
+        if (emptyMessage) emptyMessage.remove();
+        worksContainer.appendChild(workTemplate.content.cloneNode(true));
+    });
+
+    function fieldValue(parent, field) {
+        const element = parent.querySelector('[data-field="' + field + '"]');
+        return element ? element.value.trim() : "";
+    }
+
+    function collectRooms() {
+        const rooms = [];
+        roomsContainer.querySelectorAll(".room-card").forEach(function (roomCard) {
+            const room = {
+                room_id: roomCard.dataset.roomId || null,
+                room_name: fieldValue(roomCard, "room_name"),
+                room_type: fieldValue(roomCard, "room_type"),
+                area_sqft: fieldValue(roomCard, "area_sqft") || "0",
+                floor: fieldValue(roomCard, "floor"),
+                description: fieldValue(roomCard, "description"),
+                works: []
+            };
+
+            roomCard.querySelectorAll(".work-row").forEach(function (workRow) {
+                room.works.push({
+                    work_id: workRow.dataset.workId || null,
+                    work_name: fieldValue(workRow, "work_name"),
+                    area_sqft: fieldValue(workRow, "area_sqft") || "0",
+                    status: fieldValue(workRow, "status") || "not_started",
+                    start_date: fieldValue(workRow, "start_date"),
+                    completed_date: fieldValue(workRow, "completed_date"),
+                    work_description: fieldValue(workRow, "work_description"),
+                    remarks: fieldValue(workRow, "remarks")
+                });
+            });
+            rooms.push(room);
+        });
+        return rooms;
+    }
+
+    form.addEventListener("submit", function (event) {
+        const roomCards = roomsContainer.querySelectorAll(".room-card");
+        for (const room of roomCards) {
+            const roomName = room.querySelector('[data-field="room_name"]');
+            if (roomName && !roomName.value.trim()) {
+                event.preventDefault();
+                roomName.focus();
+                alert("Please enter a room name.");
+                return;
+            }
+            const workRows = room.querySelectorAll(".work-row");
+            for (const work of workRows) {
+                const workName = work.querySelector('[data-field="work_name"]');
+                if (workName && !workName.value.trim()) {
+                    event.preventDefault();
+                    workName.focus();
+                    alert("Please enter a work name.");
+                    return;
+                }
+            }
+        }
+        roomsJson.value = JSON.stringify(collectRooms());
+    });
+
+    updateRoomNumbers();
+});
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+
+
 </body>
+
 </html>
