@@ -129,15 +129,23 @@
                 <td class="text-end"><span class="js-inr">{{ payment.amount|default:0 }}</span></td>
                 <td>{% if payment.payment_date %}{{ payment.payment_date|date:"d M Y" }}{% else %}-{% endif %}</td>
                 <td class="text-end"><span class="js-inr">{{ payment.paid_amount|default:0 }}</span></td>
-                <td>
-                  {% if payment.status|lower == "paid" %}
-                    <span class="p-status paid"><i class="bi bi-check-circle-fill"></i> Paid</span>
-                  {% elif payment.status|lower == "partial" %}
-                    <span class="p-status partial"><i class="bi bi-clock-fill"></i> Partial</span>
-                  {% else %}
-                    <span class="p-status pending"><i class="bi bi-clock-fill"></i> {{ payment.status|default:"Pending" }}</span>
-                  {% endif %}
-                </td>
+                <td class="text-center align-middle">
+                  <div class="d-flex justify-content-center align-items-center">
+                      {% if payment.status|lower == "paid" %}
+                          <span class="p-status paid">
+                              <i class="bi bi-check-circle-fill"></i> Paid
+                          </span>
+                      {% elif payment.status|lower == "partial" %}
+                          <span class="p-status partial">
+                              <i class="bi bi-clock-fill"></i> Partial
+                          </span>
+                      {% else %}
+                          <span class="p-status pending">
+                              <i class="bi bi-clock-fill"></i> {{ payment.status|default:"Pending" }}
+                          </span>
+                      {% endif %}
+                  </div>
+              </td>
               </tr>
               {% empty %}
               <tr><td colspan="7" class="text-center text-muted py-4">No payment schedule added for this project.</td></tr>
