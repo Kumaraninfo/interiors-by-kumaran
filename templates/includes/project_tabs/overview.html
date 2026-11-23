@@ -1,6 +1,16 @@
 {# Overview tab content only. Include inside the Overview .tab-pane in project_update.html #}
 <style>
 /* IBK Overview */
+.ibk-overview .ov-payment-list{margin-top:9px;max-height:190px;overflow-y:auto;padding-right:3px}
+.ibk-overview .ov-payment-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #edf0f3}
+.ibk-overview .ov-payment-item:last-child{border-bottom:0}
+.ibk-overview .ov-payment-main{min-width:0}
+.ibk-overview .ov-payment-main strong{display:block;font-size:11px;color:#243244;overflow-wrap:anywhere}
+.ibk-overview .ov-payment-main small{display:block;font-size:9px;color:#64748b;margin-top:3px}
+.ibk-overview .ov-payment-side{text-align:right;flex-shrink:0}
+.ibk-overview .ov-payment-side>strong{display:block;font-size:11px;color:#172331}
+.ibk-overview .ov-payment-status{display:inline-block;margin-top:3px;padding:3px 7px;border-radius:20px;font-size:9px;font-weight:700;background:#fff4d8;color:#9a6700}
+.ibk-overview .ov-payment-status.paid{background:#e7f8ed;color:#16803d}
 .ibk-overview{display:flex;flex-direction:column;gap:12px;color:#172331;font-size:13px}
 .ibk-overview .ov-card{background:#fff;border:1px solid #e1e5eb;border-radius:17px;padding:15px 17px;box-shadow:0 4px 13px rgba(20,32,48,.06);min-width:0;height:100%}
 .ibk-overview .ov-top-grid{display:grid;grid-template-columns:1.25fr 1.08fr 1fr;gap:12px}
@@ -118,17 +128,54 @@
             </div>
         </div>
 
-        <!-- Project Value: replace sample figures with your actual model fields when available -->
+        <!-- Payment Overview: values are loaded from the database -->
         <div class="ov-card">
             <div class="ov-card-head">
-                <i class="bi bi-database"></i>
-                <div><h6>Project Value</h6><p>Quotation &amp; cost summary.</p></div>
+                <i class="bi bi-wallet2"></i>
+                <div>
+                    <h6>Payment Overview</h6>
+                    <p>Project value and saved payment schedule.</p>
+                </div>
             </div>
-            <div class="ov-value-row"><span>Quoted Amount</span><strong>₹ 18,50,000</strong></div>
-            <div class="ov-value-row"><span>Additional / Variations</span><strong>₹ 2,75,000</strong></div>
-            <div class="ov-value-row total"><span>Total Project Value</span><strong>₹ 21,25,000</strong></div>
-            <div class="ov-value-row paid"><span>Amount Paid</span><strong>₹ 15,30,000</strong></div>
-            <div class="ov-value-row balance"><span>Balance Amount</span><strong>₹ 5,95,000</strong></div>
+
+            <div class="ov-value-row total">
+                <span>Project Value</span>
+                <strong>₹ {{ project.project_value|default:0|floatformat:2 }}</strong>
+            </div>
+            <div class="ov-value-row">
+                <span>Project Profit</span>
+                <strong>₹ {{ project.project_profit|default:0|floatformat:2 }}</strong>
+            </div>
+            <div class="ov-value-row paid">
+                <span>Amount Paid</span>
+                <strong>₹ {{ total_paid|default:0|floatformat:2 }}</strong>
+            </div>
+            <div class="ov-value-row balance">
+                <span>Balance Amount</span>
+                <strong>₹ {{ pending_amount|default:0|floatformat:2 }}</strong>
+            </div>
+
+            <div class="ov-payment-list">
+                {% for payment in payment_schedule %}
+                    <div class="ov-payment-item">
+                        <div class="ov-payment-main">
+                            <strong>{{ payment.milestone }}</strong>
+                            <small>{{ payment.percentage|default:0|floatformat:2 }}% · Paid ₹ {{ payment.paid_amount|default:0|floatformat:2 }}</small>
+                        </div>
+                        <div class="ov-payment-side">
+                            <strong>₹ {{ payment.amount|default:0|floatformat:2 }}</strong>
+                            <span class="ov-payment-status {{ payment.status }}">
+                                {{ payment.get_status_display|default:payment.status|title }}
+                            </span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="ov-empty">
+                        <i class="bi bi-wallet"></i>
+                        No payment records found for this project.
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 

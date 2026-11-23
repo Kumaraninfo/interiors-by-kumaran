@@ -1,27 +1,27 @@
 {# Payment tab include: templates/includes/project_tabs/payment.html #}
 <style>
 .payment-page{color:#172331;font-size:13px}
-.payment-page .p-card{background:#fff;border:1px solid #e1e6ed;border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.06);padding:15px;height:100%}
-.payment-page .p-heading{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.payment-page .p-card{background:#fff;border:1px solid #e1e6ed;border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.06);padding:13px;height:100%}
+.payment-page .p-heading{display:flex;align-items:center;gap:10px;margin-bottom:12px}\n.payment-page > .row{align-items:stretch}\n.payment-page .col-xl-8,.payment-page .col-xl-4{display:flex;flex-direction:column;gap:12px}\n.payment-page .col-xl-8 > .p-card,.payment-page .col-xl-4 > .p-card{width:100%}\n.payment-page .col-xl-8 > .p-card:first-child,.payment-page .col-xl-4 > .p-card:first-child{min-height:190px}
 .payment-page .p-heading>i{font-size:25px;color:#ad690c}
 .payment-page .p-heading h5{font-size:17px;font-weight:750;margin:0;color:#172331}
 .payment-page .p-heading p{font-size:12px;color:#64748b;margin:3px 0 0}
 .payment-page .p-total-chip{display:flex;align-items:center;gap:18px;background:#fff2d2;border:1px solid #ecd69f;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:650;white-space:nowrap}
 .payment-page .p-total-chip strong{font-size:16px}
-.payment-page .p-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.payment-page .p-stat{display:flex;align-items:center;gap:11px;padding:12px;border-radius:13px;min-width:0;min-height:74px}
+.payment-page .p-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.payment-page .p-stat{display:flex;align-items:center;gap:8px;padding:9px;border-radius:12px;min-width:0;min-height:64px}
 .payment-page .p-stat.green{background:#eaf8e9}.payment-page .p-stat.amber{background:#fff5df}.payment-page .p-stat.blue{background:#e8f3ff}.payment-page .p-stat.purple{background:#f2edff}
-.payment-page .p-stat-icon{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.75);font-size:23px}
+.payment-page .p-stat-icon{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.75);font-size:19px}
 .payment-page .green .p-stat-icon,.payment-page .green .p-stat-value{color:#16803a}.payment-page .amber .p-stat-icon,.payment-page .amber .p-stat-value{color:#98500b}.payment-page .blue .p-stat-icon,.payment-page .blue .p-stat-value{color:#0876bd}.payment-page .purple .p-stat-icon,.payment-page .purple .p-stat-value{color:#6336c8}
 .payment-page .p-stat-label{font-size:11px;color:#475569;font-weight:600;white-space:nowrap}
-.payment-page .p-stat-value{font-size:19px;font-weight:800;line-height:1.3;white-space:nowrap}
+.payment-page .p-stat-value{font-size:16px;font-weight:800;line-height:1.25;white-space:nowrap}
 .payment-page .p-stat-sub{font-size:10px;color:#64748b}
 .payment-page .p-progress-ring{width:48px;height:48px;flex:0 0 48px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#159447 0 72%,#dce5df 72% 100%);position:relative}
 .payment-page .p-progress-ring:before{content:"";position:absolute;inset:5px;background:#e8f3ff;border-radius:50%}
 .payment-page .p-progress-ring span{position:relative;font-size:11px;font-weight:800;color:#166534}
-.payment-page .p-table-wrap{overflow-x:auto}
+.payment-page .p-table-wrap{max-height:250px;overflow:auto;border-radius:8px;scrollbar-width:thin}
 .payment-page .p-table{min-width:760px;margin:0;font-size:12px;vertical-align:middle}
-.payment-page .p-table thead th{background:#eef0f2;color:#202a36;font-weight:750;padding:9px 8px;white-space:nowrap;border-bottom:1px solid #d8dee7}
+.payment-page .p-table thead th{position:sticky;top:0;z-index:2;background:#eef0f2;color:#202a36;font-weight:750;padding:9px 8px;white-space:nowrap;border-bottom:1px solid #d8dee7}
 .payment-page .p-table tbody td{padding:7px 8px;border-color:#e6eaf0;white-space:nowrap}
 .payment-page .p-table tfoot td{background:#fff1cc;font-weight:800;padding:9px 8px;border-color:#f0dfb4}
 .payment-page .p-status{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700}
@@ -29,7 +29,7 @@
 .payment-page .p-action{border:0;background:transparent;padding:2px 5px;font-size:15px;color:#172331}
 .payment-page .p-action.delete{color:#dc2626}
 .payment-page .p-add{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:650;color:#172331}
-.payment-page .p-history{position:relative;padding-left:4px}
+.payment-page .p-history{position:relative;padding-left:4px;max-height:190px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
 .payment-page .p-history:before{content:"";position:absolute;left:12px;top:8px;bottom:18px;width:2px;background:#d5dde6}
 .payment-page .p-history-item{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) auto 18px;gap:8px;align-items:start;padding:8px 0;border-bottom:1px solid #edf0f3}
 .payment-page .p-history-item:last-child{border-bottom:0}
@@ -50,99 +50,191 @@
 <div class="payment-page">
   <div class="row g-3">
     <div class="col-xl-8">
-      <div class="p-card mb-3">
+      <div class="p-card">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
           <div class="p-heading mb-0">
             <i class="bi bi-wallet2"></i>
             <div><h5>Payment Overview</h5><p>Project payment status and collection summary.</p></div>
           </div>
-          <div class="p-total-chip"><span>Total Project Value</span><strong>₹ 21,25,000</strong></div>
+          <div class="p-total-chip">
+            <span>Total Project Value</span>
+<strong>₹ <span class="js-inr" data-amount="{{ project_value|default:0 }}">{{ project_value|default:0|floatformat:0 }}</span></strong>
+          </div>
         </div>
+
         <div class="p-stats">
           <div class="p-stat green">
             <div class="p-stat-icon"><i class="bi bi-cash-stack"></i></div>
-            <div><div class="p-stat-label">Amount Received</div><div class="p-stat-value">₹ 15,30,000</div></div>
+            <div>
+              <div class="p-stat-label">Amount Received</div>
+              <div class="p-stat-value">₹ <span class="js-inr">{{ paid_amount|default:0 }}</span></div>
+            </div>
           </div>
+
           <div class="p-stat amber">
             <div class="p-stat-icon"><i class="bi bi-hourglass-split"></i></div>
-            <div><div class="p-stat-label">Pending Amount</div><div class="p-stat-value">₹ 5,95,000</div></div>
+            <div>
+              <div class="p-stat-label">Balance Amount</div>
+              <div class="p-stat-value">₹ <span class="js-inr">{{ balance_amount|default:0 }}</span></div>
+            </div>
           </div>
+
           <div class="p-stat blue">
             <div class="p-stat-icon"><i class="bi bi-percent"></i></div>
-            <div><div class="p-stat-label">Received</div><div class="p-stat-value">72%</div></div>
-            <div class="p-progress-ring"><span>72%</span></div>
+            <div>
+              <div class="p-stat-label">Received Percentage</div>
+              <div class="p-stat-value">{{ payment_received_percentage|default:0|floatformat:1 }}%</div>
+              <div class="p-stat-sub">Received amount</div>
+            </div>
+            <div class="p-progress-ring" style="background:conic-gradient(#159447 0 {{ payment_received_percentage|default:0 }}%,#dce5df {{ payment_received_percentage|default:0 }}% 100%)">
+              <span>{{ payment_received_percentage|default:0|floatformat:0 }}%</span>
+            </div>
           </div>
+
           <div class="p-stat purple">
-            <div class="p-stat-icon"><i class="bi bi-calendar-event"></i></div>
-            <div><div class="p-stat-label">Next Due</div><div class="p-stat-value">₹ 2,75,000</div><div class="p-stat-sub">10 Dec 2026</div></div>
+            <div class="p-stat-icon"><i class="bi bi-list-check"></i></div>
+            <div>
+              <div class="p-stat-label">Pending Installment</div>
+              <div class="p-stat-value">{{ pending_payment_count|default:0 }}</div>
+              <div class="p-stat-sub">Stages remaining</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="p-card">
+        <div class="border-top mt-3 pt-3">
         <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-2">
           <div class="p-heading mb-0">
             <i class="bi bi-list-check"></i>
-            <div><h5>Payment Schedule</h5><p>Agreed payment plan with due dates and status.</p></div>
+            <div><h5>Payment Schedule</h5><p>Agreed payment plan, due dates and collection status.</p></div>
           </div>
-          <button type="button" class="p-add" id="addPaymentStage"><i class="bi bi-plus-lg me-1"></i> Add Payment Stage</button>
         </div>
         <div class="p-table-wrap">
           <table class="table p-table" id="paymentTable">
-            <thead><tr><th>S.No</th><th>Payment Stage</th><th>% of Value</th><th>Amount (₹)</th><th>Due Date</th><th>Paid Amount (₹)</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead>
+              <tr>
+                <th>S.No</th><th>Payment Stage</th><th>% of Value</th>
+                <th>Amount (₹)</th><th>Due Date</th><th>Paid Amount (₹)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
             <tbody id="paymentRows">
-              <tr><td>1</td><td>Booking Advance</td><td class="text-center">10%</td><td class="text-end">2,12,500</td><td>06 Nov 2026</td><td class="text-end">2,12,500</td><td><span class="p-status paid"><i class="bi bi-check-circle-fill"></i> Paid</span></td><td><button class="p-action" type="button"><i class="bi bi-pencil"></i></button><button class="p-action delete p-delete" type="button"><i class="bi bi-trash3"></i></button></td></tr>
-              <tr><td>2</td><td>After 3D Design Approval</td><td class="text-center">20%</td><td class="text-end">4,25,000</td><td>20 Nov 2026</td><td class="text-end">4,25,000</td><td><span class="p-status paid"><i class="bi bi-check-circle-fill"></i> Paid</span></td><td><button class="p-action" type="button"><i class="bi bi-pencil"></i></button><button class="p-action delete p-delete" type="button"><i class="bi bi-trash3"></i></button></td></tr>
-              <tr><td>3</td><td>Material Procurement</td><td class="text-center">20%</td><td class="text-end">4,25,000</td><td>05 Dec 2026</td><td class="text-end">4,25,000</td><td><span class="p-status paid"><i class="bi bi-check-circle-fill"></i> Paid</span></td><td><button class="p-action" type="button"><i class="bi bi-pencil"></i></button><button class="p-action delete p-delete" type="button"><i class="bi bi-trash3"></i></button></td></tr>
-              <tr><td>4</td><td>Mid Execution</td><td class="text-center">20%</td><td class="text-end">4,25,000</td><td>20 Dec 2026</td><td class="text-end">2,75,000</td><td><span class="p-status partial"><i class="bi bi-clock-fill"></i> Partial</span></td><td><button class="p-action" type="button"><i class="bi bi-pencil"></i></button><button class="p-action delete p-delete" type="button"><i class="bi bi-trash3"></i></button></td></tr>
-              <tr><td>5</td><td>Before Handover</td><td class="text-center">20%</td><td class="text-end">4,25,000</td><td>10 Apr 2027</td><td class="text-end">0</td><td><span class="p-status pending"><i class="bi bi-clock-fill"></i> Pending</span></td><td><button class="p-action" type="button"><i class="bi bi-pencil"></i></button><button class="p-action delete p-delete" type="button"><i class="bi bi-trash3"></i></button></td></tr>
-              <tr><td>6</td><td>Final Handover</td><td class="text-center">10%</td><td class="text-end">2,12,500</td><td>30 Apr 2027</td><td class="text-end">0</td><td><span class="p-status pending"><i class="bi bi-clock-fill"></i> Pending</span></td><td><button class="p-action" type="button"><i class="bi bi-pencil"></i></button><button class="p-action delete p-delete" type="button"><i class="bi bi-trash3"></i></button></td></tr>
+              {% for payment in payment_schedule %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                  <strong>{{ payment.milestone|default:"Payment Stage" }}</strong>
+                  {% if payment.payment_mode %}<small class="d-block text-muted">{{ payment.payment_mode }}</small>{% endif %}
+                </td>
+                <td class="text-center">{{ payment.percentage|default:0|floatformat:2 }}%</td>
+                <td class="text-end"><span class="js-inr">{{ payment.amount|default:0 }}</span></td>
+                <td>{% if payment.payment_date %}{{ payment.payment_date|date:"d M Y" }}{% else %}-{% endif %}</td>
+                <td class="text-end"><span class="js-inr">{{ payment.paid_amount|default:0 }}</span></td>
+                <td>
+                  {% if payment.status|lower == "paid" %}
+                    <span class="p-status paid"><i class="bi bi-check-circle-fill"></i> Paid</span>
+                  {% elif payment.status|lower == "partial" %}
+                    <span class="p-status partial"><i class="bi bi-clock-fill"></i> Partial</span>
+                  {% else %}
+                    <span class="p-status pending"><i class="bi bi-clock-fill"></i> {{ payment.status|default:"Pending" }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center text-muted py-4">No payment schedule added for this project.</td></tr>
+              {% endfor %}
             </tbody>
-            <tfoot><tr><td colspan="2" class="text-center">Total</td><td class="text-center">100%</td><td class="text-end">₹ 21,25,000</td><td></td><td class="text-end">₹ 15,30,000</td><td colspan="2"></td></tr></tfoot>
+            <tfoot>
+              <tr>
+                <td colspan="2" class="text-center">Total</td>
+                <td class="text-center">100%</td>
+                <td class="text-end">₹ <span class="js-inr">{{ total_payment_amount|default:0 }}</span></td>
+                <td></td>
+                <td class="text-end">₹ <span class="js-inr">{{ total_paid|default:0 }}</span></td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
+        </div>
+        <div class="small text-muted mt-2">Payment stage values and collection details are loaded from the ProjectPayment records.</div>
         </div>
       </div>
     </div>
 
     <div class="col-xl-4">
-      <div class="p-card mb-3">
-        <div class="p-heading"><i class="bi bi-clock-history"></i><div><h5>Payment History</h5><p>All payments received for this project.</p></div></div>
+      <div class="p-card">
+        <div class="p-heading">
+          <i class="bi bi-clock-history"></i>
+          <div><h5>Payment History</h5><p>Recorded payments received for this project.</p></div>
+        </div>
         <div class="p-history">
-          <div class="p-history-item"><div class="p-history-dot"><i class="bi bi-check-lg"></i></div><div class="p-history-main"><strong>₹ 2,12,500 received</strong><small>Booking Advance</small></div><div class="p-history-date">06 Nov 2026</div><i class="bi bi-file-earmark-text p-history-file"></i></div>
-          <div class="p-history-item"><div class="p-history-dot"><i class="bi bi-check-lg"></i></div><div class="p-history-main"><strong>₹ 4,25,000 received</strong><small>After 3D Design Approval</small></div><div class="p-history-date">20 Nov 2026</div><i class="bi bi-file-earmark-text p-history-file"></i></div>
-          <div class="p-history-item"><div class="p-history-dot"><i class="bi bi-check-lg"></i></div><div class="p-history-main"><strong>₹ 4,25,000 received</strong><small>Material Procurement</small></div><div class="p-history-date">05 Dec 2026</div><i class="bi bi-file-earmark-text p-history-file"></i></div>
-          <div class="p-history-item"><div class="p-history-dot partial"><i class="bi bi-clock"></i></div><div class="p-history-main"><strong>₹ 2,75,000 received <span class="text-warning">(Partial)</span></strong><small>Mid Execution (₹ 1,50,000 pending)</small></div><div class="p-history-date">20 Dec 2026</div><i class="bi bi-file-earmark-text p-history-file"></i></div>
+          {% for payment in payment_schedule %}
+            {% if payment.paid_amount and payment.paid_amount > 0 %}
+            <div class="p-history-item">
+              <div class="p-history-dot {% if payment.status|lower == 'partial' %}partial{% endif %}">
+                <i class="bi {% if payment.status|lower == 'partial' %}bi-clock{% else %}bi-check-lg{% endif %}"></i>
+              </div>
+              <div class="p-history-main">
+                <strong>₹ <span class="js-inr">{{ payment.paid_amount|default:0 }}</span> received</strong>
+                <small>{{ payment.milestone }}</small>
+                {% if payment.transaction_reference %}
+                  <small class="d-block">Ref: {{ payment.transaction_reference }}</small>
+                {% endif %}
+                {% if payment.remarks %}<small class="d-block">{{ payment.remarks }}</small>{% endif %}
+              </div>
+              <div class="p-history-date">{% if payment.payment_date %}{{ payment.payment_date|date:"d M Y" }}{% else %}-{% endif %}</div>
+              <i class="bi bi-receipt p-history-file"></i>
+            </div>
+            {% endif %}
+          {% empty %}
+            <p class="text-muted small mb-0">No payment history available.</p>
+          {% endfor %}
         </div>
       </div>
 
       <div class="p-card">
-        <div class="p-heading"><i class="bi bi-layers"></i><div><h5>Payment Actions</h5></div></div>
+        <div class="p-heading"><i class="bi bi-info-circle"></i><div><h5>Payment Summary</h5></div></div>
         <div class="p-action-grid">
-          <button type="button" class="btn p-btn-dark"><i class="bi bi-plus-lg me-1"></i> Record Payment</button>
-          <button type="button" class="btn p-btn-light"><i class="bi bi-pencil me-1"></i> Edit Schedule</button>
-          <button type="button" class="btn p-btn-light"><i class="bi bi-receipt me-1"></i> Payment Receipt</button>
-          <button type="button" class="btn p-btn-light"><i class="bi bi-download me-1"></i> Download Statement</button>
+          <div class="rounded-3 p-2 bg-light">
+            <small class="text-muted d-block">Scheduled Amount</small>
+            <strong>₹ <span class="js-inr">{{ total_payment_amount|default:0 }}</span></strong>
+          </div>
+          <div class="rounded-3 p-2 bg-light">
+            <small class="text-muted d-block">Collected Amount</small>
+            <strong>₹ <span class="js-inr">{{ total_paid|default:0 }}</span></strong>
+          </div>
+          <div class="rounded-3 p-2 bg-light">
+            <small class="text-muted d-block">Pending Amount</small>
+            <strong>₹ <span class="js-inr">{{ pending_amount|default:0 }}</span></strong>
+          </div>
+          <div class="rounded-3 p-2 bg-light">
+            <small class="text-muted d-block">Project Profit</small>
+            <strong>₹ <span class="js-inr">{{ project_profit|default:0 }}</span></strong>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+
 <script>
-(function(){
-  const script = document.currentScript;
-  const root = script.previousElementSibling;
-  if(!root || !root.classList.contains('payment-page')) return;
-  const rows = root.querySelector('#paymentRows');
-  root.querySelector('#addPaymentStage').addEventListener('click', function(){
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td></td><td contenteditable="true">New Payment Stage</td><td class="text-center" contenteditable="true">0%</td><td class="text-end" contenteditable="true">0</td><td contenteditable="true">-</td><td class="text-end">0</td><td><span class="p-status pending"><i class="bi bi-clock-fill"></i> Pending</span></td><td><button class="p-action" type="button"><i class="bi bi-pencil"></i></button><button class="p-action delete p-delete" type="button"><i class="bi bi-trash3"></i></button></td>`;
-    rows.appendChild(tr); renumber();
-  });
-  rows.addEventListener('click', function(e){
-    const del = e.target.closest('.p-delete');
-    if(del){ del.closest('tr').remove(); renumber(); }
-  });
-  function renumber(){ [...rows.rows].forEach((row,i)=>row.cells[0].textContent=i+1); }
+(function () {
+  function formatProjectPaymentAmounts(scope) {
+    const indianFormat = new Intl.NumberFormat('en-IN', {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    });
+
+    scope.querySelectorAll('.js-inr').forEach(function (node) {
+      const raw = node.dataset.amount || node.textContent || '0';
+      const value = Number(String(raw).replace(/,/g, '').trim());
+      node.textContent = Number.isFinite(value)
+        ? indianFormat.format(Math.round(value))
+        : '0';
+    });
+  }
+
+  const root = document.querySelector('.payment-page');
+  if (root) formatProjectPaymentAmounts(root);
 })();
 </script>

@@ -75,27 +75,43 @@
                     </div>
                 </div>
 
+                <!-- TOTAL PROJECT VALUE -->
                 <div class="col-xl col-md-4 col-6">
                     <div class="stat-card stat-purple">
                         <div class="stat-top">
-                            <div class="stat-icon"><i class="bi bi-clock"></i></div>
-                            <span>Pending / On Hold</span>
+                            <div class="stat-icon">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                            <span>Total Project Value</span>
                         </div>
-                        <h2>{{ hold_projects|default:0 }}</h2>
-                        <div class="stat-growth negative">↓ -25%</div>
-                        <i class="bi bi-pause-circle stat-watermark"></i>
+
+                        <h2 class="project-amount"
+                            id="totalProjectValue"
+                            data-amount="{{ total_project_value|default:0 }}">
+                        </h2>
+
+
+                        <i class="bi bi-wallet2 stat-watermark"></i>
                     </div>
                 </div>
 
+
+                <!-- TOTAL PROJECT PROFIT -->
                 <div class="col-xl col-md-4 col-6">
                     <div class="stat-card stat-red">
                         <div class="stat-top">
-                            <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
-                            <span>Discontinued</span>
+                            <div class="stat-icon">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <span> Total Project Profit</span>
                         </div>
-                        <h2>{{ discontinued_projects|default:0 }}</h2>
-                        
-                        <i class="bi bi-person-workspace stat-watermark"></i>
+
+                        <h2 class="project-amount"
+                            id="totalProjectProfit"
+                            data-amount="{{ total_project_profit|default:0 }}">
+                        </h2>
+
+                        <i class="bi bi-currency-rupee stat-watermark"></i>
                     </div>
                 </div>
 
@@ -943,6 +959,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("Projects Displayed on Map:", markers.length);
 
+
+});
+
+// ==========================================
+// PROJECT VALUE & PROFIT FORMAT
+// ==========================================
+
+function formatShortAmount(amount) {
+
+    const absAmount = Math.abs(amount);
+
+    if (absAmount >= 10000000) {
+
+        let value = Math.trunc(amount / 1000000) / 10;
+
+        return value + " Cr";
+    }
+
+    if (absAmount >= 100000) {
+
+        let value = Math.trunc(amount / 10000) / 10;
+
+        return value + " L";
+    }
+
+    if (absAmount >= 1000) {
+
+        let value = Math.trunc(amount / 100) / 10;
+
+        return value + " K";
+    }
+
+    return amount.toLocaleString("en-IN");
+}
+
+
+// ==========================================
+// UPDATE BOTH AMOUNT CARDS
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const ids = [
+        "totalProjectValue",
+        "totalProjectProfit"
+    ];
+
+    ids.forEach(function (id) {
+
+        const element = document.getElementById(id);
+
+        if (!element) return;
+
+        const amount = Number(element.getAttribute("data-amount"));
+
+        if (!Number.isFinite(amount)) {
+            console.error("Invalid amount:", id);
+            return;
+        }
+
+        const formattedAmount = formatShortAmount(amount);
+
+        element.textContent = "₹ " + formattedAmount;
+
+        console.log(id, amount, formattedAmount);
+
+    });
 
 });
 </script>

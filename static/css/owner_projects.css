@@ -1723,7 +1723,7 @@
 \===================================================== */
 
 
-
+/* 
 .view-project-btn {
 
     display: inline-flex;
@@ -1768,7 +1768,7 @@
 
     transform: translateY(-2px);
 
-}
+} */
 
 
 
@@ -2920,7 +2920,7 @@
 
 /* PROJECT ACTION BUTTONS */
 
-.project-action-buttons {
+/* .project-action-buttons {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -2941,10 +2941,10 @@
     border: 1px solid transparent;
 
     transition: all .25s ease;
-}
+} */
 
 /* EDIT BUTTON */
-
+/* 
 .edit-action {
     background: #fff5e6;
     color: #b78335;
@@ -2955,10 +2955,10 @@
     background: #b78335;
     color: #ffffff;
     transform: translateY(-2px);
-}
+} */
 
 /* PROJECT DETAILS BUTTON */
-
+/* 
 .details-action {
     background: #eaf0f7;
     color: #263e56;
@@ -2969,4 +2969,6 @@
     background: #263e56;
     color: #ffffff;
     transform: translateY(-2px);
-}
+} */
+
+

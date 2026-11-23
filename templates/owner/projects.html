@@ -294,18 +294,19 @@
                                     <div class="d-flex justify-content-center align-items-center project-action-buttons ">
 
                                         <!-- EDIT PROJECT -->
-                                        <a href="{% url 'edit_project' project.project_id %}"
+                                        <!-- <a href="{% url 'edit_project' project.project_id %}"
                                         class="project-action-btn edit-action"
                                         title="Edit Project">
                                             <i class="bi bi-pencil-square"></i>
-                                        </a>
+                                        </a> -->
 
                                         <!-- VIEW PROJECT DETAILS -->
                                        
                                         <a href="{% url 'project_update' project.project_id %}"
-                                        class="project-action-btn details-action"
+                                        class="btn btn-outline-primary btn-sm project-action-btn details-action update-action"
                                         title="Project Update">
-                                            <i class="bi bi-arrow-up-right-square"></i>
+                                           
+                                            <span>Update</span>
                                         </a>
 
                                     </div>

@@ -1,45 +1,27 @@
 {% load static %}
-
-
-
 <!DOCTYPE html>
-
 <html lang="en">
-
-
-
 <head>
 
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-
     <title>IBK | Edit Project</title>
-
-
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
 <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
 
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 
-
-    <style>
-
-
-
-/* ==========================================
+<style>
+   /* ==========================================
 
    EDIT PROJECT - MODERN UI
 
-========================================== */
-
-
+\========================================== */
 
 .edit-project-wrapper {
 
@@ -51,11 +33,7 @@
 
 }
 
-
-
 /* PAGE HEADER */
-
-
 
 .edit-heading {
 
@@ -71,8 +49,6 @@
 
 }
 
-
-
 .edit-heading h4 {
 
     font-size: 22px;
@@ -87,8 +63,6 @@
 
 }
 
-
-
 .edit-heading p {
 
     font-size: 13px;
@@ -98,8 +72,6 @@
     margin: 0;
 
 }
-
-
 
 .back-btn {
 
@@ -123,8 +95,6 @@
 
 }
 
-
-
 .back-btn:hover {
 
     color: #304b91;
@@ -132,8 +102,6 @@
     transform: translateX(-3px);
 
 }
-
-
 
 .edit-heading .badge {
 
@@ -153,11 +121,7 @@
 
 }
 
-
-
 /* MAIN FORM CONTAINER */
-
-
 
 .edit-form-container {
 
@@ -173,19 +137,13 @@
 
 }
 
-
-
 /* SECTION */
-
-
 
 .form-section {
 
     margin-bottom: 20px;
 
 }
-
-
 
 .section-heading {
 
@@ -206,8 +164,6 @@
     margin-bottom: 17px;
 
 }
-
-
 
 .section-heading i {
 
@@ -231,8 +187,6 @@
 
 }
 
-
-
 .section-divider {
 
     border: 0;
@@ -245,11 +199,7 @@
 
 }
 
-
-
 /* LABELS */
-
-
 
 .form-label {
 
@@ -265,8 +215,6 @@
 
 }
 
-
-
 .required {
 
     color: #e05252;
@@ -275,11 +223,7 @@
 
 }
 
-
-
 /* INPUTS */
-
-
 
 .form-control,
 
@@ -305,8 +249,6 @@
 
 }
 
-
-
 .form-control:hover,
 
 .form-select:hover {
@@ -316,8 +258,6 @@
     background: #fff;
 
 }
-
-
 
 .form-control:focus,
 
@@ -333,8 +273,6 @@
 
 }
 
-
-
 .form-control::placeholder {
 
     color: #a5afbf;
@@ -342,8 +280,6 @@
     font-size: 12px;
 
 }
-
-
 
 textarea.form-control {
 
@@ -355,11 +291,7 @@ textarea.form-control {
 
 }
 
-
-
 /* PROJECT CODE */
-
-
 
 .project-code {
 
@@ -375,11 +307,7 @@ textarea.form-control {
 
 }
 
-
-
 /* ALERT MESSAGES */
-
-
 
 .edit-alert {
 
@@ -395,8 +323,6 @@ textarea.form-control {
 
 }
 
-
-
 .edit-alert.alert-success {
 
     background: #edf9f1;
@@ -406,8 +332,6 @@ textarea.form-control {
     border-color: #d6f0df;
 
 }
-
-
 
 .edit-alert.alert-danger {
 
@@ -419,8 +343,6 @@ textarea.form-control {
 
 }
 
-
-
 .edit-alert.alert-warning {
 
     background: #fff8e9;
@@ -431,11 +353,7 @@ textarea.form-control {
 
 }
 
-
-
 /* ACTION BUTTONS */
-
-
 
 .form-actions {
 
@@ -454,8 +372,6 @@ textarea.form-control {
     border-top: 1px solid #edf0f5;
 
 }
-
-
 
 .cancel-btn,
 
@@ -485,8 +401,6 @@ textarea.form-control {
 
 }
 
-
-
 .cancel-btn {
 
     color: #596579;
@@ -497,8 +411,6 @@ textarea.form-control {
 
 }
 
-
-
 .cancel-btn:hover {
 
     background: #f4f6fa;
@@ -508,8 +420,6 @@ textarea.form-control {
     color: #293e83;
 
 }
-
-
 
 .save-btn {
 
@@ -523,8 +433,6 @@ textarea.form-control {
 
 }
 
-
-
 .save-btn:hover {
 
     background: linear-gradient(135deg, #263e7d, #1e3067);
@@ -537,11 +445,7 @@ textarea.form-control {
 
 }
 
-
-
 /* SELECT ARROW */
-
-
 
 .form-select {
 
@@ -549,11 +453,7 @@ textarea.form-control {
 
 }
 
-
-
 /* RESPONSIVE */
-
-
 
 @media (min-width: 1400px) {
 
@@ -563,8 +463,6 @@ textarea.form-control {
 
     }
 
-
-
     .edit-form-container {
 
         padding: 28px;
@@ -572,8 +470,6 @@ textarea.form-control {
     }
 
 }
-
-
 
 @media (max-width: 991px) {
 
@@ -583,8 +479,6 @@ textarea.form-control {
 
     }
 
-
-
     .edit-form-container {
 
         padding: 20px;
@@ -592,8 +486,6 @@ textarea.form-control {
     }
 
 }
-
-
 
 @media (max-width: 768px) {
 
@@ -603,23 +495,17 @@ textarea.form-control {
 
     }
 
-
-
     .edit-heading {
 
         align-items: flex-start;
 
     }
 
-
-
     .edit-heading h4 {
 
         font-size: 19px;
 
     }
-
-
 
     .edit-form-container {
 
@@ -629,15 +515,11 @@ textarea.form-control {
 
     }
 
-
-
     .section-heading {
 
         margin-bottom: 13px;
 
     }
-
-
 
     .section-divider {
 
@@ -645,15 +527,11 @@ textarea.form-control {
 
     }
 
-
-
     .form-actions {
 
         flex-direction: column-reverse;
 
     }
-
-
 
     .cancel-btn,
 
@@ -665,8 +543,6 @@ textarea.form-control {
 
 }
 
-
-
 @media (max-width: 480px) {
 
     .edit-heading .badge {
@@ -675,15 +551,11 @@ textarea.form-control {
 
     }
 
-
-
     .edit-form-container {
 
         padding: 13px;
 
     }
-
-
 
     .form-control,
 
@@ -695,15 +567,11 @@ textarea.form-control {
 
 }
 
-
-
 /* =====================================
 
    PROJECT STATUS & TIMELINE
 
-===================================== */
-
-
+\===================================== */
 
 .status-timeline-section {
 
@@ -713,8 +581,6 @@ textarea.form-control {
 
 }
 
-
-
 .status-timeline-grid {
 
     width: 100%;
@@ -723,15 +589,11 @@ textarea.form-control {
 
 }
 
-
-
 .status-timeline-grid > div {
 
     min-width: 0;
 
 }
-
-
 
 .status-timeline-grid .form-control,
 
@@ -743,317 +605,572 @@ textarea.form-control {
 
 }
 
-
-
-
-
-    
-
-/* ==========================================
-   ROOM & WORK MANAGEMENT - ALIGNMENT
-========================================== */
-
 .edit-project-wrapper {
+
     width: 100%;
+
     max-width: 1500px;
+
     padding: 22px 24px;
+
     margin: 0 auto;
+
     box-sizing: border-box;
+
 }
 
 .edit-form-container {
+
     width: 100%;
+
     box-sizing: border-box;
+
     overflow: hidden;
+
 }
 
 .edit-form-container .form-section {
+
     width: 100%;
+
     min-width: 0;
+
 }
 
 .edit-form-container .row {
+
     --bs-gutter-x: 16px;
+
     --bs-gutter-y: 14px;
+
 }
 
 .edit-form-container .form-label {
+
     display: block;
+
     width: 100%;
+
     margin-bottom: 6px;
+
     line-height: 1.35;
+
 }
 
 .edit-form-container .form-control,
+
 .edit-form-container .form-select {
+
     width: 100%;
+
     min-width: 0;
+
     min-height: 41px;
+
     box-sizing: border-box;
+
 }
 
 /* Room cards */
+
 #roomsContainer {
+
     display: flex;
+
     flex-direction: column;
+
     gap: 16px;
+
     width: 100%;
+
 }
 
 .room-card {
+
     width: 100%;
+
     margin: 0 !important;
+
     border: 1px solid #e2e8f0 !important;
+
     border-radius: 12px !important;
+
     background: #fff;
+
     box-shadow: 0 3px 12px rgba(31, 48, 80, .045);
+
     overflow: hidden;
+
 }
 
 .room-card > .card-body {
+
     padding: 20px;
+
 }
 
 .room-card .room-number {
+
     display: flex;
+
     align-items: center;
+
     color: #263d70;
+
     font-size: 14px;
+
     line-height: 1.4;
+
 }
 
 .room-card .room-number i {
+
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
+
     width: 30px;
+
     height: 30px;
+
     border-radius: 8px;
+
     color: #405b9c;
+
     background: #edf2ff;
+
 }
 
 .room-card .badge {
+
     padding: 7px 10px;
+
     font-size: 11px;
+
     font-weight: 700;
+
 }
 
 .room-card .section-divider,
+
 .room-card hr {
+
     margin: 20px 0;
+
     border-color: #e9edf4;
+
     opacity: 1;
+
 }
 
 /* Work rows */
+
 .work-row {
+
     width: 100%;
+
     padding: 15px !important;
+
     border: 1px solid #e5eaf2 !important;
+
     border-radius: 9px !important;
+
     background: #f9fbfe;
+
 }
 
 .work-row .row {
+
     align-items: end;
+
     --bs-gutter-x: 12px;
+
     --bs-gutter-y: 12px;
+
 }
 
 .work-row .form-label {
+
     min-height: 16px;
+
     font-size: 11.5px;
+
     font-weight: 650;
+
     color: #536176;
+
 }
 
 .work-row .form-control,
+
 .work-row .form-select {
+
     min-height: 39px;
+
     font-size: 12px;
+
 }
 
 .work-row textarea.form-control {
+
     min-height: 68px;
+
 }
 
 /* Section heading and buttons */
+
 #addRoomBtn,
+
 .add-work-btn {
+
     min-height: 37px;
+
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
+
     gap: 5px;
+
     white-space: nowrap;
+
     border-radius: 7px;
+
     font-size: 12px;
+
     font-weight: 650;
+
 }
 
 /* Stage history */
+
 .stage-history-list {
+
     width: 100%;
+
     padding: 20px;
+
     border: 1px solid #e7ebf2;
+
     border-radius: 11px;
+
     background: #fbfcfe;
+
 }
 
 .stage-history-item {
+
     position: relative;
+
     width: 100%;
+
     padding-bottom: 15px;
+
     margin-bottom: 15px !important;
+
     border-bottom: 1px solid #e9edf3;
+
 }
 
 .stage-history-item:last-child {
+
     padding-bottom: 0;
+
     margin-bottom: 0 !important;
+
     border-bottom: 0;
+
 }
 
 .stage-history-icon {
+
     width: 32px;
+
     height: 32px;
+
     min-width: 32px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     color: #fff;
+
     background: #304b91;
+
     border-radius: 50%;
+
 }
 
 .stage-history-item .flex-grow-1 {
+
     min-width: 0;
+
 }
 
 /* Form actions */
+
 .form-actions {
+
     position: sticky;
+
     bottom: 0;
+
     z-index: 5;
+
     background: rgba(255,255,255,.97);
+
 }
 
 @media (max-width: 991.98px) {
+
     .edit-project-wrapper {
+
         padding: 18px 14px;
+
     }
+
     .edit-form-container {
+
         padding: 20px;
+
     }
+
     .room-card > .card-body {
+
         padding: 16px;
+
     }
+
 }
 
 @media (max-width: 767.98px) {
+
     .edit-project-wrapper {
+
         padding: 12px 8px;
+
     }
+
     .edit-heading {
+
         align-items: flex-start;
+
     }
+
     .edit-form-container {
+
         padding: 15px;
+
         border-radius: 10px;
+
     }
+
     .room-card > .card-body {
+
         padding: 13px;
+
     }
+
     .work-row {
+
         padding: 11px !important;
+
     }
+
     .stage-history-list {
+
         padding: 14px;
+
     }
+
     .stage-history-item {
+
         gap: 10px !important;
+
     }
+
 }
 
 @media (max-width: 575.98px) {
+
     .edit-heading {
+
         flex-direction: column;
+
     }
+
     .edit-heading > .badge {
+
         align-self: flex-start;
+
     }
+
     .room-card .d-flex.justify-content-between {
+
         align-items: flex-start !important;
+
     }
+
     .form-actions {
+
         flex-direction: column-reverse;
+
         gap: 9px;
+
     }
+
     .form-actions .cancel-btn,
+
     .form-actions .save-btn {
+
         width: 100%;
+
     }
+
     .stage-history-item .d-flex.justify-content-between {
+
         align-items: flex-start !important;
+
     }
+
 }
 
+   /* Premium compact payment schedule */
+.payment-table-wrap {
+    border: 1px solid #e4e9f2;
+    border-radius: 12px;
+    background: #fff;
+    overflow-x: auto;
+    box-shadow: 0 5px 18px rgba(25, 43, 75, .045);
+}
+#paymentScheduleTable {
+    min-width: 1180px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #344054;
+    font-size: 11.5px;
+}
+#paymentScheduleTable thead th {
+    background: #f4f6fb;
+    color: #52617a;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: .045em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 12px 10px;
+    border: 0;
+    border-bottom: 1px solid #e5eaf2;
+}
+#paymentScheduleTable thead th:first-child { padding-left: 15px; }
+#paymentScheduleTable tbody td {
+    padding: 9px 8px;
+    vertical-align: middle;
+    border: 0;
+    border-bottom: 1px solid #edf0f5;
+    background: #fff;
+}
+#paymentScheduleTable tbody tr:last-child td { border-bottom: 0; }
+#paymentScheduleTable tbody tr:hover td { background: #fafbff; }
+#paymentScheduleTable tbody td:first-child {
+    padding-left: 15px;
+    color: #8792a5;
+    font-weight: 700;
+    width: 38px;
+}
+#paymentScheduleTable [data-pay] {
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 1px solid #e5e9f0;
+    border-radius: 7px;
+    background: #fbfcfe;
+    color: #344054;
+    font-size: 11px;
+    box-shadow: none;
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+#paymentScheduleTable [data-pay]:hover { border-color: #cbd5e3; background: #fff; }
+#paymentScheduleTable [data-pay]:focus {
+    border-color: #7188d8;
+    background: #fff;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(83, 109, 254, .09);
+}
+#paymentScheduleTable [data-pay="milestone"] { min-width: 165px; font-weight: 650; }
+#paymentScheduleTable [data-pay="percentage"] { width: 72px; min-width: 72px; text-align: center; font-weight: 700; }
+#paymentScheduleTable [data-pay="amount"] { width: 112px; min-width: 112px; background: #f4f6fb; color: #334a80; font-weight: 700; }
+#paymentScheduleTable [data-pay="paid_amount"] { width: 112px; min-width: 112px; }
+#paymentScheduleTable [data-pay="status"] { min-width: 100px; }
+#paymentScheduleTable [data-pay="payment_date"] { min-width: 132px; }
+#paymentScheduleTable [data-pay="payment_mode"] { min-width: 120px; }
+#paymentScheduleTable [data-pay="transaction_reference"] { min-width: 145px; }
+#paymentScheduleTable [data-pay="remarks"] { min-width: 130px; }
+#paymentScheduleTable tfoot th {
+    padding: 12px 10px;
+    background: #f5f7fc;
+    color: #344563;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+    border: 0;
+    border-top: 1px solid #e3e8f1;
+}
+#paymentScheduleTable tfoot th:first-child { padding-left: 15px; }
+#paymentScheduleTable #paymentPercentTotal { color: #405b9c; }
+#paymentScheduleTable #paymentAmountTotal,
+#paymentScheduleTable #paymentReceivedTotal { font-variant-numeric: tabular-nums; }
+#paymentScheduleTable #paymentBalanceLabel { text-align: right; color: #66748b; }
+.payment-table-wrap::-webkit-scrollbar { height: 7px; }
+.payment-table-wrap::-webkit-scrollbar-track { background: #f5f7fb; border-radius: 10px; }
+.payment-table-wrap::-webkit-scrollbar-thumb { background: #cbd3e1; border-radius: 10px; }
+.payment-table-wrap::-webkit-scrollbar-thumb:hover { background: #aab6ca; }
+@media (max-width: 767.98px) {
+    .payment-table-wrap { border-radius: 9px; }
+    #paymentScheduleTable thead th { padding: 10px 8px; }
+    #paymentScheduleTable tbody td { padding: 7px 6px; }
+}
 </style>
 
 </head>
 
-
-
 <body>
 
-
-
 <div class="app-layout">
-
-
 
     <!-- SIDEBAR -->
 
     {% include 'includes/sidebar_owner.html' %}
 
-
-
     <main class="main-area">
-
-
 
         <!-- HEADER -->
 
         {% include 'includes/header.html' %}
 
-
-
         <section class="page-content p-2">
 
-
-
             <div class="edit-project-wrapper">
-
-
 
                 <!-- PAGE HEADER -->
 
                 <div class="edit-heading">
 
-
-
                     <div>
 
-                        <a href="{% url 'owner_projects' %}" class="back-btn">
+                        <a href="{% url 'project_update' project.project_id %}" class="back-btn">
 
                             <i class="bi bi-arrow-left"></i>
 
-                            Back to Projects
+                           Project Update
 
                         </a>
-
-
 
                         <h4>Edit Project</h4>
 
@@ -1061,27 +1178,19 @@ textarea.form-control {
 
                     </div>
 
-
-
                     <span class="badge bg-primary-subtle text-primary px-3 py-2">
 
                         {{ project.project_code }}
 
                     </span>
 
-
-
                 </div>
-
-
 
                 <!-- SUCCESS / ERROR MESSAGES -->
 
                 {% if messages %}
 
                     {% for message in messages %}
-
-
 
                         <div class="alert
 
@@ -1097,8 +1206,6 @@ textarea.form-control {
 
                             role="alert">
 
-
-
                             <i class="bi
 
                                 {% if message.tags == 'success' %}bi-check-circle-fill
@@ -1109,11 +1216,7 @@ textarea.form-control {
 
                             </i>
 
-
-
                             {{ message }}
-
-
 
                             <button type="button"
 
@@ -1123,37 +1226,24 @@ textarea.form-control {
 
                             </button>
 
-
-
                         </div>
-
-
 
                     {% endfor %}
 
                 {% endif %}
 
-
-
-
-
                 <!-- ONE FORM -->
 
                 <form method="POST" class="edit-form-container">
 
-
-
                     {% csrf_token %}
 
                     <input type="hidden" name="rooms_json" id="roomsJson">
-
-
+                    <input type="hidden" name="payments_json" id="paymentsJson">
 
                     <!-- 01 CLIENT INFORMATION -->
 
                     <div class="form-section">
-
-
 
                         <div class="section-heading">
 
@@ -1163,17 +1253,13 @@ textarea.form-control {
 
                         </div>
 
-
-
                         <div class="row g-2">
-
-
 
                             <div class="col-md-6">
 
                                 <label class="form-label">
 
-                                    Client Name <span class="required">*</span>
+                                    Client Name <span class="required">\*</span>
 
                                 </label>
 
@@ -1191,13 +1277,11 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-6">
 
                                 <label class="form-label">
 
-                                    Phone Number <span class="required">*</span>
+                                    Phone Number <span class="required">\*</span>
 
                                 </label>
 
@@ -1215,8 +1299,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-6">
 
                                 <label class="form-label">Alternative Phone</label>
@@ -1233,8 +1315,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-6">
 
                                 <label class="form-label">Email Address</label>
@@ -1249,25 +1329,15 @@ textarea.form-control {
 
                             </div>
 
-
-
                         </div>
 
                     </div>
 
-
-
                     <hr class="section-divider">
-
-
-
-
 
                     <!-- 02 PROPERTY DETAILS -->
 
                     <div class="form-section">
-
-
 
                         <div class="section-heading">
 
@@ -1277,11 +1347,7 @@ textarea.form-control {
 
                         </div>
 
-
-
                         <div class="row g-2">
-
-
 
                             <div class="col-md-4">
 
@@ -1297,8 +1363,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-4">
 
                                 <label class="form-label">Project Type</label>
@@ -1306,8 +1370,6 @@ textarea.form-control {
                                 <select name="project_type" class="form-select" required>
 
                                     <option value="">Select project type</option>
-
-
 
                                     {% for type in project_types %}
 
@@ -1320,8 +1382,6 @@ textarea.form-control {
                                         </option>
 
                                     {% endfor %}
-
-
 
                                     <option value="Full Home Interior" {% if project.project_type == "Full Home Interior" %}selected{% endif %}>Full Home Interior</option>
 
@@ -1342,8 +1402,6 @@ textarea.form-control {
                                 </select>
 
                             </div>
-
-
 
                             <div class="col-md-4">
 
@@ -1367,8 +1425,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-6">
 
                                 <label class="form-label">Project Location</label>
@@ -1382,8 +1438,6 @@ textarea.form-control {
                                        value="{{ project.location }}">
 
                             </div>
-
-
 
                             <div class="col-md-6">
 
@@ -1403,8 +1457,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-6">
 
                                 <label class="form-label">Google Maps Link</label>
@@ -1420,8 +1472,6 @@ textarea.form-control {
                                        placeholder="Paste Google Maps link">
 
                             </div>
-
-
 
                             <div class="col-md-6">
 
@@ -1447,25 +1497,15 @@ textarea.form-control {
 
                             </div>
 
-
-
                         </div>
 
                     </div>
 
-
-
                     <hr class="section-divider">
-
-
-
-
 
                     <!-- 03 ROOM REQUIREMENTS -->
 
                     <div class="form-section">
-
-
 
                         <div class="section-heading">
 
@@ -1475,11 +1515,7 @@ textarea.form-control {
 
                         </div>
 
-
-
                         <div class="row g-2">
-
-
 
                             <div class="col-md-3 col-6">
 
@@ -1497,8 +1533,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-3 col-6">
 
                                 <label class="form-label">Living Rooms</label>
@@ -1514,8 +1548,6 @@ textarea.form-control {
                                        min="0" max="50">
 
                             </div>
-
-
 
                             <div class="col-md-3 col-6">
 
@@ -1533,8 +1565,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-3 col-6">
 
                                 <label class="form-label">Bathrooms</label>
@@ -1551,8 +1581,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-12">
 
                                 <label class="form-label">Additional Requirements</label>
@@ -1567,187 +1595,400 @@ textarea.form-control {
 
                             </div>
 
-
-
                         </div>
 
                     </div>
 
-
-
                     <hr class="section-divider">
 
-                    <!-- 04 ROOM & WORK MANAGEMENT -->
-
+                    <hr class="section-divider">
+                    <!-- PROJECT FINANCIALS & PAYMENT SCHEDULE -->
                     <div class="form-section">
                         <div class="section-heading">
-                            <i class="bi bi-door-open"></i>
-                            Room & Work Management
+                            <i class="bi bi-cash-coin"></i>
+                            Project Financial Details
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Project Value (₹)</label>
+                                <input type="number" min="0" step="0.01" name="project_value"
+                                       id="projectValue" class="form-control"
+                                       value="{{ project.project_value|default_if_none:'0' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Project Profit (₹)</label>
+                                <input type="number" min="0" step="0.01" name="project_profit"
+                                       class="form-control"
+                                       value="{{ project.project_profit|default_if_none:'0' }}">
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                             <div>
-                                <h6 class="mb-1 fw-bold">Project Rooms</h6>
-                                <small class="text-muted">Add rooms and manage individual works with area and status.</small>
+                                <h6 class="fw-bold mb-1">Payment Schedule</h6>
+                                <small class="text-muted">Default percentages are prefilled. You can customize them for this project; total must be 100%.</small>
                             </div>
+                            <span class="badge bg-primary-subtle text-primary">Project-wise</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered align-middle" id="paymentScheduleTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th><th>Milestone / Stage</th><th style="width:100px">%</th>
+                                        <th>Amount (₹)</th><th>Paid Amount (₹)</th><th>Status</th>
+                                        <th>Payment Date</th><th>Payment Mode</th><th>Transaction / Reference</th><th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for payment in payment_schedule %}
+                                    <tr class="payment-row" data-payment-id="{{ payment.payment_id }}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><input class="form-control form-control-sm" data-pay="milestone" value="{{ payment.milestone }}"></td>
+                                        <td><input type="number" min="0" max="100" step="0.01" class="form-control form-control-sm payment-percent" data-pay="percentage" value="{{ payment.percentage }}"></td>
+                                        <td><input type="number" class="form-control form-control-sm payment-amount" data-pay="amount" value="{{ payment.amount }}" readonly></td>
+                                        <td><input type="number" min="0" step="0.01" class="form-control form-control-sm" data-pay="paid_amount" value="{{ payment.paid_amount }}"></td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-pay="status">
+                                                <option value="pending" {% if payment.status|default:'pending'|lower == "pending" %}selected{% endif %}>Pending</option>
+                                                <option value="paid" {% if payment.status|lower == "paid" %}selected{% endif %}>Paid</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="date" class="form-control form-control-sm" data-pay="payment_date" value="{{ payment.payment_date|date:'Y-m-d' }}"></td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-pay="payment_mode">
+                                                <option value="">Select</option>
+                                                <option value="cash" {% if payment.payment_mode == "cash" %}selected{% endif %}>Cash</option>
+                                                <option value="bank_transfer" {% if payment.payment_mode == "bank_transfer" %}selected{% endif %}>Bank Transfer</option>
+                                                <option value="upi" {% if payment.payment_mode == "upi" %}selected{% endif %}>UPI</option>
+                                                <option value="cheque" {% if payment.payment_mode == "cheque" %}selected{% endif %}>Cheque</option>
+                                                <option value="card" {% if payment.payment_mode == "card" %}selected{% endif %}>Card</option>
+                                                <option value="other" {% if payment.payment_mode == "other" %}selected{% endif %}>Other</option>
+                                            </select>
+                                        </td>
+                                        <td><input class="form-control form-control-sm" data-pay="transaction_reference" value="{{ payment.transaction_reference }}"></td>
+                                        <td><input class="form-control form-control-sm" data-pay="remarks" value="{{ payment.remarks }}"></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th colspan="2">Total</th>
+                                        <th id="paymentPercentTotal">100%</th>
+                                        <th id="paymentAmountTotal">₹0.00</th>
+                                        <th id="paymentReceivedTotal">₹0.00</th>
+                                        <th colspan="5" id="paymentBalanceLabel">Balance: ₹0.00</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <small class="text-muted">Payment remarks are optional; add them in the milestone record if needed.</small>
+                    </div>
+                    <hr class="section-divider">
+                    <!-- 04 ROOM & WORK MANAGEMENT -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <i class="bi bi-door-open"></i>
+
+                            Room & Work Management
+
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+
+                            <div>
+
+                                <h6 class="mb-1 fw-bold">Project Rooms</h6>
+
+                                <small class="text-muted">Add rooms and manage individual works with area and status.</small>
+
+                            </div>
+
                             <button type="button" class="btn btn-primary btn-sm" id="addRoomBtn">
+
                                 <i class="bi bi-plus-lg me-1"></i> Add Room
+
                             </button>
+
                         </div>
 
                         <div id="roomsContainer">
+
                             {% for room in rooms %}
+
                             <div class="card room-card mb-3" data-room-id="{{ room.room_id }}">
+
                                 <div class="card-body">
+
                                     <div class="d-flex justify-content-between align-items-center mb-3">
+
                                         <h6 class="fw-bold room-number mb-0">
+
                                             <i class="bi bi-house-door me-2"></i>Room {{ forloop.counter }}
+
                                         </h6>
-                                        <span class="badge bg-primary-subtle text-primary">{{ room.works.count }} Works</span>
+
+                                        <div class="d-flex align-items-center gap-2">
+    <span class="badge bg-primary-subtle text-primary">{{ room.works.count }} Works</span>
+    <button type="button" class="btn btn-sm btn-outline-danger delete-room-btn"><i class="bi bi-trash3"></i> </button>
+</div>
+
                                     </div>
 
                                     <div class="row g-3">
+
                                         <div class="col-md-4">
-                                            <label class="form-label">Room Name <span class="required">*</span></label>
+
+                                            <label class="form-label">Room Name <span class="required">\*</span></label>
+
                                             <input type="text" class="form-control" data-field="room_name" value="{{ room.room_name }}" required>
+
                                         </div>
+
                                         <div class="col-md-4">
+
                                             <label class="form-label">Room Type</label>
+
                                             <select class="form-select" data-field="room_type">
+
                                                 <option value="">Select room type</option>
+
                                                 <option value="Living Room" {% if room.room_type == "Living Room" %}selected{% endif %}>Living Room</option>
+
                                                 <option value="Master Bedroom" {% if room.room_type == "Master Bedroom" %}selected{% endif %}>Master Bedroom</option>
+
                                                 <option value="Bedroom" {% if room.room_type == "Bedroom" %}selected{% endif %}>Bedroom</option>
+
                                                 <option value="Guest Bedroom" {% if room.room_type == "Guest Bedroom" %}selected{% endif %}>Guest Bedroom</option>
+
                                                 <option value="Kids Bedroom" {% if room.room_type == "Kids Bedroom" %}selected{% endif %}>Kids Bedroom</option>
+
                                                 <option value="Kitchen" {% if room.room_type == "Kitchen" %}selected{% endif %}>Kitchen</option>
+
                                                 <option value="Dining Room" {% if room.room_type == "Dining Room" %}selected{% endif %}>Dining Room</option>
+
                                                 <option value="Pooja Room" {% if room.room_type == "Pooja Room" %}selected{% endif %}>Pooja Room</option>
+
                                                 <option value="Bathroom" {% if room.room_type == "Bathroom" %}selected{% endif %}>Bathroom</option>
+
                                                 <option value="Balcony" {% if room.room_type == "Balcony" %}selected{% endif %}>Balcony</option>
+
                                                 <option value="Utility Room" {% if room.room_type == "Utility Room" %}selected{% endif %}>Utility Room</option>
+
                                                 <option value="Study Room" {% if room.room_type == "Study Room" %}selected{% endif %}>Study Room</option>
+
                                                 <option value="Office" {% if room.room_type == "Office" %}selected{% endif %}>Office</option>
+
                                                 <option value="Other" {% if room.room_type == "Other" %}selected{% endif %}>Other</option>
+
                                             </select>
+
                                         </div>
+
                                         <div class="col-md-4">
-                                            <label class="form-label">Room Area (Sq.ft)</label>
-                                            <input type="number" class="form-control" data-field="area_sqft" value="{{ room.area_sqft }}" min="0" step="0.01">
-                                        </div>
+    <label class="form-label">Room Total Sq.ft (All Works)</label>
+    <input type="number" class="form-control room-total-sqft" data-field="area_sqft" value="{{ room.area_sqft|default_if_none:'0' }}" min="0" step="0.01" readonly>
+</div>
+
                                         <div class="col-md-6">
+
                                             <label class="form-label">Floor</label>
+
                                             <input type="text" class="form-control" data-field="floor" value="{{ room.floor }}" placeholder="Eg: Ground Floor">
+
                                         </div>
+
                                         <div class="col-md-6">
+
                                             <label class="form-label">Description</label>
+
                                             <input type="text" class="form-control" data-field="description" value="{{ room.description }}">
+
                                         </div>
+
                                     </div>
 
                                     <hr class="section-divider">
 
                                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+
                                         <h6 class="fw-bold mb-0"><i class="bi bi-tools me-2"></i>Room Works</h6>
+
                                         <button type="button" class="btn btn-outline-primary btn-sm add-work-btn">
+
                                             <i class="bi bi-plus-lg me-1"></i> Add Work
+
                                         </button>
+
                                     </div>
 
                                     <div class="works-container">
+
                                         {% for work in room.works.all %}
+
                                         <div class="work-row border rounded p-3 mb-2" data-work-id="{{ work.work_id }}">
+    <div class="d-flex justify-content-end mb-2">
+        <button type="button" class="btn btn-sm btn-outline-danger delete-work-btn"><i class="bi bi-trash3"></i> </button>
+    </div>
+
                                             <div class="row g-2">
+
                                                 <div class="col-lg-3 col-md-6">
-                                                    <label class="form-label">Work Name <span class="required">*</span></label>
+
+                                                    <label class="form-label">Work Name <span class="required">\*</span></label>
+
                                                     <select class="form-select" data-field="work_name" required>
+
                                                         <option value="">Select Work</option>
+
                                                         <option value="wardrobe" {% if work.work_name == "wardrobe" or work.work_name == "Wardrobe" %}selected{% endif %}>Wardrobe</option>
+
                                                         <option value="loft" {% if work.work_name == "loft" or work.work_name == "Loft" %}selected{% endif %}>Loft</option>
+
                                                         <option value="false_ceiling" {% if work.work_name == "false_ceiling" or work.work_name == "False Ceiling" %}selected{% endif %}>False Ceiling</option>
+
                                                         <option value="tv_unit" {% if work.work_name == "tv_unit" or work.work_name == "TV Unit" %}selected{% endif %}>TV Unit</option>
+
                                                         <option value="tv_back_panel" {% if work.work_name == "tv_back_panel" or work.work_name == "TV Back Panel" %}selected{% endif %}>TV Back Panel</option>
+
                                                         <option value="modular_kitchen" {% if work.work_name == "modular_kitchen" or work.work_name == "Modular Kitchen" %}selected{% endif %}>Modular Kitchen</option>
+
                                                         <option value="crockery_unit" {% if work.work_name == "crockery_unit" or work.work_name == "Crockery Unit" %}selected{% endif %}>Crockery Unit</option>
+
                                                         <option value="wardrobe_with_loft" {% if work.work_name == "wardrobe_with_loft" or work.work_name == "Wardrobe with Loft" %}selected{% endif %}>Wardrobe with Loft</option>
+
                                                         <option value="bed_unit" {% if work.work_name == "bed_unit" or work.work_name == "Bed Unit" %}selected{% endif %}>Bed Unit</option>
+
                                                         <option value="dressing_unit" {% if work.work_name == "dressing_unit" or work.work_name == "Dressing Unit" %}selected{% endif %}>Dressing Unit</option>
+
                                                         <option value="study_table" {% if work.work_name == "study_table" or work.work_name == "Study Table" %}selected{% endif %}>Study Table</option>
+
                                                         <option value="pooja_unit" {% if work.work_name == "pooja_unit" or work.work_name == "Pooja Unit" %}selected{% endif %}>Pooja Unit</option>
+
                                                         <option value="shoe_rack" {% if work.work_name == "shoe_rack" or work.work_name == "Shoe Rack" %}selected{% endif %}>Shoe Rack</option>
+
                                                         <option value="partition" {% if work.work_name == "partition" or work.work_name == "Partition" %}selected{% endif %}>Partition</option>
+
                                                         <option value="wall_panelling" {% if work.work_name == "wall_panelling" or work.work_name == "Wall Panelling" %}selected{% endif %}>Wall Panelling</option>
+
                                                         <option value="painting" {% if work.work_name == "painting" or work.work_name == "Painting" %}selected{% endif %}>Painting</option>
+
                                                         <option value="electrical_work" {% if work.work_name == "electrical_work" or work.work_name == "Electrical Work" %}selected{% endif %}>Electrical Work</option>
+
                                                         <option value="plumbing_work" {% if work.work_name == "plumbing_work" or work.work_name == "Plumbing Work" %}selected{% endif %}>Plumbing Work</option>
+
                                                         <option value="flooring" {% if work.work_name == "flooring" or work.work_name == "Flooring" %}selected{% endif %}>Flooring</option>
+
                                                         <option value="wallpaper" {% if work.work_name == "wallpaper" or work.work_name == "Wallpaper" %}selected{% endif %}>Wallpaper</option>
+
                                                         <option value="curtains_blinds" {% if work.work_name == "curtains_blinds" or work.work_name == "Curtains / Blinds" %}selected{% endif %}>Curtains / Blinds</option>
+
                                                         <option value="glass_work" {% if work.work_name == "glass_work" or work.work_name == "Glass Work" %}selected{% endif %}>Glass Work</option>
+
                                                         <option value="other" {% if work.work_name == "other" or work.work_name == "Other" %}selected{% endif %}>Other</option>
+
                                                     </select>
+
                                                 </div>
-                                                <div class="col-lg-2 col-md-6">
-                                                    <label class="form-label">Sq.ft</label>
-                                                    <input type="number" class="form-control" data-field="area_sqft" value="{{ work.area_sqft }}" min="0" step="0.01">
-                                                </div>
+
+                                                <div class="col-lg-1 col-md-4">
+    <label class="form-label">Height (H)</label>
+    <input type="number" class="form-control dimension-input" data-field="height" min="0" step="0.01" placeholder="H">
+</div>
+<div class="col-lg-1 col-md-4">
+    <label class="form-label">Width (W)</label>
+    <input type="number" class="form-control dimension-input" data-field="width" min="0" step="0.01" placeholder="W">
+</div>
+<div class="col-lg-2 col-md-4">
+    <label class="form-label">Total Sq.ft</label>
+    <input type="number" class="form-control calculated-sqft" data-field="area_sqft" value="{{ work.area_sqft }}" min="0" step="0.01">
+</div>
+
                                                 <div class="col-lg-3 col-md-6">
+
                                                     <label class="form-label">Status</label>
+
                                                     <select class="form-select" data-field="status">
+
                                                         <option value="not_started" {% if work.status == "not_started" %}selected{% endif %}>Not Started</option>
+
                                                         <option value="in_progress" {% if work.status == "in_progress" %}selected{% endif %}>In Progress</option>
+
                                                         <option value="completed" {% if work.status == "completed" %}selected{% endif %}>Completed</option>
+
                                                     </select>
+
                                                 </div>
+
                                                 <div class="col-lg-2 col-md-6">
+
                                                     <label class="form-label">Start Date</label>
+
                                                     <input type="date" class="form-control" data-field="start_date" value="{{ work.start_date|date:'Y-m-d' }}">
+
                                                 </div>
+
                                                 <div class="col-lg-2 col-md-6">
+
                                                     <label class="form-label">Completed Date</label>
+
                                                     <input type="date" class="form-control" data-field="completed_date" value="{{ work.completed_date|date:'Y-m-d' }}">
+
                                                 </div>
+
                                                 <div class="col-md-6">
+
                                                     <label class="form-label">Work Description</label>
+
                                                     <textarea class="form-control" data-field="work_description" rows="2">{{ work.work_description }}</textarea>
+
                                                 </div>
+
                                                 <div class="col-md-6">
+
                                                     <label class="form-label">Remarks</label>
+
                                                     <input type="text" class="form-control" data-field="remarks" value="{{ work.remarks }}">
+
                                                 </div>
+
                                             </div>
+
                                         </div>
+
                                         {% empty %}
+
                                         <p class="text-muted small no-works-message mb-0">No works added for this room yet. Click Add Work.</p>
+
                                         {% endfor %}
+
                                     </div>
+
                                 </div>
+
                             </div>
+
                             {% empty %}
+
                             <div class="text-center text-muted border rounded p-4" id="emptyRoomsMessage">
+
                                 <i class="bi bi-door-open fs-3"></i>
+
                                 <p class="mb-0 mt-2">No rooms added yet. Click Add Room to get started.</p>
+
                             </div>
+
                             {% endfor %}
+
                         </div>
+
                     </div>
-
-
-
-
-
-
-
-
-
 
                     <!-- 05 PROJECT STATUS & TIMELINE -->
 
-
-
                     <div class="form-section status-timeline-section">
-
-
 
                         <div class="section-heading">
 
@@ -1757,29 +1998,17 @@ textarea.form-control {
 
                         </div>
 
-
-
                         <div class="row g-3 status-timeline-grid">
 
-
-
                             <!-- CURRENT PROJECT STAGE -->
-
-
 
                             <div class="col-12 col-md-6">
 
                                 <label class="form-label">Current Project Stage</label>
 
-
-
                                 <select name="current_status" class="form-select" required>
 
-
-
                                     {% for value, label in status_choices %}
-
-
 
                                         <option value="{{ value }}"
 
@@ -1789,29 +2018,17 @@ textarea.form-control {
 
                                         </option>
 
-
-
                                     {% endfor %}
-
-
 
                                 </select>
 
                             </div>
 
-
-
-
-
                             <!-- PROJECT START DATE -->
-
-
 
                             <div class="col-12 col-md-6">
 
                                 <label class="form-label">Project Start Date</label>
-
-
 
                                 <input
 
@@ -1827,19 +2044,11 @@ textarea.form-control {
 
                             </div>
 
-
-
-
-
                             <!-- TARGET HANDOVER DATE -->
-
-
 
                             <div class="col-12 col-md-6">
 
                                 <label class="form-label">Target Handover Date</label>
-
-
 
                                 <input
 
@@ -1855,19 +2064,11 @@ textarea.form-control {
 
                             </div>
 
-
-
-
-
                             <!-- ACTUAL HANDOVER DATE -->
-
-
 
                             <div class="col-12 col-md-6">
 
                                 <label class="form-label">Actual Handover Date</label>
-
-
 
                                 <input
 
@@ -1883,66 +2084,81 @@ textarea.form-control {
 
                             </div>
 
-
-
                         </div>
 
-
-
                     </div>
-
-
-
-
 
                     <hr class="section-divider">
 
                     <!-- PROJECT STAGE HISTORY -->
+
                     <hr class="section-divider">
 
                     <div class="form-section">
+
                         <div class="section-heading">
+
                             <i class="bi bi-clock-history"></i>
+
                             Project Stage History
+
                         </div>
 
                         <div class="stage-history-list">
+
                             {% for history in stage_history %}
+
                             <div class="stage-history-item d-flex align-items-start gap-3 mb-3">
+
                                 <div class="stage-history-icon">
+
                                     <i class="bi bi-check-lg"></i>
+
                                 </div>
+
                                 <div class="flex-grow-1">
+
                                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
                                         <strong>{{ history.get_stage_display }}</strong>
+
                                         <small class="text-muted">{{ history.changed_at|date:"d M Y, h:i A" }}</small>
+
                                     </div>
+
                                     <small class="text-muted">
+
                                         Changed by:
+
                                         {% if history.changed_by %}{{ history.changed_by.username }}{% else %}System / Not recorded{% endif %}
+
                                     </small>
+
                                     {% if history.remarks %}<p class="small mb-0 mt-1">{{ history.remarks }}</p>{% endif %}
+
                                 </div>
+
                             </div>
+
                             {% empty %}
+
                             <div class="text-center text-muted border rounded p-4">
+
                                 <i class="bi bi-clock-history fs-3"></i>
+
                                 <p class="small mb-0 mt-2">No stage history available.</p>
+
                             </div>
+
                             {% endfor %}
+
                         </div>
+
                     </div>
-
-
-
-
-
 
                     <!-- 07 MAP COORDINATES -->
 
                     <div class="form-section">
-
-
 
                         <div class="section-heading">
 
@@ -1952,11 +2168,7 @@ textarea.form-control {
 
                         </div>
 
-
-
                         <div class="row g-2">
-
-
 
                             <div class="col-md-6">
 
@@ -1978,8 +2190,6 @@ textarea.form-control {
 
                             </div>
 
-
-
                             <div class="col-md-6">
 
                                 <label class="form-label">Longitude</label>
@@ -2000,29 +2210,19 @@ textarea.form-control {
 
                             </div>
 
-
-
                         </div>
 
                     </div>
 
-
-
-
-
                     <!-- FORM ACTIONS -->
 
                     <div class="form-actions">
-
-
 
                         <a href="{% url 'owner_projects' %}" class="cancel-btn">
 
                             Cancel
 
                         </a>
-
-
 
                         <button type="submit" class="save-btn">
 
@@ -2032,184 +2232,412 @@ textarea.form-control {
 
                         </button>
 
-
-
                     </div>
-
-
 
                 </form>
 
-
-
             </div>
-
-
 
         </section>
 
-
-
     </main>
-
-
 
 </div>
 
-
-
-
-
 <!-- ROOM & WORK TEMPLATES -->
+
 <template id="roomTemplate">
+
     <div class="card room-card mb-3">
+
         <div class="card-body">
+
             <div class="d-flex justify-content-between align-items-center mb-3">
+
                 <h6 class="fw-bold room-number mb-0"><i class="bi bi-house-door me-2"></i>New Room</h6>
-                <span class="badge bg-primary-subtle text-primary">New Room</span>
+
+                <button type="button" class="btn btn-sm btn-outline-danger delete-room-btn"><i class="bi bi-trash3"></i> </button>
+
             </div>
+
             <div class="row g-3">
+
                 <div class="col-md-4">
-                    <label class="form-label">Room Name <span class="required">*</span></label>
+
+                    <label class="form-label">Room Name <span class="required">\*</span></label>
+
                     <input type="text" class="form-control" data-field="room_name" required>
+
                 </div>
+
                 <div class="col-md-4">
+
                     <label class="form-label">Room Type</label>
+
                     <select class="form-select" data-field="room_type">
+
                         <option value="">Select room type</option>
+
                         <option value="Living Room">Living Room</option>
+
                         <option value="Master Bedroom">Master Bedroom</option>
+
                         <option value="Bedroom">Bedroom</option>
+
                         <option value="Guest Bedroom">Guest Bedroom</option>
+
                         <option value="Kids Bedroom">Kids Bedroom</option>
+
                         <option value="Kitchen">Kitchen</option>
+
                         <option value="Dining Room">Dining Room</option>
+
                         <option value="Pooja Room">Pooja Room</option>
+
                         <option value="Bathroom">Bathroom</option>
+
                         <option value="Balcony">Balcony</option>
+
                         <option value="Utility Room">Utility Room</option>
+
                         <option value="Study Room">Study Room</option>
+
                         <option value="Office">Office</option>
+
                         <option value="Other">Other</option>
+
                     </select>
+
                 </div>
+
                 <div class="col-md-4">
-                    <label class="form-label">Room Area (Sq.ft)</label>
-                    <input type="number" class="form-control" data-field="area_sqft" min="0" step="0.01" value="0">
-                </div>
+    <label class="form-label">Room Total Sq.ft (All Works)</label>
+    <input type="number" class="form-control room-total-sqft" data-field="area_sqft" min="0" step="0.01" value="0.00" readonly>
+</div>
+
                 <div class="col-md-6">
+
                     <label class="form-label">Floor</label>
+
                     <input type="text" class="form-control" data-field="floor">
+
                 </div>
+
                 <div class="col-md-6">
+
                     <label class="form-label">Description</label>
+
                     <input type="text" class="form-control" data-field="description">
+
                 </div>
+
             </div>
+
             <hr class="section-divider">
+
             <div class="d-flex justify-content-between align-items-center mb-3">
+
                 <h6 class="fw-bold mb-0"><i class="bi bi-tools me-2"></i>Room Works</h6>
+
                 <button type="button" class="btn btn-outline-primary btn-sm add-work-btn"><i class="bi bi-plus-lg me-1"></i>Add Work</button>
+
             </div>
+
             <div class="works-container">
+
                 <p class="text-muted small no-works-message mb-0">No works added yet. Click Add Work.</p>
+
             </div>
+
         </div>
+
     </div>
+
 </template>
 
 <template id="workTemplate">
+
     <div class="work-row border rounded p-3 mb-2">
+
         <div class="row g-2">
+
             <div class="col-lg-3 col-md-6">
-                <label class="form-label">Work Name <span class="required">*</span></label>
+
+                <label class="form-label">Work Name <span class="required">\*</span></label>
+
                 <select class="form-select" data-field="work_name" required>
+
                     <option value="" selected>Select Work</option>
+
                     <option value="wardrobe">Wardrobe</option>
+
                     <option value="loft">Loft</option>
+
                     <option value="false_ceiling">False Ceiling</option>
+
                     <option value="tv_unit">TV Unit</option>
+
                     <option value="tv_back_panel">TV Back Panel</option>
+
                     <option value="modular_kitchen">Modular Kitchen</option>
+
                     <option value="crockery_unit">Crockery Unit</option>
+
                     <option value="wardrobe_with_loft">Wardrobe with Loft</option>
+
                     <option value="bed_unit">Bed Unit</option>
+
                     <option value="dressing_unit">Dressing Unit</option>
+
                     <option value="study_table">Study Table</option>
+
                     <option value="pooja_unit">Pooja Unit</option>
+
                     <option value="shoe_rack">Shoe Rack</option>
+
                     <option value="partition">Partition</option>
+
                     <option value="wall_panelling">Wall Panelling</option>
+
                     <option value="painting">Painting</option>
+
                     <option value="electrical_work">Electrical Work</option>
+
                     <option value="plumbing_work">Plumbing Work</option>
+
                     <option value="flooring">Flooring</option>
+
                     <option value="wallpaper">Wallpaper</option>
+
                     <option value="curtains_blinds">Curtains / Blinds</option>
+
                     <option value="glass_work">Glass Work</option>
+
                     <option value="other">Other</option>
+
                 </select>
+
             </div>
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label">Sq.ft</label>
-                <input type="number" class="form-control" data-field="area_sqft" min="0" step="0.01" value="0">
-            </div>
+
+            <div class="col-lg-1 col-md-4">
+    <label class="form-label">Height (H)</label>
+    <input type="number" class="form-control dimension-input" data-field="height" min="0" step="0.01" placeholder="H">
+</div>
+<div class="col-lg-1 col-md-4">
+    <label class="form-label">Width (W)</label>
+    <input type="number" class="form-control dimension-input" data-field="width" min="0" step="0.01" placeholder="W">
+</div>
+<div class="col-lg-2 col-md-4">
+    <label class="form-label">Total Sq.ft</label>
+    <input type="number" class="form-control calculated-sqft" data-field="area_sqft" min="0" step="0.01" value="0">
+</div>
+
             <div class="col-lg-3 col-md-6">
+
                 <label class="form-label">Status</label>
+
                 <select class="form-select" data-field="status">
+
                     <option value="not_started" selected>Not Started</option>
+
                     <option value="in_progress">In Progress</option>
+
                     <option value="completed">Completed</option>
+
                 </select>
+
             </div>
+
             <div class="col-lg-2 col-md-6">
+
                 <label class="form-label">Start Date</label>
+
                 <input type="date" class="form-control" data-field="start_date">
+
             </div>
+
             <div class="col-lg-2 col-md-6">
+
                 <label class="form-label">Completed Date</label>
+
                 <input type="date" class="form-control" data-field="completed_date">
+
             </div>
+
             <div class="col-md-6">
+
                 <label class="form-label">Work Description</label>
+
                 <textarea class="form-control" data-field="work_description" rows="2"></textarea>
+
             </div>
+
             <div class="col-md-6">
+
                 <label class="form-label">Remarks</label>
+
                 <input type="text" class="form-control" data-field="remarks">
+
             </div>
+
         </div>
+
     </div>
+
 </template>
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
+
     const roomsContainer = document.getElementById("roomsContainer");
+
     const addRoomBtn = document.getElementById("addRoomBtn");
+
     const roomTemplate = document.getElementById("roomTemplate");
+
     const workTemplate = document.getElementById("workTemplate");
+
     const form = document.querySelector(".edit-form-container");
+
     const roomsJson = document.getElementById("roomsJson");
+
+    const paymentsJson = document.getElementById("paymentsJson");
+    const projectValueInput = document.getElementById("projectValue");
+    const paymentTable = document.getElementById("paymentScheduleTable");
+
+    function updatePaymentTotals() {
+        if (!paymentTable) return;
+        const rows = [...paymentTable.querySelectorAll(".payment-row")];
+        const projectValue = parseFloat(projectValueInput?.value || "0") || 0;
+        let percentTotal = 0, amountTotal = 0, receivedTotal = 0;
+
+        rows.forEach(row => {
+            const percent = parseFloat(row.querySelector('[data-pay="percentage"]')?.value || "0") || 0;
+            const amount = projectValue * percent / 100;
+            const amountInput = row.querySelector('[data-pay="amount"]');
+            const paid = parseFloat(row.querySelector('[data-pay="paid_amount"]')?.value || "0") || 0;
+            if (amountInput) amountInput.value = amount.toFixed(2);
+            percentTotal += percent;
+            amountTotal += amount;
+            receivedTotal += paid;
+        });
+
+        const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+        setText("paymentPercentTotal", percentTotal.toFixed(2) + "%");
+        setText("paymentAmountTotal", "₹" + amountTotal.toFixed(2));
+        setText("paymentReceivedTotal", "₹" + receivedTotal.toFixed(2));
+        setText("paymentBalanceLabel", "Balance: ₹" + Math.max(amountTotal - receivedTotal, 0).toFixed(2));
+    }
+
+    function collectPayments() {
+        return [...paymentTable.querySelectorAll(".payment-row")].map(row => {
+            const get = field => row.querySelector('[data-pay="' + field + '"]')?.value.trim() || "";
+            return {
+                payment_id: row.dataset.paymentId || null,
+                milestone: get("milestone"),
+                percentage: get("percentage") || "0",
+                paid_amount: get("paid_amount") || "0",
+                status: get("status") || "pending",
+                payment_date: get("payment_date"),
+                payment_mode: get("payment_mode"),
+                transaction_reference: get("transaction_reference"),
+                remarks: get("remarks")
+            };
+        });
+    }
+
+    if (paymentTable) {
+        paymentTable.addEventListener("input", updatePaymentTotals);
+        paymentTable.addEventListener("change", updatePaymentTotals);
+    }
+    if (projectValueInput) projectValueInput.addEventListener("input", updatePaymentTotals);
+    updatePaymentTotals();
+
+    // Always serialize payment data before the form is submitted.
+    // Keep this listener BEFORE the room-script guard below.
+    if (form && paymentsJson) {
+        form.addEventListener("submit", function (event) {
+            const rows = paymentTable
+                ? [...paymentTable.querySelectorAll(".payment-row")]
+                : [];
+
+            if (!rows.length) {
+                event.preventDefault();
+                alert("Payment schedule rows are not loaded. Please refresh the page.");
+                return;
+            }
+
+            const totalPercent = rows.reduce((sum, row) => {
+                return sum + (parseFloat(row.querySelector('[data-pay=\"percentage\"]')?.value || "0") || 0);
+            }, 0);
+
+            if (Math.abs(totalPercent - 100) > 0.001) {
+                event.preventDefault();
+                alert("Payment schedule percentages must total exactly 100%.");
+                return;
+            }
+
+            paymentsJson.value = JSON.stringify(collectPayments());
+        });
+    }
 
     if (!roomsContainer || !addRoomBtn || !form || !roomsJson) return;
 
     function updateRoomNumbers() {
+
         roomsContainer.querySelectorAll(".room-card").forEach(function (room, index) {
+
             const heading = room.querySelector(".room-number");
+
             if (heading) {
+
                 heading.innerHTML = '<i class="bi bi-house-door me-2"></i>Room ' + (index + 1);
+
             }
+
         });
+
     }
 
     addRoomBtn.addEventListener("click", function () {
+
         const emptyMessage = document.getElementById("emptyRoomsMessage");
+
         if (emptyMessage) emptyMessage.remove();
+
         roomsContainer.appendChild(roomTemplate.content.cloneNode(true));
+
         updateRoomNumbers();
+
     });
 
     roomsContainer.addEventListener("click", function (event) {
+        const deleteWorkBtn = event.target.closest(".delete-work-btn");
+        if (deleteWorkBtn) {
+            const roomCard = deleteWorkBtn.closest(".room-card");
+            deleteWorkBtn.closest(".work-row")?.remove();
+            updateRoomTotal(roomCard);
+            return;
+        }
+
+        const deleteRoomBtn = event.target.closest(".delete-room-btn");
+        if (deleteRoomBtn) {
+            deleteRoomBtn.closest(".room-card")?.remove();
+            updateRoomNumbers();
+            if (!roomsContainer.querySelector(".room-card")) {
+                const empty = document.createElement("div");
+                empty.id = "emptyRoomsMessage";
+                empty.className = "text-center text-muted border rounded p-4";
+                empty.innerHTML = '<i class="bi bi-door-open fs-3"></i><p class="mb-0 mt-2">No rooms added yet.</p>';
+                roomsContainer.appendChild(empty);
+            }
+            return;
+        }
+
         const button = event.target.closest(".add-work-btn");
         if (!button) return;
         const roomCard = button.closest(".room-card");
@@ -2217,75 +2645,169 @@ document.addEventListener("DOMContentLoaded", function () {
         const emptyMessage = worksContainer.querySelector(".no-works-message");
         if (emptyMessage) emptyMessage.remove();
         worksContainer.appendChild(workTemplate.content.cloneNode(true));
+        updateRoomTotal(roomCard);
     });
 
+    function updateRoomTotal(roomCard) {
+        if (!roomCard) return;
+        let total = 0;
+        roomCard.querySelectorAll('.work-row [data-field="area_sqft"]').forEach(function (input) {
+            total += parseFloat(input.value || "0") || 0;
+        });
+        const roomTotalInput = roomCard.querySelector('.room-total-sqft');
+        if (roomTotalInput) roomTotalInput.value = total.toFixed(2);
+    }
+
+    // Calculate work area only: H x W. Room total is the sum of all work areas.
+    roomsContainer.addEventListener("input", function (event) {
+        const workRow = event.target.closest(".work-row");
+        if (!workRow) return;
+        const roomCard = workRow.closest(".room-card");
+        if (event.target.matches('[data-field="height"], [data-field="width"]')) {
+            const height = parseFloat(workRow.querySelector('[data-field="height"]')?.value || "0");
+            const width = parseFloat(workRow.querySelector('[data-field="width"]')?.value || "0");
+            const sqftInput = workRow.querySelector('[data-field="area_sqft"]');
+            if (sqftInput) sqftInput.value = (height > 0 && width > 0) ? (height * width).toFixed(2) : "0.00";
+        }
+        if (event.target.matches('[data-field="height"], [data-field="width"], [data-field="area_sqft"]')) {
+            updateRoomTotal(roomCard);
+        }
+    });
+
+    // Set totals on initial page load from the saved work sqft values.
+    roomsContainer.querySelectorAll(".room-card").forEach(updateRoomTotal);
+
     function fieldValue(parent, field) {
+
         const element = parent.querySelector('[data-field="' + field + '"]');
+
         return element ? element.value.trim() : "";
+
     }
 
     function collectRooms() {
+
         const rooms = [];
+
         roomsContainer.querySelectorAll(".room-card").forEach(function (roomCard) {
+
             const room = {
+
                 room_id: roomCard.dataset.roomId || null,
+
                 room_name: fieldValue(roomCard, "room_name"),
+
                 room_type: fieldValue(roomCard, "room_type"),
+
                 area_sqft: fieldValue(roomCard, "area_sqft") || "0",
+
                 floor: fieldValue(roomCard, "floor"),
+
                 description: fieldValue(roomCard, "description"),
+
                 works: []
+
             };
 
             roomCard.querySelectorAll(".work-row").forEach(function (workRow) {
+
                 room.works.push({
+
                     work_id: workRow.dataset.workId || null,
+
                     work_name: fieldValue(workRow, "work_name"),
+
+                    height: fieldValue(workRow, "height"),
+
+                    width: fieldValue(workRow, "width"),
+
                     area_sqft: fieldValue(workRow, "area_sqft") || "0",
+
                     status: fieldValue(workRow, "status") || "not_started",
+
                     start_date: fieldValue(workRow, "start_date"),
+
                     completed_date: fieldValue(workRow, "completed_date"),
+
                     work_description: fieldValue(workRow, "work_description"),
+
                     remarks: fieldValue(workRow, "remarks")
+
                 });
+
             });
+
             rooms.push(room);
+
         });
+
         return rooms;
+
     }
 
     form.addEventListener("submit", function (event) {
+
         const roomCards = roomsContainer.querySelectorAll(".room-card");
+
         for (const room of roomCards) {
+
             const roomName = room.querySelector('[data-field="room_name"]');
+
             if (roomName && !roomName.value.trim()) {
+
                 event.preventDefault();
+
                 roomName.focus();
+
                 alert("Please enter a room name.");
+
                 return;
+
             }
+
             const workRows = room.querySelectorAll(".work-row");
+
             for (const work of workRows) {
+
                 const workName = work.querySelector('[data-field="work_name"]');
+
                 if (workName && !workName.value.trim()) {
+
                     event.preventDefault();
+
                     workName.focus();
+
                     alert("Please enter a work name.");
+
                     return;
+
                 }
+
             }
+
         }
+
+        const paymentRows = paymentTable ? paymentTable.querySelectorAll(".payment-row") : [];
+        const totalPercent = [...paymentRows].reduce((sum, row) => {
+            return sum + (parseFloat(row.querySelector('[data-pay="percentage"]')?.value || "0") || 0);
+        }, 0);
+        if (Math.abs(totalPercent - 100) > 0.001) {
+            event.preventDefault();
+            alert("Payment schedule percentages must total exactly 100%.");
+            return;
+        }
+        paymentsJson.value = JSON.stringify(collectPayments());
         roomsJson.value = JSON.stringify(collectRooms());
+
     });
 
     updateRoomNumbers();
+
 });
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-
-
 </body>
-
 </html>

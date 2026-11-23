@@ -125,6 +125,19 @@ class Project(models.Model):
         blank=True
     )
 
+    # PROJECT FINANCIAL DETAILS
+    project_value = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    project_profit = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
     bedroom_count = models.IntegerField(default=0)
     living_room_count = models.IntegerField(default=0)
     kitchen_count = models.IntegerField(default=0)
@@ -141,15 +154,18 @@ class Project(models.Model):
     )
 
     project_start_date = models.DateField(
-        null=True, blank=True
+        null=True,
+        blank=True
     )
 
     target_handover_date = models.DateField(
-        null=True, blank=True
+        null=True,
+        blank=True
     )
 
     actual_handover_date = models.DateField(
-        null=True, blank=True
+        null=True,
+        blank=True
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -192,16 +208,13 @@ class Project(models.Model):
 
         super().save(*args, **kwargs)
 
-        # First stage automatically saved
         if is_new:
             ProjectStageHistory.objects.create(
                 project=self,
                 stage="enquiry"
             )
 
-        # Save every stage change
         elif old_status != self.current_status:
-
             ProjectStageHistory.objects.create(
                 project=self,
                 stage=self.current_status
@@ -400,3 +413,83 @@ class ProjectStageHistory(models.Model):
 
     def __str__(self):
         return f"{self.project.project_code} - {self.get_stage_display()}"
+
+
+
+class ProjectPayment(models.Model):
+
+    PAYMENT_STATUS = [
+        ("pending", "Pending"),
+        ("paid", "Paid"),
+    ]
+
+    PAYMENT_MODES = [
+        ("cash", "Cash"),
+        ("bank_transfer", "Bank Transfer"),
+        ("upi", "UPI"),
+        ("cheque", "Cheque"),
+        ("card", "Card"),
+        ("other", "Other"),
+    ]
+
+    payment_id = models.BigAutoField(primary_key=True)
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="payment_schedule"
+    )
+
+    milestone = models.CharField(max_length=150)
+
+    percentage = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    paid_amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS,
+        default="pending"
+    )
+
+    payment_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    payment_mode = models.CharField(
+        max_length=30,
+        choices=PAYMENT_MODES,
+        blank=True
+    )
+
+    transaction_reference = models.CharField(
+        max_length=150,
+        blank=True
+    )
+
+    remarks = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "project_payments"
+        ordering = ["payment_id"]
+
+    def __str__(self):
+        return f"{self.project.project_code} - {self.milestone}"
