@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBK Login</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body>
+<div class="container-fluid py-4">
+
+    <!-- Welcome Section -->
+    <div class="mb-4">
+        <h3 class="fw-bold">
+            Welcome, {{ client.client_name }}
+        </h3>
+        <p class="text-muted">
+            View and track your interior projects here.
+        </p>
+    </div>
+
+    <!-- Project Count -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Projects</p>
+                    <h3 class="fw-bold">{{ projects.count }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Projects Section -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">My Projects</h5>
+    </div>
+
+    <div class="row g-3">
+
+        {% for project in projects %}
+
+        <div class="col-xl-4 col-md-6">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                {{ project.project_code }}
+                            </h5>
+
+                            <small class="text-muted">
+                                {{ project.project_type }}
+                            </small>
+                        </div>
+
+                        <span class="badge rounded-pill bg-light text-dark">
+                            {{ project.status|default:"Pending" }}
+                        </span>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Project Location</small>
+                        <p class="fw-semibold mb-0">
+                            {{ project.location|default:"Not updated" }}
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Client Name</small>
+                        <p class="fw-semibold mb-0">
+                            {{ project.client.client_name }}
+                        </p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+
+                        <span class="text-muted small">
+                            Project Details
+                        </span>
+
+                        <a href="#" class="btn btn-dark btn-sm rounded-pill px-3">
+                            View Project
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body text-center py-5">
+                    <h5 class="fw-bold">No Projects Found</h5>
+                    <p class="text-muted mb-0">
+                        Your projects will appear here once they are assigned.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

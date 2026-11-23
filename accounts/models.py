@@ -31,6 +31,9 @@ class UserProfile(models.Model):
 
 
 
+
+from django.conf import settings
+
 class Client(models.Model):
     client_id = models.BigAutoField(primary_key=True)
 
@@ -46,6 +49,16 @@ class Client(models.Model):
     alternative_phone = models.CharField(
         max_length=15, blank=True, null=True
     )
+
+    # Client Login Account
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="client_account"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -53,6 +66,7 @@ class Client(models.Model):
 
     def __str__(self):
         return self.client_name
+
 
 class Employee(models.Model):
     employee_id = models.BigAutoField(primary_key=True)

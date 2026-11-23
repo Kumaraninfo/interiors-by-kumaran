@@ -10,12 +10,25 @@ from django.db import transaction
 from django.utils import timezone
 from decimal import Decimal, InvalidOperation
 from uuid import uuid4
-from .models import (UserProfile,Client,Employee,Project,ProjectDetail, ProjectRoom,RoomWork,ProjectStageHistory, ProjectPayment,)
+from .models import (UserProfile,
+Client,Employee,Project,ProjectDetail, 
+ProjectRoom,RoomWork,ProjectStageHistory, ProjectPayment,)
+
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 from django.utils.dateparse import parse_date
 import json
 from django.db.models import Sum
+from django.contrib.auth import get_user_model
+from django.db.models import Q
+
+
+
+
+
+
+
+
 
 def home(request):
     return render(request, "home.html")
@@ -30,32 +43,34 @@ def logout_page(request):
 def client_profile(request):
     return render(request, "dashboards/client_profile.html")
 
+
 def login_page(request):
     error = ""
-    # if request.user.is_authenticated:
-    #     profile = request.user.userprofile
-
-    # if profile.is_owneruser:
-    #     return redirect("owner_dashboard")
-    # elif profile.is_manageruser:
-    #     return redirect("manager_dashboard")
-    # elif profile.is_sitemanageruser:
-    #     return redirect("sitepm_dashboard")
-    # elif profile.is_clientuser:
-    #     return redirect("client_dashboard")
-
 
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        username_or_email = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
 
-        user = authenticate(
-            request,
-            username=username,
-            password=password
-        )
+        User = get_user_model()
 
-        
+        # Username or Email மூலம் User-ஐ கண்டுபிடிக்க
+        users = User.objects.filter(
+            Q(username__iexact=username_or_email) |
+            Q(email__iexact=username_or_email)
+        ).distinct()
+
+        # ஒரே ஒரு User மட்டும் match ஆனால் login செய்யலாம்
+        if users.count() == 1:
+            user_obj = users.first()
+
+            user = authenticate(
+                request,
+                username=user_obj.username,
+                password=password
+            )
+        else:
+            user = None
+
         if user is not None:
 
             print("LOGIN SUCCESS")
@@ -1031,6 +1046,59 @@ def edit_project(request, project_id):
                 client.phone = request.POST.get("phone", "").strip()
                 client.alternative_phone = request.POST.get("alternative_phone", "").strip()
                 client.email = request.POST.get("email", "").strip() or None
+                
+                # Client Login Account Creation
+                email = request.POST.get("email", "").strip().lower()
+                temporary_password = request.POST.get("temporary_password", "").strip()
+
+                client.email = email or None
+
+                if temporary_password:
+                    if not email:
+                        raise ValueError("Email address is required to create client login.")
+
+                    if len(temporary_password) < 8:
+                        raise ValueError("Temporary password must contain at least 8 characters.")
+
+                    User = get_user_model()
+
+                    if client.user_id is None:
+                        # Prevent connecting an unrelated existing account
+                        if User.objects.filter(email__iexact=email).exists():
+                            raise ValueError("This email already belongs to another account.")
+
+                        user = User.objects.create_user(
+                            username=email,
+                            email=email,
+                            password=temporary_password
+                        )
+
+                        UserProfile.objects.create(
+                            user=user,
+                            is_clientuser=True
+                        )
+
+                        client.user = user
+
+                    else:
+                        # Update password for this already linked client account
+                        user = client.user
+                        user.email = email
+                        user.username = email
+                        user.set_password(temporary_password)
+                        user.save()
+
+                        profile, created = UserProfile.objects.get_or_create(
+                            user=user,
+                            defaults={"is_clientuser": True}
+                        )
+
+                        if not profile.is_clientuser:
+                            profile.is_clientuser = True
+                            profile.save(update_fields=["is_clientuser"])
+
+                client.save()
+
                 if not client.client_name or not client.phone:
                     raise ValueError("Client name and phone are required.")
                 client.save()
@@ -1232,7 +1300,7 @@ def edit_project(request, project_id):
                 ).delete()
 
             messages.success(request, "Project and payment schedule updated successfully!")
-            return redirect("owner_projects")
+            return redirect("project_update", project_id=project.project_id)
 
         except (ValueError, InvalidOperation, TypeError, json.JSONDecodeError) as error:
             messages.error(request, f"Unable to update project: {error}")
@@ -1662,12 +1730,29 @@ def sitepm_dashboard(request):
 
 
 @login_required
+
+@login_required
+@login_required
 def client_dashboard(request):
-    if not request.user.userprofile.is_clientuser:
+
+    profile = getattr(request.user, "userprofile", None)
+
+    if not profile or not profile.is_clientuser:
         return redirect("login")
 
-    return render(request, "client/dashboard.html")
+    projects = (
+        Project.objects
+        .filter(client__user=request.user)
+        .select_related("client")
+        .order_by("-created_at")
+    )
 
+    context = {
+        "projects": projects,
+        "client": request.user.client_account,
+    }
+
+    return render(request, "client/client_dashboard.html", context)
 
 @transaction.atomic
 def client_booking(request):

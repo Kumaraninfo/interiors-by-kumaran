@@ -927,3 +927,73 @@
     font-weight: 700;
     white-space: nowrap;
 }
+
+.stage{
+    display: inline-block;
+
+    padding: 7px 11px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+/* 1. ENQUIRY - Slate Grey */
+.stage-enquiry {
+    background: #eef1f4;
+    color: #536273;
+    border-color: #dce2e8;
+}
+
+/* 2. QUOTATION - Premium Blue */
+.stage-quotation {
+    background: #e8f1ff;
+    color: #2864a5;
+    border-color: #cfe0fa;
+}
+
+/* 3. SITE VISIT - Soft Orange */
+.stage-site_visit {
+    background: #fff0e6;
+    color: #b85b27;
+    border-color: #ffdcc5;
+}
+
+/* 4. PAYMENT - Golden */
+.stage-payment {
+    background: #fff5d9;
+    color: #98700a;
+    border-color: #f3e3a9;
+}
+
+/* 5. 3D DESIGN - Premium Purple */
+.stage-3d_design {
+    background: #f1eaff;
+    color: #7445b5;
+    border-color: #dfcff8;
+}
+
+/* 6. MATERIAL SELECTION - Teal */
+.stage-material_selection {
+    background: #e2f6f3;
+    color: #16786e;
+    border-color: #c4e9e3;
+}
+
+/* 7. EXECUTION - Premium Green */
+.stage-execution {
+    background: #e1f5e7;
+    color: #16743b;
+    border-color: #c4e8ce;
+}
+
+/* 8. HANDOVER - Deep Emerald */
+.stage-handover {
+    background: #d9f0e5;
+    color: #075c3b;
+    border-color: #b9e2ce;
+}

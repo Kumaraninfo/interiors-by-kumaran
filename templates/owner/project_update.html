@@ -71,7 +71,7 @@
                         {{ project.project_code }}
                     </span>
 
-                    <span class="project-stage-badge">
+                    <span class="stage stage-{{ project.current_status }}">
                         {{ project.get_current_status_display }}
                     </span>
 

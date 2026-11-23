@@ -691,7 +691,7 @@ textarea.form-control {
 
     margin: 0 !important;
 
-    border: 1px solid #e2e8f0 !important;
+    border: 2px solid #0d6efd!important ;
 
     border-radius: 12px !important;
 
@@ -1050,7 +1050,7 @@ textarea.form-control {
     box-shadow: 0 5px 18px rgba(25, 43, 75, .045);
 }
 #paymentScheduleTable {
-    min-width: 1180px;
+    /* min-width: 1180px; */
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -1315,7 +1315,7 @@ textarea.form-control {
 
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
 
                                 <label class="form-label">Email Address</label>
 
@@ -1327,7 +1327,29 @@ textarea.form-control {
 
                                        value="{{ client.email|default:'' }}">
 
+                            </div> -->
+
+                            <div class="col-md-6">
+                            <label class="form-label">Email Address</label>
+                            <input type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ client.email|default:'' }}"
+                            placeholder="client@gmail.com">
                             </div>
+
+                            <div class="col-md-6">
+                            <label class="form-label">Temporary Password</label>
+                            <input type="text"
+                            name="temporary_password"
+                            class="form-control"
+                            placeholder="Enter temporary password"
+                            autocomplete="new-password">
+                            <small class="text-muted">
+                            Create or update the client's login password.
+                            </small>
+                            </div>
+
 
                         </div>
 
@@ -1622,21 +1644,21 @@ textarea.form-control {
                                        value="{{ project.project_profit|default_if_none:'0' }}">
                             </div>
                         </div>
-
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <br>
+                        <!-- <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                             <div>
                                 <h6 class="fw-bold mb-1">Payment Schedule</h6>
                                 <small class="text-muted">Default percentages are prefilled. You can customize them for this project; total must be 100%.</small>
                             </div>
                             <span class="badge bg-primary-subtle text-primary">Project-wise</span>
-                        </div>
+                        </div> -->
                         <div class="table-responsive">
                             <table class="table table-sm table-bordered align-middle" id="paymentScheduleTable">
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th><th>Milestone / Stage</th><th style="width:100px">%</th>
                                         <th>Amount (₹)</th><th>Paid Amount (₹)</th><th>Status</th>
-                                        <th>Payment Date</th><th>Payment Mode</th><th>Transaction / Reference</th><th>Remarks</th>
+                                        <th>Payment Date</th><th>Payment Mode</th><th>Transaction / Reference</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1666,7 +1688,7 @@ textarea.form-control {
                                             </select>
                                         </td>
                                         <td><input class="form-control form-control-sm" data-pay="transaction_reference" value="{{ payment.transaction_reference }}"></td>
-                                        <td><input class="form-control form-control-sm" data-pay="remarks" value="{{ payment.remarks }}"></td>
+                                        <!-- <td><input class="form-control form-control-sm" data-pay="remarks" value="{{ payment.remarks }}"></td> -->
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -1681,7 +1703,7 @@ textarea.form-control {
                                 </tfoot>
                             </table>
                         </div>
-                        <small class="text-muted">Payment remarks are optional; add them in the milestone record if needed.</small>
+                        <!-- <small class="text-muted">Payment remarks are optional; add them in the milestone record if needed.</small> -->
                     </div>
                     <hr class="section-divider">
                     <!-- 04 ROOM & WORK MANAGEMENT -->
