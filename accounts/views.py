@@ -1003,23 +1003,35 @@ def update_project_status(request, project_id):
 
 @login_required
 def edit_project(request, project_id):
+
     project = get_object_or_404(
         Project.objects.select_related("client"),
         project_id=project_id
     )
 
     profile = getattr(request.user, "userprofile", None)
+
     if not profile or not profile.is_owneruser:
-        messages.error(request, "You don't have permission to edit this project.")
+        messages.error(
+            request,
+            "You don't have permission to edit this project."
+        )
         return redirect("login")
 
     client = project.client
+
     enquiry = (
         project.details.filter(detail_type="enquiry")
         .order_by("-created_at").first()
     )
-    enquiry_data = enquiry.detail_data.copy() if enquiry and enquiry.detail_data else {}
 
+    enquiry_data = (
+        enquiry.detail_data.copy()
+        if enquiry and enquiry.detail_data
+        else {}
+    )
+
+    # Money values are rounded to whole numbers
     default_schedule = [
         ("Booking Advance", Decimal("10")),
         ("After 3D Design Approval", Decimal("20")),
@@ -1029,43 +1041,75 @@ def edit_project(request, project_id):
         ("Final Handover", Decimal("10")),
     ]
 
-    # Existing projects receive the standard six milestones only once.
+    # Create default payment schedule only once
     if not project.payment_schedule.exists():
+
         ProjectPayment.objects.bulk_create([
             ProjectPayment(
-                project=project, milestone=name, percentage=percentage,
-                amount=(project.project_value * percentage / Decimal("100")).quantize(Decimal("0.01"))
+                project=project,
+                milestone=name,
+                percentage=percentage,
+                amount=(
+                    project.project_value * percentage / Decimal("100")
+                ).quantize(Decimal("1"))
             )
             for name, percentage in default_schedule
         ])
 
     if request.method == "POST":
+
         try:
             with transaction.atomic():
-                client.client_name = request.POST.get("client_name", "").strip()
-                client.phone = request.POST.get("phone", "").strip()
-                client.alternative_phone = request.POST.get("alternative_phone", "").strip()
-                client.email = request.POST.get("email", "").strip() or None
-                
-                # Client Login Account Creation
-                email = request.POST.get("email", "").strip().lower()
-                temporary_password = request.POST.get("temporary_password", "").strip()
+
+                # -----------------------------------------
+                # CLIENT DETAILS
+                # -----------------------------------------
+
+                client.client_name = request.POST.get(
+                    "client_name", ""
+                ).strip()
+
+                client.phone = request.POST.get(
+                    "phone", ""
+                ).strip()
+
+                client.alternative_phone = request.POST.get(
+                    "alternative_phone", ""
+                ).strip()
+
+                email = request.POST.get(
+                    "email", ""
+                ).strip().lower()
+
+                temporary_password = request.POST.get(
+                    "temporary_password", ""
+                ).strip()
 
                 client.email = email or None
 
+                # Client Login Account Creation
                 if temporary_password:
+
                     if not email:
-                        raise ValueError("Email address is required to create client login.")
+                        raise ValueError(
+                            "Email address is required to create client login."
+                        )
 
                     if len(temporary_password) < 8:
-                        raise ValueError("Temporary password must contain at least 8 characters.")
+                        raise ValueError(
+                            "Temporary password must contain at least 8 characters."
+                        )
 
                     User = get_user_model()
 
                     if client.user_id is None:
-                        # Prevent connecting an unrelated existing account
-                        if User.objects.filter(email__iexact=email).exists():
-                            raise ValueError("This email already belongs to another account.")
+
+                        if User.objects.filter(
+                            email__iexact=email
+                        ).exists():
+                            raise ValueError(
+                                "This email already belongs to another account."
+                            )
 
                         user = User.objects.create_user(
                             username=email,
@@ -1081,7 +1125,7 @@ def edit_project(request, project_id):
                         client.user = user
 
                     else:
-                        # Update password for this already linked client account
+
                         user = client.user
                         user.email = email
                         user.username = email
@@ -1095,223 +1139,584 @@ def edit_project(request, project_id):
 
                         if not profile.is_clientuser:
                             profile.is_clientuser = True
-                            profile.save(update_fields=["is_clientuser"])
-
-                client.save()
+                            profile.save(
+                                update_fields=["is_clientuser"]
+                            )
 
                 if not client.client_name or not client.phone:
-                    raise ValueError("Client name and phone are required.")
+                    raise ValueError(
+                        "Client name and phone are required."
+                    )
+
                 client.save()
 
-                old_status = project.current_status
-                project.location = request.POST.get("location", "").strip()
-                project.google_map_link = request.POST.get("google_map_link", "").strip()
-                project.project_type = request.POST.get("project_type", "").strip()
+                # -----------------------------------------
+                # PROJECT DETAILS
+                # -----------------------------------------
 
-                area = request.POST.get("area_sqft", "").strip()
+                old_status = project.current_status
+
+                project.location = request.POST.get(
+                    "location", ""
+                ).strip()
+
+                project.google_map_link = request.POST.get(
+                    "google_map_link", ""
+                ).strip()
+
+                project.project_type = request.POST.get(
+                    "project_type", ""
+                ).strip()
+
+                area = request.POST.get(
+                    "area_sqft", ""
+                ).strip()
+
+                # Area remains decimal
                 project.area_sqft = Decimal(area) if area else None
 
-                project.project_value = Decimal(request.POST.get("project_value") or "0")
-                project.project_profit = Decimal(request.POST.get("project_profit") or "0")
-                if project.project_value < 0 or project.project_profit < 0:
-                    raise ValueError("Project value and profit cannot be negative.")
+                # Project value - whole number
+                project.project_value = Decimal(
+                    request.POST.get("project_value") or "0"
+                ).quantize(Decimal("1"))
 
-                project.bedroom_count = int(request.POST.get("bedroom_count") or 0)
-                project.living_room_count = int(request.POST.get("living_room_count") or 0)
-                project.kitchen_count = int(request.POST.get("kitchen_count") or 0)
-                project.bathroom_count = int(request.POST.get("bathroom_count") or 0)
+                # Project profit - whole number
+                project.project_profit = Decimal(
+                    request.POST.get("project_profit") or "0"
+                ).quantize(Decimal("1"))
+
+                if (
+                    project.project_value < 0
+                    or project.project_profit < 0
+                ):
+                    raise ValueError(
+                        "Project value and profit cannot be negative."
+                    )
+
+                project.bedroom_count = int(
+                    request.POST.get("bedroom_count") or 0
+                )
+
+                project.living_room_count = int(
+                    request.POST.get("living_room_count") or 0
+                )
+
+                project.kitchen_count = int(
+                    request.POST.get("kitchen_count") or 0
+                )
+
+                project.bathroom_count = int(
+                    request.POST.get("bathroom_count") or 0
+                )
 
                 status = request.POST.get("current_status")
+
                 if status not in dict(Project.PROJECT_STATUS):
                     raise ValueError("Invalid project status.")
+
                 project.current_status = status
 
                 project.enquiry_date = (
-                    parse_date(request.POST.get("enquiry_date", "")) or project.enquiry_date
+                    parse_date(
+                        request.POST.get("enquiry_date", "")
+                    ) or project.enquiry_date
                 )
-                project.project_start_date = parse_date(request.POST.get("project_start_date", ""))
-                project.target_handover_date = parse_date(request.POST.get("target_handover_date", ""))
-                project.actual_handover_date = parse_date(request.POST.get("actual_handover_date", ""))
 
-                latitude = request.POST.get("latitude", "").strip()
-                longitude = request.POST.get("longitude", "").strip()
-                project.latitude = Decimal(latitude) if latitude else None
-                project.longitude = Decimal(longitude) if longitude else None
+                project.project_start_date = parse_date(
+                    request.POST.get("project_start_date", "")
+                )
+
+                project.target_handover_date = parse_date(
+                    request.POST.get("target_handover_date", "")
+                )
+
+                project.actual_handover_date = parse_date(
+                    request.POST.get("actual_handover_date", "")
+                )
+
+                latitude = request.POST.get(
+                    "latitude", ""
+                ).strip()
+
+                longitude = request.POST.get(
+                    "longitude", ""
+                ).strip()
+
+                # Coordinates remain decimal
+                project.latitude = (
+                    Decimal(latitude) if latitude else None
+                )
+
+                project.longitude = (
+                    Decimal(longitude) if longitude else None
+                )
+
                 project.save()
 
-                if old_status != status:
-                    history = project.stage_history.order_by("-history_id").first()
-                    if history and history.stage == status:
-                        history.changed_by = request.user
-                        history.save(update_fields=["changed_by"])
+                # -----------------------------------------
+                # STAGE HISTORY
+                # -----------------------------------------
 
-                enquiry_data = enquiry.detail_data.copy() if enquiry and enquiry.detail_data else {}
-                enquiry_data.update({
-                    "property_type": request.POST.get("property_type", ""),
-                    "budget": request.POST.get("budget", ""),
-                    "message": request.POST.get("message", ""),
-                })
-                if enquiry:
-                    enquiry.detail_data = enquiry_data
-                    enquiry.created_by = enquiry.created_by or request.user
-                    enquiry.save()
-                else:
-                    ProjectDetail.objects.create(
-                        project=project, detail_type="enquiry",
-                        detail_data=enquiry_data, created_by=request.user
+                if old_status != status:
+
+                    history = (
+                        project.stage_history
+                        .order_by("-history_id")
+                        .first()
                     )
 
-                # Payment schedule: percentages are editable, but must total 100%.
-                payment_json = json.loads(request.POST.get("payments_json", "[]"))
+                    if history and history.stage == status:
+                        history.changed_by = request.user
+                        history.save(
+                            update_fields=["changed_by"]
+                        )
+
+                # -----------------------------------------
+                # ENQUIRY DETAILS
+                # -----------------------------------------
+
+                enquiry_data = (
+                    enquiry.detail_data.copy()
+                    if enquiry and enquiry.detail_data
+                    else {}
+                )
+
+                enquiry_data.update({
+                    "property_type": request.POST.get(
+                        "property_type", ""
+                    ),
+                    "budget": request.POST.get(
+                        "budget", ""
+                    ),
+                    "message": request.POST.get(
+                        "message", ""
+                    ),
+                })
+
+                if enquiry:
+
+                    enquiry.detail_data = enquiry_data
+                    enquiry.created_by = (
+                        enquiry.created_by or request.user
+                    )
+                    enquiry.save()
+
+                else:
+
+                    ProjectDetail.objects.create(
+                        project=project,
+                        detail_type="enquiry",
+                        detail_data=enquiry_data,
+                        created_by=request.user
+                    )
+
+                # -----------------------------------------
+                # PAYMENT SCHEDULE
+                # -----------------------------------------
+
+                payment_json = json.loads(
+                    request.POST.get("payments_json", "[]")
+                )
+
                 if not isinstance(payment_json, list) or not payment_json:
-                    raise ValueError("Payment schedule is missing. Refresh and try again.")
+                    raise ValueError(
+                        "Payment schedule is missing. Refresh and try again."
+                    )
 
                 total_percentage = sum(
-                    (Decimal(str(item.get("percentage") or "0")) for item in payment_json),
+                    (
+                        Decimal(str(item.get("percentage") or "0"))
+                        for item in payment_json
+                    ),
                     Decimal("0")
                 )
+
                 if total_percentage != Decimal("100"):
-                    raise ValueError("Payment percentages must total exactly 100%.")
+                    raise ValueError(
+                        "Payment percentages must total exactly 100%."
+                    )
 
                 existing_payment_ids = set()
+
                 for item in payment_json:
-                    milestone = str(item.get("milestone", "")).strip()
+
+                    milestone = str(
+                        item.get("milestone", "")
+                    ).strip()
+
                     if not milestone:
-                        raise ValueError("Payment milestone name is required.")
+                        raise ValueError(
+                            "Payment milestone name is required."
+                        )
 
-                    percentage = Decimal(str(item.get("percentage") or "0"))
-                    paid_amount = Decimal(str(item.get("paid_amount") or "0"))
+                    # Percentage can remain decimal
+                    percentage = Decimal(
+                        str(item.get("percentage") or "0")
+                    )
+
+                    # Paid amount - whole number
+                    paid_amount = Decimal(
+                        str(item.get("paid_amount") or "0")
+                    ).quantize(Decimal("1"))
+
                     if percentage < 0 or paid_amount < 0:
-                        raise ValueError("Percentage and paid amount cannot be negative.")
+                        raise ValueError(
+                            "Percentage and paid amount cannot be negative."
+                        )
 
-                    amount = (project.project_value * percentage / Decimal("100")).quantize(Decimal("0.01"))
+                    # Payment amount - whole number
+                    amount = (
+                        project.project_value
+                        * percentage
+                        / Decimal("100")
+                    ).quantize(Decimal("1"))
+
                     pay_status = item.get("status", "pending")
-                    if pay_status not in dict(ProjectPayment.PAYMENT_STATUS):
+
+                    if pay_status not in dict(
+                        ProjectPayment.PAYMENT_STATUS
+                    ):
                         raise ValueError("Invalid payment status.")
+
                     if paid_amount > amount:
-                        raise ValueError(f"Paid amount cannot exceed {milestone} amount.")
+                        raise ValueError(
+                            f"Paid amount cannot exceed {milestone} amount."
+                        )
 
                     payment_id = item.get("payment_id")
+
                     if payment_id:
+
                         payment = get_object_or_404(
-                            ProjectPayment, payment_id=payment_id, project=project
+                            ProjectPayment,
+                            payment_id=payment_id,
+                            project=project
                         )
-                        existing_payment_ids.add(str(payment.payment_id))
+
                     else:
                         payment = ProjectPayment(project=project)
+
                     payment.milestone = milestone
                     payment.percentage = percentage
                     payment.amount = amount
                     payment.paid_amount = paid_amount
                     payment.status = pay_status
-                    payment.payment_date = parse_date(item.get("payment_date", ""))
-                    payment.payment_mode = item.get("payment_mode", "")
-                    payment.transaction_reference = item.get("transaction_reference", "")
-                    payment.remarks = item.get("remarks", "")
-                    payment.save()
-                    existing_payment_ids.add(str(payment.payment_id))
 
-                ProjectPayment.objects.filter(project=project).exclude(
+                    payment.payment_date = parse_date(
+                        item.get("payment_date", "")
+                    )
+
+                    payment.payment_mode = item.get(
+                        "payment_mode", ""
+                    )
+
+                    payment.transaction_reference = item.get(
+                        "transaction_reference", ""
+                    )
+
+                    payment.remarks = item.get("remarks", "")
+
+                    payment.save()
+
+                    existing_payment_ids.add(
+                        str(payment.payment_id)
+                    )
+
+                ProjectPayment.objects.filter(
+                    project=project
+                ).exclude(
                     payment_id__in=existing_payment_ids
                 ).delete()
 
-                # Existing Room + Work JSON sync
+                # -----------------------------------------
+                # ROOMS + WORKS
+                # -----------------------------------------
+
                 if "rooms_json" not in request.POST:
-                    raise ValueError("Room data was not submitted. Please refresh and try again.")
-                rooms_data = json.loads(request.POST.get("rooms_json", "[]"))
+                    raise ValueError(
+                        "Room data was not submitted. Please refresh and try again."
+                    )
+
+                rooms_data = json.loads(
+                    request.POST.get("rooms_json", "[]")
+                )
+
                 if not isinstance(rooms_data, list):
                     raise ValueError("Invalid room data.")
 
                 submitted_room_ids = set()
+
                 for room_data in rooms_data:
-                    room_name = str(room_data.get("room_name", "")).strip()
+
+                    room_name = str(
+                        room_data.get("room_name", "")
+                    ).strip()
+
                     if not room_name:
                         raise ValueError("Room name is required.")
+
                     room_id = room_data.get("room_id")
+
+                    # Existing Room
                     if room_id:
-                        room = get_object_or_404(ProjectRoom, room_id=room_id, project=project)
-                        submitted_room_ids.add(str(room.room_id))
-                        room.room_name = room_name
-                        room.room_type = room_data.get("room_type", "")
-                        room.floor = room_data.get("floor", "")
-                        room.description = room_data.get("description", "")
-                        room.save()
-                    else:
-                        room = ProjectRoom.objects.create(
-                            project=project, room_name=room_name,
-                            room_type=room_data.get("room_type", ""),
-                            floor=room_data.get("floor", ""),
-                            description=room_data.get("description", "")
+
+                        room = get_object_or_404(
+                            ProjectRoom,
+                            room_id=room_id,
+                            project=project
                         )
-                        submitted_room_ids.add(str(room.room_id))
+
+                        room.room_name = room_name
+                        room.room_type = room_data.get(
+                            "room_type", ""
+                        )
+                        room.floor = room_data.get(
+                            "floor", ""
+                        )
+                        room.description = room_data.get(
+                            "description", ""
+                        )
+
+                        room.save()
+
+                    # New Room
+                    else:
+
+                        room = ProjectRoom.objects.create(
+                            project=project,
+                            room_name=room_name,
+                            room_type=room_data.get(
+                                "room_type", ""
+                            ),
+                            floor=room_data.get(
+                                "floor", ""
+                            ),
+                            description=room_data.get(
+                                "description", ""
+                            )
+                        )
+
+                    submitted_room_ids.add(str(room.room_id))
 
                     works_data = room_data.get("works", [])
+
                     if not isinstance(works_data, list):
-                        raise ValueError(f"Invalid works data in {room_name}.")
+                        raise ValueError(
+                            f"Invalid works data in {room_name}."
+                        )
+
                     submitted_work_ids = set()
-                    valid_work_statuses = dict(RoomWork.WORK_STATUS)
+
+                    valid_work_statuses = dict(
+                        RoomWork.WORK_STATUS
+                    )
+
+                    room_total_sqft = Decimal("0.00")
+                    room_total_amount = Decimal("0")
 
                     for work_data in works_data:
-                        work_name = str(work_data.get("work_name", "")).strip()
-                        if not work_name:
-                            raise ValueError(f"Work name is required in {room_name}.")
-                        work_status = work_data.get("status", "not_started")
-                        if work_status not in valid_work_statuses:
-                            raise ValueError("Invalid room work status.")
 
-                        height = str(work_data.get("height", "")).strip()
-                        width = str(work_data.get("width", "")).strip()
-                        if height and width:
-                            if Decimal(height) < 0 or Decimal(width) < 0:
-                                raise ValueError("Work dimensions cannot be negative.")
-                            work_sqft = Decimal(height) * Decimal(width)
+                        work_name = str(
+                            work_data.get("work_name", "")
+                        ).strip()
+
+                        if not work_name:
+                            raise ValueError(
+                                f"Work name is required in {room_name}."
+                            )
+
+                        work_status = work_data.get(
+                            "status", "not_started"
+                        )
+
+                        if work_status not in valid_work_statuses:
+                            raise ValueError(
+                                "Invalid room work status."
+                            )
+
+                        # ---------------------------------
+                        # WORK HEIGHT, WIDTH AND RATE
+                        # ---------------------------------
+
+                        # Height and width remain decimal
+                        height = Decimal(
+                            str(work_data.get("height") or "0")
+                        )
+
+                        width = Decimal(
+                            str(work_data.get("width") or "0")
+                        )
+
+                        # Rate per sqft - whole number
+                        rate_per_sqft = Decimal(
+                            str(work_data.get("rate_per_sqft") or "0")
+                        ).quantize(Decimal("1"))
+
+                        if height < 0 or width < 0:
+                            raise ValueError(
+                                "Work dimensions cannot be negative."
+                            )
+
+                        if rate_per_sqft < 0:
+                            raise ValueError(
+                                "Work rate cannot be negative."
+                            )
+
+                        # Calculate Sq.ft using H x W
+                        if height > 0 and width > 0:
+
+                            work_sqft = (
+                                height * width
+                            ).quantize(Decimal("0.01"))
+
                         else:
-                            work_sqft = Decimal(str(work_data.get("area_sqft") or "0"))
+
+                            # Manual Sq.ft if H/W are not entered
+                            work_sqft = Decimal(
+                                str(
+                                    work_data.get("area_sqft") or "0"
+                                )
+                            )
+
                         if work_sqft < 0:
-                            raise ValueError("Work square feet cannot be negative.")
+                            raise ValueError(
+                                "Work square feet cannot be negative."
+                            )
+
+                        # Work amount - whole number
+                        work_amount = (
+                            work_sqft * rate_per_sqft
+                        ).quantize(Decimal("1"))
+
+                        # ---------------------------------
+                        # CREATE / UPDATE WORK
+                        # ---------------------------------
 
                         work_id = work_data.get("work_id")
-                        if work_id:
-                            work = get_object_or_404(RoomWork, work_id=work_id, room=room)
-                            submitted_work_ids.add(str(work.work_id))
-                        else:
-                            work = RoomWork(room=room)
-                        work.work_name = work_name
-                        work.work_description = work_data.get("work_description", "")
-                        work.area_sqft = work_sqft
-                        work.status = work_status
-                        work.start_date = parse_date(work_data.get("start_date", ""))
-                        work.completed_date = parse_date(work_data.get("completed_date", ""))
-                        work.remarks = work_data.get("remarks", "")
-                        work.save()
-                        submitted_work_ids.add(str(work.work_id))
 
-                    RoomWork.objects.filter(room=room).exclude(
+                        if work_id:
+
+                            work = get_object_or_404(
+                                RoomWork,
+                                work_id=work_id,
+                                room=room
+                            )
+
+                        else:
+
+                            work = RoomWork(room=room)
+
+                        work.work_name = work_name
+
+                        work.work_description = work_data.get(
+                            "work_description", ""
+                        )
+
+                        work.height = height
+                        work.width = width
+                        work.area_sqft = work_sqft
+                        work.rate_per_sqft = rate_per_sqft
+
+                        work.status = work_status
+
+                        work.start_date = parse_date(
+                            work_data.get("start_date", "")
+                        )
+
+                        work.completed_date = parse_date(
+                            work_data.get("completed_date", "")
+                        )
+
+                        work.remarks = work_data.get(
+                            "remarks", ""
+                        )
+
+                        work.save()
+
+                        submitted_work_ids.add(
+                            str(work.work_id)
+                        )
+
+                        # Room totals
+                        room_total_sqft += work_sqft
+                        room_total_amount += work_amount
+
+                    # Delete removed works
+                    RoomWork.objects.filter(
+                        room=room
+                    ).exclude(
                         work_id__in=submitted_work_ids
                     ).delete()
-                    room.area_sqft = sum(
-                        (work.area_sqft or Decimal("0.00") for work in RoomWork.objects.filter(room=room)),
-                        Decimal("0.00")
-                    )
-                    room.save(update_fields=["area_sqft"])
 
-                ProjectRoom.objects.filter(project=project).exclude(
+                    # Save room total Sq.ft
+                    room.area_sqft = room_total_sqft
+
+                    room.save(
+                        update_fields=["area_sqft"]
+                    )
+
+                # Delete removed rooms
+                ProjectRoom.objects.filter(
+                    project=project
+                ).exclude(
                     room_id__in=submitted_room_ids
                 ).delete()
 
-            messages.success(request, "Project and payment schedule updated successfully!")
-            return redirect("project_update", project_id=project.project_id)
+            messages.success(
+                request,
+                "Project and payment schedule updated successfully!"
+            )
 
-        except (ValueError, InvalidOperation, TypeError, json.JSONDecodeError) as error:
-            messages.error(request, f"Unable to update project: {error}")
+            return redirect(
+                "project_update",
+                project_id=project.project_id
+            )
+
+        except (
+            ValueError,
+            InvalidOperation,
+            TypeError,
+            json.JSONDecodeError
+        ) as error:
+
+            messages.error(
+                request,
+                f"Unable to update project: {error}"
+            )
+
+    # -----------------------------------------
+    # GET: LOAD ROOMS AND WORKS
+    # -----------------------------------------
 
     rooms = (
-        ProjectRoom.objects.filter(project=project)
-        .prefetch_related("works").order_by("room_id")
+        ProjectRoom.objects
+        .filter(project=project)
+        .prefetch_related("works")
+        .order_by("room_id")
     )
-    stage_history = project.stage_history.select_related("changed_by").order_by(
-        "changed_at", "history_id"
+
+    # Calculate room amount for displaying in template
+    for room in rooms:
+
+        room_total_amount = Decimal("0")
+
+        for work in room.works.all():
+
+            work_amount = (
+                Decimal(str(work.area_sqft or 0)) *
+                Decimal(str(work.rate_per_sqft or 0))
+            ).quantize(Decimal("1"))
+
+            room_total_amount += work_amount
+
+        room.total_amount = room_total_amount
+
+    stage_history = (
+        project.stage_history
+        .select_related("changed_by")
+        .order_by("changed_at", "history_id")
     )
+
     payment_schedule = project.payment_schedule.all()
 
     context = {
@@ -1323,34 +1728,55 @@ def edit_project(request, project_id):
         "stage_history": stage_history,
         "payment_schedule": payment_schedule,
     }
-    return render(request, "owner/edit_project.html", context)
+
+    return render(
+        request,
+        "owner/edit_project.html",
+        context
+    )
 
 
 @login_required
 def project_update(request, project_id):
+
+    import json
+
+    from decimal import Decimal, InvalidOperation
+    from django.db import transaction
+    from django.contrib import messages
+    from django.shortcuts import get_object_or_404, redirect, render
+    from django.utils.dateparse import parse_date
+
+    # -----------------------------------------
+    # GET PROJECT
+    # -----------------------------------------
 
     project = get_object_or_404(
         Project.objects.select_related("client"),
         project_id=project_id
     )
 
-    # ----------------------------------------
+    # -----------------------------------------
     # OWNER PERMISSION
-    # ----------------------------------------
+    # -----------------------------------------
+
     profile = getattr(request.user, "userprofile", None)
 
     if not profile or not profile.is_owneruser:
+
         messages.error(
             request,
             "You don't have permission to edit this project."
         )
+
         return redirect("login")
 
     client = project.client
 
-    # ----------------------------------------
+    # -----------------------------------------
     # PROJECT PROGRESS
-    # ----------------------------------------
+    # -----------------------------------------
+
     progress_map = {
         "enquiry": 1,
         "quotation": 8,
@@ -1362,9 +1788,10 @@ def project_update(request, project_id):
         "handover": 100,
     }
 
-    # ----------------------------------------
+    # -----------------------------------------
     # LATEST ENQUIRY DETAILS
-    # ----------------------------------------
+    # -----------------------------------------
+
     enquiry = (
         project.details
         .filter(detail_type="enquiry")
@@ -1378,117 +1805,253 @@ def project_update(request, project_id):
         else {}
     )
 
-    # ----------------------------------------
+    # -----------------------------------------
+    # LOAD EXISTING QUOTATION
+    # -----------------------------------------
+
+    quotation_obj = (
+        ProjectDetail.objects
+        .filter(
+            project=project,
+            detail_type="quotation"
+        )
+        .order_by("-created_at")
+        .first()
+    )
+
+    quotation_data = (
+        quotation_obj.detail_data.copy()
+        if quotation_obj and quotation_obj.detail_data
+        else {}
+    )
+
+    # -----------------------------------------
     # POST UPDATE
-    # ----------------------------------------
+    # -----------------------------------------
+
     if request.method == "POST":
+
         try:
-            from django.db import transaction
 
             with transaction.atomic():
 
-                # CLIENT DETAILS
+                # =====================================
+                # 01. CLIENT DETAILS
+                # =====================================
+
                 client.client_name = request.POST.get(
-                    "client_name", ""
+                    "client_name",
+                    client.client_name
                 ).strip()
+
                 client.phone = request.POST.get(
-                    "phone", ""
+                    "phone",
+                    client.phone
                 ).strip()
+
                 client.alternative_phone = request.POST.get(
-                    "alternative_phone", ""
+                    "alternative_phone",
+                    client.alternative_phone or ""
                 ).strip()
+
                 client.email = request.POST.get(
-                    "email", ""
+                    "email",
+                    client.email or ""
                 ).strip() or None
 
                 if not client.client_name or not client.phone:
+
                     raise ValueError(
                         "Client name and phone are required."
                     )
 
                 client.save()
 
-                # PROJECT DETAILS
+                # =====================================
+                # 02. PROJECT DETAILS
+                # =====================================
+
                 project.project_code = request.POST.get(
-                    "project_code", project.project_code
+                    "project_code",
+                    project.project_code
                 ).strip()
+
                 project.location = request.POST.get(
-                    "location", ""
+                    "location",
+                    project.location or ""
                 ).strip()
+
                 project.google_map_link = request.POST.get(
-                    "google_map_link", ""
+                    "google_map_link",
+                    project.google_map_link or ""
                 ).strip()
+
                 project.project_type = request.POST.get(
-                    "project_type", ""
+                    "project_type",
+                    project.project_type or ""
                 ).strip()
 
-                area = request.POST.get("area_sqft", "").strip()
-                project.area_sqft = Decimal(area) if area else None
+                area = request.POST.get(
+                    "area_sqft",
+                    ""
+                ).strip()
 
-                # ROOM COUNTS
+                project.area_sqft = (
+                    Decimal(area)
+                    if area else None
+                )
+
+                # =====================================
+                # 03. ROOM COUNTS
+                # =====================================
+
                 project.bedroom_count = int(
-                    request.POST.get("bedroom_count") or 0
-                )
-                project.living_room_count = int(
-                    request.POST.get("living_room_count") or 0
-                )
-                project.kitchen_count = int(
-                    request.POST.get("kitchen_count") or 0
-                )
-                project.bathroom_count = int(
-                    request.POST.get("bathroom_count") or 0
+                    request.POST.get(
+                        "bedroom_count",
+                        project.bedroom_count or 0
+                    ) or 0
                 )
 
-                # PROJECT STATUS
-                status = request.POST.get("current_status")
-                valid_statuses = dict(Project.PROJECT_STATUS)
+                project.living_room_count = int(
+                    request.POST.get(
+                        "living_room_count",
+                        project.living_room_count or 0
+                    ) or 0
+                )
+
+                project.kitchen_count = int(
+                    request.POST.get(
+                        "kitchen_count",
+                        project.kitchen_count or 0
+                    ) or 0
+                )
+
+                project.bathroom_count = int(
+                    request.POST.get(
+                        "bathroom_count",
+                        project.bathroom_count or 0
+                    ) or 0
+                )
+
+                # =====================================
+                # 04. PROJECT STATUS
+                # =====================================
+
+                status = request.POST.get(
+                    "current_status",
+                    project.current_status
+                )
+
+                valid_statuses = dict(
+                    Project.PROJECT_STATUS
+                )
 
                 if status not in valid_statuses:
-                    raise ValueError("Invalid project status.")
+
+                    raise ValueError(
+                        "Invalid project status."
+                    )
 
                 project.current_status = status
 
-                # PROJECT DATES
+                # =====================================
+                # 05. PROJECT DATES
+                # =====================================
+
                 project.enquiry_date = (
-                    parse_date(request.POST.get("enquiry_date", ""))
+                    parse_date(
+                        request.POST.get("enquiry_date", "")
+                    )
                     or project.enquiry_date
                 )
+
                 project.project_start_date = parse_date(
-                    request.POST.get("project_start_date", "")
+                    request.POST.get(
+                        "project_start_date",
+                        ""
+                    )
                 )
+
                 project.target_handover_date = parse_date(
-                    request.POST.get("target_handover_date", "")
+                    request.POST.get(
+                        "target_handover_date",
+                        ""
+                    )
                 )
+
                 project.actual_handover_date = parse_date(
-                    request.POST.get("actual_handover_date", "")
+                    request.POST.get(
+                        "actual_handover_date",
+                        ""
+                    )
                 )
 
-                # MAP COORDINATES
-                latitude = request.POST.get("latitude", "").strip()
-                longitude = request.POST.get("longitude", "").strip()
+                # =====================================
+                # 06. MAP COORDINATES
+                # =====================================
 
-                project.latitude = Decimal(latitude) if latitude else None
-                project.longitude = Decimal(longitude) if longitude else None
+                latitude = request.POST.get(
+                    "latitude",
+                    ""
+                ).strip()
 
-                # Save project. Project.save() handles stage history.
+                longitude = request.POST.get(
+                    "longitude",
+                    ""
+                ).strip()
+
+                project.latitude = (
+                    Decimal(latitude)
+                    if latitude else None
+                )
+
+                project.longitude = (
+                    Decimal(longitude)
+                    if longitude else None
+                )
+
+                # Save project
                 project.save()
 
-                # ENQUIRY JSON DETAILS
+                # =====================================
+                # 07. ENQUIRY JSON DETAILS
+                # =====================================
+
                 enquiry_data = (
                     enquiry.detail_data.copy()
                     if enquiry and enquiry.detail_data
                     else {}
                 )
+
                 enquiry_data.update({
-                    "property_type": request.POST.get("property_type", ""),
-                    "budget": request.POST.get("budget", ""),
-                    "message": request.POST.get("message", ""),
+
+                    "property_type": request.POST.get(
+                        "property_type",
+                        ""
+                    ),
+
+                    "budget": request.POST.get(
+                        "budget",
+                        ""
+                    ),
+
+                    "message": request.POST.get(
+                        "message",
+                        ""
+                    ),
+
                 })
 
                 if enquiry:
+
                     enquiry.detail_data = enquiry_data
-                    enquiry.save()
+
+                    enquiry.save(
+                        update_fields=["detail_data"]
+                    )
+
                 else:
+
                     ProjectDetail.objects.create(
                         project=project,
                         detail_type="enquiry",
@@ -1496,20 +2059,229 @@ def project_update(request, project_id):
                         created_by=request.user
                     )
 
-            messages.success(request, "Project updated successfully!")
-            return redirect("owner_projects")
+                # =====================================
+                # 08. SAVE EDITABLE QUOTATION
+                # =====================================
 
-        except (ValueError, TypeError, ArithmeticError) as error:
+                quotation_json = request.POST.get(
+                    "quotation_json",
+                    ""
+                ).strip()
+
+                if quotation_json:
+
+                    quotation_rows = json.loads(
+                        quotation_json
+                    )
+
+                    if not isinstance(quotation_rows, list):
+
+                        raise ValueError(
+                            "Invalid quotation data."
+                        )
+
+                    cleaned_rows = []
+
+                    for row in quotation_rows:
+
+                        work_name = str(
+                            row.get("work_name", "")
+                        ).strip()
+
+                        if not work_name:
+                            continue
+
+                        sqft = Decimal(
+                            str(row.get("sqft") or "0")
+                        )
+
+                        rate = Decimal(
+                            str(row.get("rate") or "0")
+                        )
+
+                        if sqft < 0 or rate < 0:
+
+                            raise ValueError(
+                                "Quotation sqft and rate cannot be negative."
+                            )
+
+                        amount = (
+                            sqft * rate
+                        ).quantize(Decimal("1"))
+
+                        cleaned_rows.append({
+
+                            "work_id": row.get("work_id"),
+
+                            "room_name": str(
+                                row.get("room_name", "")
+                            ),
+
+                            "work_name": work_name,
+
+                            "sqft": str(sqft),
+
+                            "rate": str(
+                                rate.quantize(Decimal("1"))
+                            ),
+
+                            "amount": str(amount),
+
+                        })
+
+                    # =================================
+                    # QUOTATION CALCULATIONS
+                    # =================================
+
+                    subtotal = sum(
+                        (
+                            Decimal(row["amount"])
+                            for row in cleaned_rows
+                        ),
+                        Decimal("0")
+                    )
+
+                    discount = Decimal(
+                        str(
+                            request.POST.get(
+                                "quotation_discount"
+                            ) or "0"
+                        )
+                    ).quantize(Decimal("1"))
+
+                    transport = Decimal(
+                        str(
+                            request.POST.get(
+                                "quotation_transport"
+                            ) or "0"
+                        )
+                    ).quantize(Decimal("1"))
+
+                    gst_percentage = Decimal(
+                        str(
+                            request.POST.get(
+                                "quotation_gst"
+                            ) or "18"
+                        )
+                    )
+
+                    if discount < 0 or transport < 0:
+
+                        raise ValueError(
+                            "Discount and transport cannot be negative."
+                        )
+
+                    if gst_percentage < 0:
+
+                        raise ValueError(
+                            "GST percentage cannot be negative."
+                        )
+
+                    taxable_amount = max(
+                        subtotal - discount + transport,
+                        Decimal("0")
+                    )
+
+                    gst_amount = (
+                        taxable_amount
+                        * gst_percentage
+                        / Decimal("100")
+                    ).quantize(Decimal("1"))
+
+                    grand_total = (
+                        taxable_amount + gst_amount
+                    )
+
+                    # =================================
+                    # QUOTATION JSON
+                    # =================================
+
+                    quotation_data = {
+
+                        "items": cleaned_rows,
+
+                        "subtotal": str(subtotal),
+
+                        "discount": str(discount),
+
+                        "extra_transport": str(transport),
+
+                        "gst_percentage": str(
+                            gst_percentage
+                        ),
+
+                        "gst_amount": str(gst_amount),
+
+                        "total_quotation": str(
+                            grand_total
+                        ),
+
+                        "remarks": request.POST.get(
+                            "quotation_remarks",
+                            ""
+                        ),
+
+                    }
+
+                    # =================================
+                    # CREATE / UPDATE QUOTATION
+                    # =================================
+
+                    if quotation_obj:
+
+                        quotation_obj.detail_data = quotation_data
+
+                        quotation_obj.save(
+                            update_fields=[
+                                "detail_data",
+                                "updated_at"
+                            ]
+                        )
+
+                    else:
+
+                        quotation_obj = ProjectDetail.objects.create(
+
+                            project=project,
+
+                            detail_type="quotation",
+
+                            detail_data=quotation_data,
+
+                            created_by=request.user
+
+                        )
+
+            messages.success(
+                request,
+                "Project and quotation updated successfully!"
+            )
+
+            return redirect(
+                "project_update",
+                project_id=project.project_id
+            )
+
+        except (
+            ValueError,
+            TypeError,
+            InvalidOperation,
+            ArithmeticError,
+            json.JSONDecodeError
+        ) as error:
+
             messages.error(
                 request,
                 f"Unable to update project: {error}"
             )
 
-    # ----------------------------------------
-    # PROJECT ROOMS + ROOM WORKS
-    # ----------------------------------------
+    # =========================================
+    # 09. PROJECT ROOMS + ROOM WORKS
+    # =========================================
+
     rooms = (
-        project.rooms
+        ProjectRoom.objects
+        .filter(project=project)
         .prefetch_related("works")
         .order_by("room_id")
     )
@@ -1517,170 +2289,412 @@ def project_update(request, project_id):
     project_rooms_data = []
 
     for room in rooms:
+
         room_works_data = []
 
         for work in room.works.all():
+
             room_works_data.append({
+
                 "work_id": work.work_id,
+
                 "work_name": work.work_name,
+
                 "work_name_display": (
                     (work.work_name or "")
                     .replace("_", " ")
                     .title()
                 ),
+
                 "work_description": work.work_description,
+
+                "height": (
+                    str(work.height)
+                    if work.height is not None else "0"
+                ),
+
+                "width": (
+                    str(work.width)
+                    if work.width is not None else "0"
+                ),
+
                 "area_sqft": (
                     str(work.area_sqft)
                     if work.area_sqft is not None else "0"
                 ),
+
+                "rate_per_sqft": (
+                    str(work.rate_per_sqft)
+                    if work.rate_per_sqft is not None else "0"
+                ),
+
+                "total_amount": str(
+                    (
+                        Decimal(str(work.area_sqft or 0))
+                        * Decimal(str(work.rate_per_sqft or 0))
+                    ).quantize(Decimal("1"))
+                ),
+
                 "status": work.status,
+
                 "start_date": (
                     work.start_date.isoformat()
                     if work.start_date else None
                 ),
+
                 "completed_date": (
                     work.completed_date.isoformat()
                     if work.completed_date else None
                 ),
+
                 "remarks": work.remarks,
+
             })
 
         project_rooms_data.append({
+
             "room_id": room.room_id,
+
             "room_name": room.room_name,
+
             "room_type": room.room_type,
+
             "area_sqft": (
                 str(room.area_sqft)
                 if room.area_sqft is not None else "0"
             ),
+
             "floor": room.floor,
+
             "description": room.description,
+
             "works_count": len(room_works_data),
+
             "completed_works": sum(
-                1 for work in room_works_data
+                1
+                for work in room_works_data
                 if work["status"] == "completed"
             ),
+
             "works": room_works_data,
+
         })
 
-    # ----------------------------------------
-    # PROJECT STAGE HISTORY + KEY MILESTONES
-    # ----------------------------------------
+    # =========================================
+    # 10. QUOTATION ROWS FROM ROOM WORKS
+    # =========================================
+
+    saved_items = quotation_data.get(
+        "items",
+        []
+    )
+
+    saved_work_map = {
+
+        str(item.get("work_id")): item
+
+        for item in saved_items
+
+        if item.get("work_id")
+
+    }
+
+    quotation_rows = []
+
+    rooms_for_quotation = (
+        ProjectRoom.objects
+        .filter(project=project)
+        .prefetch_related("works")
+        .order_by("room_id")
+    )
+
+    for room in rooms_for_quotation:
+
+        for work in room.works.all():
+
+            saved_item = saved_work_map.get(
+                str(work.work_id),
+                {}
+            )
+
+            # If quotation was edited, use saved values.
+            # Otherwise use original RoomWork values.
+
+            sqft = saved_item.get(
+                "sqft",
+                str(work.area_sqft or 0)
+            )
+
+            rate = saved_item.get(
+                "rate",
+                str(work.rate_per_sqft or 0)
+            )
+
+            work_name = saved_item.get(
+                "work_name",
+                work.work_name
+            )
+
+            room_name = saved_item.get(
+                "room_name",
+                room.room_name
+            )
+
+            amount = (
+                Decimal(str(sqft or 0))
+                * Decimal(str(rate or 0))
+            ).quantize(Decimal("1"))
+
+            quotation_rows.append({
+
+                "work_id": work.work_id,
+
+                "room_name": room_name,
+
+                "work_name": work_name,
+
+                "sqft": str(sqft),
+
+                "rate": str(rate),
+
+                "amount": str(amount),
+
+            })
+
+    # =========================================
+    # 11. MANUALLY ADDED QUOTATION ROWS
+    # =========================================
+
+    for item in saved_items:
+
+        if not item.get("work_id"):
+
+            quotation_rows.append(item)
+
+    # =========================================
+    # 12. PROJECT STAGE HISTORY
+    # =========================================
+
     stage_history = list(
-        project.stage_history.order_by("changed_at")
+        project.stage_history.order_by(
+            "changed_at"
+        )
     )
 
     stage_date_map = {}
 
     for history in stage_history:
-        stage_date_map[history.stage] = history.changed_at
+
+        stage_date_map[history.stage] = (
+            history.changed_at
+        )
 
     stage_milestones = []
 
     for stage_value, stage_label in Project.PROJECT_STATUS:
+
         if stage_value == "enquiry":
+
             changed_at = project.created_at
+
         else:
-            changed_at = stage_date_map.get(stage_value)
+
+            changed_at = stage_date_map.get(
+                stage_value
+            )
 
         stage_milestones.append({
+
             "stage": stage_value,
+
             "label": stage_label,
+
             "changed_at": changed_at,
-            "is_current": stage_value == project.current_status,
+
+            "is_current": (
+                stage_value == project.current_status
+            ),
+
             "is_completed": (
                 changed_at is not None
                 and stage_value != project.current_status
             ),
+
         })
 
-    # ----------------------------------------
-    # PAYMENT DETAILS FROM DATABASE
-    # ----------------------------------------
-    payment_schedule = ProjectPayment.objects.filter(
-        project=project
-    ).order_by("payment_id")
+    # =========================================
+    # 13. PAYMENT DETAILS
+    # =========================================
 
-    # Read project financial values before calculating the received percentage.
-    project_value = getattr(project, "project_value", Decimal("0")) or Decimal("0")
-    project_profit = getattr(project, "project_profit", Decimal("0")) or Decimal("0")
+    payment_schedule = (
+        ProjectPayment.objects
+        .filter(project=project)
+        .order_by("payment_id")
+    )
 
-    # If a stage is marked Paid but paid_amount was not entered,
-    # count its full scheduled amount as received.
+    project_value = (
+        getattr(
+            project,
+            "project_value",
+            Decimal("0")
+        ) or Decimal("0")
+    )
+
+    project_profit = (
+        getattr(
+            project,
+            "project_profit",
+            Decimal("0")
+        ) or Decimal("0")
+    )
+
     total_paid = sum(
+
         (
+
             payment.paid_amount
-            if payment.paid_amount is not None and payment.paid_amount > 0
-            else (
-                payment.amount
-                if (payment.status or "").strip().lower() == "paid"
-                else Decimal("0")
+
+            if (
+                payment.paid_amount is not None
+                and payment.paid_amount > 0
             )
+
+            else (
+
+                payment.amount
+
+                if (
+                    (payment.status or "").strip().lower()
+                    == "paid"
+                )
+
+                else Decimal("0")
+
+            )
+
         )
+
         for payment in payment_schedule
+
     )
 
     total_payment_amount = sum(
+
         (
+
             payment.amount
+
             if payment.amount is not None
+
             else Decimal("0")
+
         )
+
         for payment in payment_schedule
+
     )
 
-    pending_amount = total_payment_amount - total_paid
+    pending_amount = (
+        total_payment_amount - total_paid
+    )
+
     payment_received_percentage = (
+
         min(
-            (total_paid / project_value * Decimal("100")),
+            (
+                total_paid
+                / project_value
+                * Decimal("100")
+            ),
             Decimal("100")
         )
+
         if project_value and project_value > 0
+
         else Decimal("0")
+
     )
-    # Count every stage that is not fully paid (Pending + Partial).
-    pending_payment_count = payment_schedule.exclude(
-        status__iexact="Paid"
-    ).count()
 
-    # Amount already received and remaining project balance
+    pending_payment_count = (
+        payment_schedule
+        .exclude(status__iexact="Paid")
+        .count()
+    )
+
     paid_amount = total_paid
-    balance_amount = max(project_value - paid_amount, Decimal("0"))
 
-    # ----------------------------------------
-    # FINAL CONTEXT
-    # ----------------------------------------
-    progress = progress_map.get(project.current_status, 0)
+    balance_amount = max(
+        project_value - paid_amount,
+        Decimal("0")
+    )
+
+    # =========================================
+    # 14. FINAL CONTEXT
+    # =========================================
+
+    progress = progress_map.get(
+        project.current_status,
+        0
+    )
 
     context = {
+
+        # Project and Client
         "project": project,
+
         "client": client,
+
         "progress": progress,
+
         "enquiry_data": enquiry_data,
+
         "status_choices": Project.PROJECT_STATUS,
 
-        # Project -> Rooms -> Works
+        # Rooms and Works
         "project_rooms_data": project_rooms_data,
+
         "total_rooms": len(project_rooms_data),
+
         "total_works": sum(
-            len(room["works"]) for room in project_rooms_data
+            len(room["works"])
+            for room in project_rooms_data
         ),
 
-        # Stage history and milestones
+        # Quotation
+        "quotation_data": quotation_data,
+
+        "quotation_rows": quotation_rows,
+
+        # Stage History
         "stage_history": stage_history,
+
         "stage_milestones": stage_milestones,
 
-        # Payment values from database
+        # Payment
         "payment_schedule": payment_schedule,
+
         "project_value": project_value,
+
         "project_profit": project_profit,
+
         "total_payment_amount": total_payment_amount,
+
         "total_paid": total_paid,
+
         "paid_amount": paid_amount,
+
         "pending_amount": pending_amount,
-        "payment_received_percentage": payment_received_percentage,
-        "pending_payment_count": pending_payment_count,
+
+        "payment_received_percentage": (
+            payment_received_percentage
+        ),
+
+        "pending_payment_count": (
+            pending_payment_count
+        ),
+
         "balance_amount": balance_amount,
+
     }
 
     return render(
@@ -1730,9 +2744,6 @@ def sitepm_dashboard(request):
 
 
 @login_required
-
-@login_required
-@login_required
 def client_dashboard(request):
 
     profile = getattr(request.user, "userprofile", None)
@@ -1747,13 +2758,36 @@ def client_dashboard(request):
         .order_by("-created_at")
     )
 
+    # Latest Project
+    project = projects.first()
+
+    # Project Progress
+    progress_map = {
+        "enquiry": 1,
+        "quotation": 8,
+        "site_visit": 25,
+        "payment": 50,
+        "3d_design": 63,
+        "material_selection": 75,
+        "execution": 90,
+        "handover": 100,
+    }
+
+    progress = 0
+
+    if project:
+        current_status = project.current_status
+        progress = progress_map.get(current_status, 0)
+
     context = {
         "projects": projects,
+        "project": project,
+        "status_choices": Project.PROJECT_STATUS,
+        "progress": progress,
         "client": request.user.client_account,
     }
 
     return render(request, "client/client_dashboard.html", context)
-
 @transaction.atomic
 def client_booking(request):
 

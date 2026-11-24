@@ -134,7 +134,7 @@ class Project(models.Model):
 
     area_sqft = models.DecimalField(
         max_digits=10,
-        decimal_places=2,
+        decimal_places=0,
         null=True,
         blank=True
     )
@@ -142,13 +142,13 @@ class Project(models.Model):
     # PROJECT FINANCIAL DETAILS
     project_value = models.DecimalField(
         max_digits=14,
-        decimal_places=2,
+        decimal_places=0,
         default=0
     )
 
     project_profit = models.DecimalField(
         max_digits=14,
-        decimal_places=2,
+        decimal_places=0,
         default=0
     )
 
@@ -309,7 +309,7 @@ class ProjectRoom(models.Model):
 
     area_sqft = models.DecimalField(
         max_digits=10,
-        decimal_places=2,
+        decimal_places=0,
         default=0
     )
 
@@ -332,6 +332,7 @@ class ProjectRoom(models.Model):
 
 
 
+
 class RoomWork(models.Model):
 
     WORK_STATUS = [
@@ -348,17 +349,33 @@ class RoomWork(models.Model):
         related_name="works"
     )
 
-    work_name = models.CharField(
-        max_length=150
+    work_name = models.CharField(max_length=150)
+
+    work_description = models.TextField(blank=True)
+
+    # Work Measurements
+    height = models.DecimalField(
+        max_digits=10,
+        decimal_places=0,
+        default=0
     )
 
-    work_description = models.TextField(
-        blank=True
+    width = models.DecimalField(
+        max_digits=10,
+        decimal_places=0,
+        default=0
     )
 
     area_sqft = models.DecimalField(
         max_digits=10,
-        decimal_places=2,
+        decimal_places=0,
+        default=0
+    )
+
+    # Individual Work Rate
+    rate_per_sqft = models.DecimalField(
+        max_digits=12,
+        decimal_places=0,
         default=0
     )
 
@@ -383,13 +400,16 @@ class RoomWork(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def total_amount(self):
+        return self.area_sqft * self.rate_per_sqft
+
     class Meta:
         db_table = "room_works"
         ordering = ["work_id"]
 
     def __str__(self):
         return f"{self.room.room_name} - {self.work_name}"
-
 
 
 class ProjectStageHistory(models.Model):
@@ -458,19 +478,19 @@ class ProjectPayment(models.Model):
 
     percentage = models.DecimalField(
         max_digits=5,
-        decimal_places=2,
+        decimal_places=0,
         default=0
     )
 
     amount = models.DecimalField(
         max_digits=14,
-        decimal_places=2,
+        decimal_places=0,
         default=0
     )
 
     paid_amount = models.DecimalField(
         max_digits=14,
-        decimal_places=2,
+        decimal_places=0,
         default=0
     )
 

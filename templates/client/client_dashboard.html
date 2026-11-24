@@ -1,126 +1,408 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBK Login</title>
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>IBK | Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'css/owner_dashboard.css' %}"> -->
+  
+    <link rel="stylesheet" href="{% static 'css/client/client_dashboard.css' %}">
+    
 </head>
 
 <body>
-<div class="container-fluid py-4">
+<div class="app-layout">
 
-    <!-- Welcome Section -->
-    <div class="mb-4">
-        <h3 class="fw-bold">
-            Welcome, {{ client.client_name }}
-        </h3>
-        <p class="text-muted">
-            View and track your interior projects here.
-        </p>
-    </div>
+    <!-- SIDEBAR -->
+    {% include 'includes/sidebar_client.html' %}
 
-    <!-- Project Count -->
-    <div class="row g-3 mb-4">
+    <main class="main-area">
 
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Total Projects</p>
-                    <h3 class="fw-bold">{{ projects.count }}</h3>
-                </div>
+        <!-- HEADER -->
+        {% include 'includes/header.html' %}
+
+        <!-- ONLY THIS CONTENT AREA SCROLLS -->
+        <section class="page-content project-page">
+
+        <!-- BREADCRUMB -->
+
+       <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <!-- LEFT SIDE -->
+            <div class="project-breadcrumb">
+                
             </div>
+
+           
+
         </div>
 
-    </div>
 
-    <!-- Projects Section -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold mb-0">My Projects</h5>
-    </div>
+        <!-- PROJECT BANNER -->
 
-    <div class="row g-3">
+        <section class="project-banner">
 
-        {% for project in projects %}
+          
+            <img
+                src="{% static 'images/banner.png' %}"
+                class="project-banner-image"
+                alt="Interior project living room"
+            >
 
-        <div class="col-xl-4 col-md-6">
+            <div class="project-banner-info">
 
-            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="project-banner-top">
 
-                <div class="card-body p-4">
+                    <span class="project-code-badge">
+                        {{ project.project_code }}
+                    </span>
 
-                    <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="stage stage-{{ project.current_status }}">
+                        {{ project.get_current_status_display }}
+                    </span>
 
-                        <div>
-                            <h5 class="fw-bold mb-1">
-                                {{ project.project_code }}
-                            </h5>
+                </div>
 
-                            <small class="text-muted">
-                                {{ project.project_type }}
-                            </small>
-                        </div>
+               <h2 class="fw-bold">
+                    Welcome
+                    <span style="color: #ff8c00; font-weight: 700;">
+                        {{ project.client.client_name }}
+                    </span>
+                    !
+                </h2>
 
-                        <span class="badge rounded-pill bg-light text-dark">
-                            {{ project.status|default:"Pending" }}
-                        </span>
+                <div class="project-banner-meta">
 
-                    </div>
+                    <span>
+                        <i class="bi bi-geo-alt"></i>
+                        {{ project.location|default:"Location not added" }}
+                    </span>
 
-                    <hr>
+                    <span>
+                        <i class="bi bi-house"></i>
+                        {{ project.project_type|default:"Interior Project" }}
+                    </span>
 
-                    <div class="mb-3">
-                        <small class="text-muted">Project Location</small>
-                        <p class="fw-semibold mb-0">
-                            {{ project.location|default:"Not updated" }}
-                        </p>
-                    </div>
+                    <span>
+                        <i class="bi bi-arrows-angle-expand"></i>
+                        {{ project.area_sqft|default:"-" }} Sq.ft
+                    </span>
 
-                    <div class="mb-3">
-                        <small class="text-muted">Client Name</small>
-                        <p class="fw-semibold mb-0">
-                            {{ project.client.client_name }}
-                        </p>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-
-                        <span class="text-muted small">
-                            Project Details
-                        </span>
-
-                        <a href="#" class="btn btn-dark btn-sm rounded-pill px-3">
-                            View Project
-                        </a>
-
-                    </div>
+                    <span>
+                        <i class="bi bi-door-closed"></i>
+                        {{ project.bedroom_count|default:0 }} BHK
+                    </span>
 
                 </div>
 
             </div>
 
-        </div>
 
-        {% empty %}
+            <div class="banner-schedule project-progress">
 
-        <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body text-center py-5">
-                    <h5 class="fw-bold">No Projects Found</h5>
-                    <p class="text-muted mb-0">
-                        Your projects will appear here once they are assigned.
-                    </p>
+                <div class="progress-heading">
+                    <h6>Project Progress</h6>
+
+                    <strong class="progress-percentage">
+                        {{ progress|default:0 }}%
+                    </strong>
                 </div>
+
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-{{ current_status }}"
+                        role="progressbar"
+                        style="width: {{ progress|default:0 }}%;"
+                        aria-valuenow="{{ progress|default:0 }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100">
+                    </div>
+                </div>
+
+               <div class="schedule-grid">
+
+                    <div class="schedule-item">
+                        <small>Start Date</small>
+                        <strong id="projectStartDate"
+                            data-date="{{ project.project_start_date|date:'Y-m-d' }}">
+                            {{ project.project_start_date|date:"d M Y"|default:"-" }}
+                        </strong>
+                    </div>
+
+                    <div class="schedule-item">
+                        <small>Target Handover</small>
+                        <strong id="targetHandoverDate"
+                            data-date="{{ project.target_handover_date|date:'Y-m-d' }}">
+                            {{ project.target_handover_date|date:"d M Y"|default:"-" }}
+                        </strong>
+                    </div>
+
+                    <div class="schedule-item">
+                        <small>Remaining</small>
+                        <strong class="remaining-days" id="remainingDays">
+                            Calculating...
+                        </strong>
+                    </div>
+
+                </div>
+
             </div>
-        </div>
 
-        {% endfor %}
+        </section>
 
-    </div>
+
+        <!-- PROJECT STAGE TIMELINE -->
+
+        <section class="project-timeline" id="projectTimeline"
+         data-status="{{ project.current_status }}">
+
+            <div class="timeline-list">
+
+                {% for value, label in status_choices %}
+
+                <div class="timeline-stage" data-stage="{{ value }}">
+
+                    <div class="timeline-dot">
+                        <i class="bi bi-circle"></i>
+                    </div>
+
+                    <span>{{ label }}</span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECT NAVIGATION TABS -->
+
+        <ul class="nav nav-pills project-tabs" id="projectTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="pill"
+                        data-bs-target="#overview" type="button" role="tab"
+                        aria-controls="overview" aria-selected="true">
+                    <i class="bi bi-grid me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quotation-tab" data-bs-toggle="pill"
+                        data-bs-target="#quotation" type="button" role="tab"
+                        aria-controls="quotation" aria-selected="false">
+                    <i class="bi bi-file-earmark-text me-2"></i>Quotation
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="payment-tab" data-bs-toggle="pill"
+                        data-bs-target="#payment" type="button" role="tab"
+                        aria-controls="payment" aria-selected="false">
+                    <i class="bi bi-wallet2 me-2"></i>Payment
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="site-visit-tab" data-bs-toggle="pill"
+                        data-bs-target="#site-visit" type="button" role="tab"
+                        aria-controls="site-visit" aria-selected="false">
+                    <i class="bi bi-geo-alt me-2"></i>Site Visit
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="design-tab" data-bs-toggle="pill"
+                        data-bs-target="#design" type="button" role="tab"
+                        aria-controls="design" aria-selected="false">
+                    <i class="bi bi-display me-2"></i>3D Design
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="materials-tab" data-bs-toggle="pill"
+                        data-bs-target="#materials" type="button" role="tab"
+                        aria-controls="materials" aria-selected="false">
+                    <i class="bi bi-layers me-2"></i>Material Selection
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="execution-tab" data-bs-toggle="pill"
+                        data-bs-target="#execution" type="button" role="tab"
+                        aria-controls="execution" aria-selected="false">
+                    <i class="bi bi-tools me-2"></i>Execution
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="handover-tab" data-bs-toggle="pill"
+                        data-bs-target="#handover" type="button" role="tab"
+                        aria-controls="handover" aria-selected="false">
+                    <i class="bi bi-check-circle me-2"></i>Handover
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="documents-tab" data-bs-toggle="pill"
+                        data-bs-target="#documents" type="button" role="tab"
+                        aria-controls="documents" aria-selected="false">
+                    <i class="bi bi-folder me-2"></i>Documents
+                </button>
+            </li>
+        </ul>
+
+
+        <div class="tab-content" id="projectTabContent">
+
+        <section id="overview" class="tab-pane fade show active" role="tabpanel" aria-labelledby="overview-tab">
+            {% include 'includes/project_tabs/overview.html' %}
+        </section>
+
+        <section id="quotation" class="tab-pane fade" role="tabpanel" aria-labelledby="quotation-tab">
+            {% include 'includes/project_tabs/quotation.html' %}
+        </section>
+
+        <section id="payment" class="tab-pane fade" role="tabpanel" aria-labelledby="payment-tab">
+            {% include 'includes/project_tabs/payment.html' %}
+        </section>
+
+        <section id="site-visit" class="tab-pane fade" role="tabpanel" aria-labelledby="site-visit-tab">
+            {% include 'includes/project_tabs/site_visit.html' %}
+        </section>
+
+        <section id="design" class="tab-pane fade" role="tabpanel" aria-labelledby="design-tab">
+            {% include 'includes/project_tabs/design.html' %}
+        </section>
+
+        <section id="materials" class="tab-pane fade" role="tabpanel" aria-labelledby="materials-tab">
+            {% include 'includes/project_tabs/materials.html' %}
+        </section>
+
+        <section id="execution" class="tab-pane fade" role="tabpanel" aria-labelledby="execution-tab">
+            {% include 'includes/project_tabs/execution.html' %}
+        </section>
+
+        <section id="handover" class="tab-pane fade" role="tabpanel" aria-labelledby="handover-tab">
+            {% include 'includes/project_tabs/handover.html' %}
+        </section>
+
+        <section id="documents" class="tab-pane fade" role="tabpanel" aria-labelledby="documents-tab">
+            {% include 'includes/project_tabs/documents.html' %}
+        </section>
+
+        </div><!-- /.tab-content -->
+
+        </section><!-- /.page-content -->
+
+    </main>
 
 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const timeline = document.getElementById("projectTimeline");
+
+    if (!timeline) return;
+
+    const currentStatus = timeline.dataset.status;
+
+    const stages = [
+        "enquiry",
+        "quotation",
+        "site_visit",
+        "payment",
+        "3d_design",
+        "material_selection",
+        "execution",
+        "handover"
+    ];
+
+    const currentIndex = stages.indexOf(currentStatus);
+
+    document.querySelectorAll(".timeline-stage").forEach(function (stage) {
+
+        const stageValue = stage.dataset.stage;
+        const stageIndex = stages.indexOf(stageValue);
+
+        const dot = stage.querySelector(".timeline-dot");
+
+        stage.classList.remove("completed", "current", "pending");
+
+        if (stageIndex < currentIndex) {
+
+            stage.classList.add("completed");
+            dot.innerHTML = '<i class="bi bi-check-lg"></i>';
+
+        } 
+        else if (stageIndex === currentIndex) {
+
+            stage.classList.add("current");
+            dot.innerHTML = '<i class="bi bi-tools"></i>';
+
+        } 
+        else {
+
+            stage.classList.add("pending");
+            dot.innerHTML = '<i class="bi bi-circle"></i>';
+
+        }
+
+    });
+
+});
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const startElement = document.getElementById("projectStartDate");
+    const handoverElement = document.getElementById("targetHandoverDate");
+    const remainingElement = document.getElementById("remainingDays");
+
+    const startDateValue = startElement.dataset.date;
+    const handoverDateValue = handoverElement.dataset.date;
+
+    if (!startDateValue) {
+        remainingElement.textContent = "-";
+        return;
+    }
+
+ 
+    if (!handoverDateValue) {
+        remainingElement.textContent = "-";
+        return;
+    }
+
+    const [year, month, day] = handoverDateValue.split("-").map(Number);
+
+    const handoverDate = new Date(year, month - 1, day);
+
+    // Today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Calculate remaining days
+    const difference = handoverDate - today;
+
+    const remainingDays = Math.round(
+        difference / (1000 * 60 * 60 * 24)
+    );
+
+    if (remainingDays > 0) {
+        remainingElement.textContent = remainingDays + " Days Left";
+    }
+    else if (remainingDays === 0) {
+        remainingElement.textContent = "Today";
+    }
+    else {
+        remainingElement.textContent =
+            Math.abs(remainingDays) + " Days Overdue";
+    }
+
+});
+</script>
 </body>
 </html>
+
+
+

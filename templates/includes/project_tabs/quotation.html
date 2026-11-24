@@ -1,224 +1,906 @@
-{# Quotation tab include: templates/includes/project_tabs/quotation.html #}
+
 <style>
-.quotation-page{color:#172331;font-size:13px}
-.quotation-page .q-card{background:#fff;border:1px solid #e2e7ee;border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.06);padding:16px;height:100%}
-.quotation-page .q-heading{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.quotation-page .q-heading>i{font-size:24px;color:#b7791f}
-.quotation-page .q-heading h5{font-size:17px;font-weight:750;margin:0;color:#172331}
-.quotation-page .q-heading p{font-size:12px;margin:3px 0 0;color:#64748b}
-.quotation-page .q-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.quotation-page .q-version{background:#e4f8e3;color:#16803b;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700}
-.quotation-page .btn-ibk{background:#172331;color:#fff;border:1px solid #172331;border-radius:9px;font-size:12px;font-weight:650;padding:8px 13px}
-.quotation-page .btn-ibk:hover{background:#26384c;color:#fff}
-.quotation-page .btn-outline-ibk{background:#fff;color:#172331;border:1px solid #cbd5e1;border-radius:9px;font-size:12px;font-weight:650;padding:8px 12px}
-.quotation-page .btn-gold{background:#fff1cf;color:#8a5700;border:1px solid #e6b64d;border-radius:9px;font-size:12px;font-weight:700;padding:8px 13px}
-.quotation-page .q-table-wrap{overflow-x:auto}
-.quotation-page .q-table{min-width:760px;margin:0;font-size:12px;vertical-align:middle}
-.quotation-page .q-table thead th{background:#eef0f2;color:#202a36;font-weight:750;border-bottom:1px solid #d7dce3;padding:10px 8px;white-space:nowrap}
-.quotation-page .q-table tbody td{padding:7px 8px;border-color:#e3e7ed}
-.quotation-page .q-table .form-control,.quotation-page .q-table .form-select{font-size:12px;min-width:70px;padding:5px 7px;border-color:#d8dee7;border-radius:7px;text-align:right}
-.quotation-page .q-table .description-input{text-align:left;min-width:190px}
-.quotation-page .q-table .amount-cell{font-weight:700;white-space:nowrap}
-.quotation-page .q-action{border:0;background:transparent;padding:3px 6px;font-size:16px}
-.quotation-page .q-action.edit{color:#172331}.quotation-page .q-action.delete{color:#dc2626}
-.quotation-page .q-add{margin-top:10px;background:#fff0c9;color:#8a5700;border:0;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700}
-.quotation-page .q-summary-row{display:flex;justify-content:space-between;gap:12px;padding:9px 2px;border-bottom:1px solid #edf0f3;font-size:13px}
-.quotation-page .q-summary-row strong{white-space:nowrap}
-.quotation-page .q-total{background:#fff0c9;border-radius:9px;padding:11px 12px;margin-top:9px;font-weight:800;font-size:15px}
-.quotation-page .q-meta{display:grid;grid-template-columns:18px 1fr auto;gap:9px;align-items:center;padding:6px 0;font-size:12px}
-.quotation-page .q-meta i{color:#64748b;font-size:14px}
-.quotation-page .q-meta strong{font-weight:650;text-align:right}
-.quotation-page .q-notes textarea{min-height:62px;font-size:12px;border-color:#d8dee7;border-radius:9px}
-.quotation-page .q-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.quotation-page .q-footer-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.quotation-page .q-footer .btn{white-space:nowrap}
-@media(max-width:767.98px){.quotation-page .q-card{padding:12px}.quotation-page .q-footer{align-items:stretch}.quotation-page .q-footer-actions{justify-content:flex-start}.quotation-page .q-footer-actions .btn{flex:1}.quotation-page .q-heading h5{font-size:15px}}
+.quotation-page {
+    color: #172331;
+    font-size: 13px;
+}
+
+.quotation-page .q-card {
+    background: #fff;
+    border: 1px solid #e2e7ee;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, .05);
+    padding: 16px;
+    height: 100%;
+}
+
+.quotation-page .q-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.quotation-page .q-heading > i {
+    font-size: 23px;
+    color: #b7791f;
+}
+
+.quotation-page .q-heading h5 {
+    font-size: 16px;
+    font-weight: 750;
+    margin: 0;
+    color: #172331;
+}
+
+.quotation-page .q-heading p {
+    font-size: 12px;
+    margin: 3px 0 0;
+    color: #64748b;
+}
+
+.quotation-page .q-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.quotation-page .q-version {
+    background: #e4f8e3;
+    color: #16803b;
+    border-radius: 20px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.quotation-page .btn-ibk {
+    background: #172331;
+    color: #fff;
+    border: 1px solid #172331;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 650;
+    padding: 8px 13px;
+}
+
+.quotation-page .btn-ibk:hover {
+    background: #26384c;
+    color: #fff;
+}
+
+.quotation-page .btn-outline-ibk {
+    background: #fff;
+    color: #172331;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 650;
+    padding: 8px 12px;
+}
+
+.quotation-page .btn-gold {
+    background: #fff1cf;
+    color: #8a5700;
+    border: 1px solid #e6b64d;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 13px;
+}
+
+.quotation-page .q-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.quotation-page .q-table {
+    
+    margin: 0;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.quotation-page .q-table thead th {
+    background: #eef0f2;
+    color: #202a36;
+    font-weight: 750;
+    border-bottom: 1px solid #d7dce3;
+    padding: 11px 8px;
+    white-space: nowrap;
+}
+
+.quotation-page .q-table tbody td {
+    padding: 7px 8px;
+    border-color: #e3e7ed;
+}
+
+.quotation-page .q-table .form-control,
+.quotation-page .q-table .form-select {
+    font-size: 12px;
+    min-width: 75px;
+    padding: 6px 7px;
+    border-color: #d8dee7;
+    border-radius: 7px;
+}
+
+.quotation-page .q-table .description-input {
+    min-width: 190px;
+}
+
+.quotation-page .q-table .room-input {
+    min-width: 120px;
+}
+
+.quotation-page .q-table .amount-cell {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.quotation-page .q-action {
+    border: 0;
+    background: transparent;
+    padding: 3px 6px;
+    font-size: 16px;
+}
+
+.quotation-page .q-action.delete {
+    color: #dc2626;
+}
+
+.quotation-page .q-add {
+    margin-top: 11px;
+    background: #fff0c9;
+    color: #8a5700;
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.quotation-page .q-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 2px;
+    border-bottom: 1px solid #edf0f3;
+    font-size: 13px;
+}
+
+.quotation-page .q-summary-row strong {
+    white-space: nowrap;
+}
+
+.quotation-page .q-summary-row input {
+    width: 115px;
+    text-align: right;
+    font-size: 12px;
+}
+
+.quotation-page .q-total {
+    background: #fff0c9;
+    border-radius: 9px;
+    padding: 12px;
+    margin-top: 10px;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.quotation-page .q-meta {
+    display: grid;
+    grid-template-columns: 18px 1fr auto;
+    gap: 9px;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.quotation-page .q-meta:last-child {
+    border-bottom: 0;
+}
+
+.quotation-page .q-meta i {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.quotation-page .q-meta strong {
+    font-weight: 650;
+    text-align: right;
+}
+
+.quotation-page .q-notes textarea {
+    min-height: 75px;
+    font-size: 12px;
+    border-color: #d8dee7;
+    border-radius: 9px;
+}
+
+.quotation-page .q-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.quotation-page .q-footer-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.quotation-page .q-empty {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+}
+
+.quotation-page .q-footer .btn {
+    white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+    .quotation-page .q-card {
+        padding: 12px;
+    }
+
+    .quotation-page .q-footer {
+        align-items: stretch;
+    }
+
+    .quotation-page .q-footer-actions {
+        justify-content: flex-start;
+    }
+
+    .quotation-page .q-footer-actions .btn {
+        flex: 1;
+    }
+
+    .quotation-page .q-heading h5 {
+        font-size: 15px;
+    }
+}
 </style>
 
 <div class="quotation-page">
-  <div class="row g-3">
-    <div class="col-lg-8">
-      <div class="q-card">
-        <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
-          <div class="q-heading mb-0">
-            <i class="bi bi-file-earmark-text"></i>
-            <div>
-              <h5>Quotation – {{ project.project_code|default:"IBK-1042" }}</h5>
-              <p>Interior Work Quotation</p>
+
+    <!-- Hidden fields for Django -->
+    <input type="hidden"
+           name="quotation_json"
+           id="quotation_json"
+           value="">
+
+    <input type="hidden"
+           name="quotation_discount"
+           id="quotation_discount"
+           value="{{ quotation_data.discount|default:0 }}">
+
+    <input type="hidden"
+           name="quotation_transport"
+           id="quotation_transport"
+           value="{{ quotation_data.transport|default:0 }}">
+
+    <input type="hidden"
+           name="quotation_gst"
+           id="quotation_gst"
+           value="{{ quotation_data.gst|default:18 }}">
+
+    <div class="row g-3">
+
+        <!-- LEFT: QUOTATION TABLE -->
+        <div class="col-lg-8">
+
+            <div class="q-card">
+
+                <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+
+                    <div class="q-heading mb-0">
+                        <i class="bi bi-file-earmark-text"></i>
+
+                        <div>
+                            <h5>
+                                Quotation – {{ project.project_code }}
+                            </h5>
+
+                            <p>Interior Work Quotation</p>
+                        </div>
+                    </div>
+
+                    <div class="q-toolbar">
+                        <span class="q-version">
+                            Current Quotation
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="q-table-wrap">
+
+                    <table class="table q-table" id="quotationTable">
+
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th>Room</th>
+                                <th>Work Description</th>
+                                <th>Sq.ft</th>
+                                <th>Rate (₹)</th>
+                                <th>Amount (₹)</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="quotationRows">
+
+                            {% if quotation_data.items %}
+
+                                {% for item in quotation_data.items %}
+
+                                <tr data-work-id="{{ item.work_id|default:'' }}">
+
+                                    <td class="text-center">{{ forloop.counter }}</td>
+
+                                    <td>
+                                        <input type="text"
+                                               class="form-control q-room"
+                                               value="{{ item.room_name|default:'' }}">
+                                    </td>
+
+                                    <td>
+                                        <input type="text"
+                                               class="form-control description-input q-work"
+                                               value="{{ item.work_name|default:'' }}">
+                                    </td>
+
+                                    <td>
+                                        <input type="number"
+                                               class="form-control q-sqft"
+                                               min="0"
+                                               step="1"
+                                               value="{{ item.sqft|default:0 }}">
+                                    </td>
+
+                                    <td>
+                                        <input type="number"
+                                               class="form-control q-rate"
+                                               min="0"
+                                               step="1"
+                                               value="{{ item.rate|default:0 }}">
+                                    </td>
+
+                                    <td class="amount-cell text-end">0</td>
+
+                                    <td class="text-center">
+                                        <button type="button"
+                                                class="q-action delete q-delete"
+                                                title="Delete">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                {% for item in quotation_rows %}
+
+                                <tr data-work-id="{{ item.work_id }}">
+
+                                    <td class="text-center">{{ forloop.counter }}</td>
+
+                                    <td>
+                                        <input type="text"
+                                               class="form-control q-room"
+                                               value="{{ item.room_name }}">
+                                    </td>
+
+                                    <td>
+                                        <input type="text"
+                                               class="form-control description-input q-work"
+                                               value="{{ item.work_name }}">
+                                    </td>
+
+                                    <td>
+                                        <input type="number"
+                                               class="form-control q-sqft"
+                                               min="0"
+                                               step="1"
+                                               value="{{ item.sqft|default:0 }}">
+                                    </td>
+
+                                    <td>
+                                        <input type="number"
+                                               class="form-control q-rate"
+                                               min="0"
+                                               step="1"
+                                               value="{{ item.rate|default:0 }}">
+                                    </td>
+
+                                    <td class="amount-cell text-end">0</td>
+
+                                    <td class="text-center">
+                                        <button type="button"
+                                                class="q-action delete q-delete"
+                                                title="Delete">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </td>
+
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="7" class="q-empty">
+                                        No room works available.
+                                        Add works from Edit Project.
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <button type="button"
+                        class="q-add"
+                        id="addQuotationRow">
+
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Add Work
+
+                </button>
+
             </div>
-          </div>
-          <div class="q-toolbar">
-            <span class="q-version">Current (v3) <i class="bi bi-chevron-down ms-1"></i></span>
-            <button type="button" class="btn btn-outline-ibk"><i class="bi bi-clock-history me-1"></i> Version History</button>
-            <button type="button" class="btn btn-ibk"><i class="bi bi-plus-lg me-1"></i> New Version</button>
-          </div>
+
         </div>
 
-        <div class="q-table-wrap">
-          <table class="table q-table" id="quotationTable">
-            <thead>
-              <tr>
-                <th class="text-center">S.No</th>
-                <th>Work Description</th>
-                <th>Quantity</th>
-                <th>Unit</th>
-                <th>Rate (₹)</th>
-                <th>Amount (₹)</th>
-                <th class="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="quotationRows">
-              <tr>
-                <td class="text-center">1</td>
-                <td><input class="form-control description-input" value="Civil Work (Partition, Plaster, etc.)"></td>
-                <td><input class="form-control q-qty" type="number" min="0" step="0.01" value="1"></td>
-                <td><select class="form-select"><option>LS</option><option>Sq.ft</option><option>Nos</option><option>Rft</option></select></td>
-                <td><input class="form-control q-rate" type="number" min="0" value="250000"></td>
-                <td class="amount-cell text-end">2,50,000</td>
-                <td class="text-center"><button type="button" class="q-action edit" title="Edit"><i class="bi bi-pencil"></i></button><button type="button" class="q-action delete q-delete" title="Delete"><i class="bi bi-trash3"></i></button></td>
-              </tr>
-              <tr>
-                <td class="text-center">2</td>
-                <td><input class="form-control description-input" value="False Ceiling (Gypsum)"></td>
-                <td><input class="form-control q-qty" type="number" min="0" step="0.01" value="1850"></td>
-                <td><select class="form-select"><option>Sq.ft</option><option>LS</option><option>Nos</option><option>Rft</option></select></td>
-                <td><input class="form-control q-rate" type="number" min="0" value="85"></td>
-                <td class="amount-cell text-end">1,57,250</td>
-                <td class="text-center"><button type="button" class="q-action edit"><i class="bi bi-pencil"></i></button><button type="button" class="q-action delete q-delete"><i class="bi bi-trash3"></i></button></td>
-              </tr>
-              <tr>
-                <td class="text-center">3</td>
-                <td><input class="form-control description-input" value="Carpentry (Wardrobe, TV Unit, Kitchen)"></td>
-                <td><input class="form-control q-qty" type="number" min="0" step="0.01" value="1"></td>
-                <td><select class="form-select"><option>LS</option><option>Sq.ft</option><option>Nos</option><option>Rft</option></select></td>
-                <td><input class="form-control q-rate" type="number" min="0" value="575000"></td>
-                <td class="amount-cell text-end">5,75,000</td>
-                <td class="text-center"><button type="button" class="q-action edit"><i class="bi bi-pencil"></i></button><button type="button" class="q-action delete q-delete"><i class="bi bi-trash3"></i></button></td>
-              </tr>
-              <tr>
-                <td class="text-center">4</td>
-                <td><input class="form-control description-input" value="Electrical &amp; Lighting"></td>
-                <td><input class="form-control q-qty" type="number" min="0" step="0.01" value="1"></td>
-                <td><select class="form-select"><option>LS</option><option>Sq.ft</option><option>Nos</option><option>Rft</option></select></td>
-                <td><input class="form-control q-rate" type="number" min="0" value="185000"></td>
-                <td class="amount-cell text-end">1,85,000</td>
-                <td class="text-center"><button type="button" class="q-action edit"><i class="bi bi-pencil"></i></button><button type="button" class="q-action delete q-delete"><i class="bi bi-trash3"></i></button></td>
-              </tr>
-              <tr>
-                <td class="text-center">5</td>
-                <td><input class="form-control description-input" value="Painting (Interior – Premium)"></td>
-                <td><input class="form-control q-qty" type="number" min="0" step="0.01" value="1850"></td>
-                <td><select class="form-select"><option>Sq.ft</option><option>LS</option><option>Nos</option><option>Rft</option></select></td>
-                <td><input class="form-control q-rate" type="number" min="0" value="45"></td>
-                <td class="amount-cell text-end">83,250</td>
-                <td class="text-center"><button type="button" class="q-action edit"><i class="bi bi-pencil"></i></button><button type="button" class="q-action delete q-delete"><i class="bi bi-trash3"></i></button></td>
-              </tr>
-              <tr>
-                <td class="text-center">6</td>
-                <td><input class="form-control description-input" value="Fixed Furniture &amp; Other Works"></td>
-                <td><input class="form-control q-qty" type="number" min="0" step="0.01" value="1"></td>
-                <td><select class="form-select"><option>LS</option><option>Sq.ft</option><option>Nos</option><option>Rft</option></select></td>
-                <td><input class="form-control q-rate" type="number" min="0" value="120000"></td>
-                <td class="amount-cell text-end">1,20,000</td>
-                <td class="text-center"><button type="button" class="q-action edit"><i class="bi bi-pencil"></i></button><button type="button" class="q-action delete q-delete"><i class="bi bi-trash3"></i></button></td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- RIGHT: SUMMARY -->
+        <div class="col-lg-4">
+
+            <div class="q-card mb-3">
+
+                <div class="q-heading">
+                    <i class="bi bi-calculator"></i>
+
+                    <div>
+                        <h5>Quotation Summary</h5>
+                    </div>
+                </div>
+
+                <div class="q-summary-row">
+                    <span>Sub Total</span>
+                    <strong id="qSubtotal">₹ 0</strong>
+                </div>
+
+                <div class="q-summary-row">
+
+                    <label for="qDiscountInput" class="mb-0">
+                        Discount
+                    </label>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <span>₹</span>
+
+                        <input type="number"
+                               id="qDiscountInput"
+                               class="form-control form-control-sm"
+                               min="0"
+                               step="1"
+                               value="{{ quotation_data.discount|default:0 }}">
+                    </div>
+
+                </div>
+
+                <div class="q-summary-row">
+
+                    <label for="qTransportInput" class="mb-0">
+                        Transport
+                    </label>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <span>₹</span>
+
+                        <input type="number"
+                               id="qTransportInput"
+                               class="form-control form-control-sm"
+                               min="0"
+                               step="1"
+                               value="{{ quotation_data.transport|default:0 }}">
+                    </div>
+
+                </div>
+
+                <div class="q-summary-row">
+
+                    <label for="qGstInput" class="mb-0">
+                        GST (%)
+                    </label>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="number"
+                               id="qGstInput"
+                               class="form-control form-control-sm"
+                               min="0"
+                               max="100"
+                               step="1"
+                               value="{{ quotation_data.gst|default:18 }}">
+                        <span>%</span>
+                    </div>
+
+                </div>
+
+                <div class="q-summary-row">
+                    <span>GST Amount</span>
+                    <strong id="qTax">₹ 0</strong>
+                </div>
+
+                <div class="q-total d-flex justify-content-between gap-2">
+                    <span>Total Quotation</span>
+                    <strong id="qGrandTotal">₹ 0</strong>
+                </div>
+
+            </div>
+
+            <!-- QUOTATION DETAILS -->
+            <!-- <div class="q-card">
+
+                <div class="q-heading">
+                    <i class="bi bi-info-circle"></i>
+
+                    <div>
+                        <h5>Quotation Details</h5>
+                    </div>
+                </div>
+
+                <div class="q-meta">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Quotation Date</span>
+                    <strong>{% now "d M Y" %}</strong>
+                </div>
+
+                <div class="q-meta">
+                    <i class="bi bi-clock"></i>
+                    <span>Validity</span>
+                    <strong>30 Days</strong>
+                </div>
+
+                <div class="q-meta">
+                    <i class="bi bi-person"></i>
+                    <span>Prepared By</span>
+                    <strong>{{ request.user.username }}</strong>
+                </div>
+
+                <div class="q-meta">
+                    <i class="bi bi-house"></i>
+                    <span>Project</span>
+                    <strong>{{ project.project_code }}</strong>
+                </div>
+
+            </div> -->
+
         </div>
-        <button type="button" class="q-add" id="addQuotationRow"><i class="bi bi-plus-lg me-1"></i> Add Row</button>
-      </div>
-    </div>
 
-    <div class="col-lg-4">
-      <div class="q-card mb-3">
-        <div class="q-heading"><i class="bi bi-database"></i><div><h5>Quotation Summary</h5></div></div>
-        <div class="q-summary-row"><span>Sub Total</span><strong id="qSubtotal">₹ 13,70,500</strong></div>
-        <div class="q-summary-row"><label for="qDiscount" class="mb-0">Discount</label><div class="d-flex align-items-center gap-2"><span>₹</span><input id="qDiscount" class="form-control form-control-sm text-end" type="number" value="150000" min="0" style="width:105px"><i class="bi bi-pencil"></i></div></div>
-        <div class="q-summary-row"><span>Tax (GST 18%)</span><strong id="qTax">₹ 2,19,690</strong></div>
-        <div class="q-total d-flex justify-content-between gap-2"><span>Total Quotation Value</span><strong id="qGrandTotal">₹ 14,40,190</strong></div>
-      </div>
+        <!-- NOTES -->
+        <div class="col-12">
 
-      <div class="q-card">
-        <div class="q-heading"><i class="bi bi-info-circle"></i><div><h5>Quotation Details</h5></div></div>
-        <div class="q-meta"><i class="bi bi-calendar-event"></i><span>Quotation Date</span><strong>06 Nov 2026</strong></div>
-        <div class="q-meta"><i class="bi bi-clock"></i><span>Validity</span><strong>30 Days</strong></div>
-        <div class="q-meta"><i class="bi bi-layers"></i><span>Version</span><strong>v3 (Current)</strong></div>
-        <div class="q-meta"><i class="bi bi-person"></i><span>Prepared By</span><strong>Manager – IBK</strong></div>
-        <div class="q-meta"><i class="bi bi-clipboard-check"></i><span>Remarks</span><strong>Interior work as per final design.</strong></div>
-      </div>
-    </div>
+            <div class="q-card q-notes">
 
-    <div class="col-12">
-      <div class="q-card q-notes">
-        <div class="q-footer">
-          <div class="flex-grow-1" style="min-width:260px;max-width:560px">
-            <div class="q-heading mb-1"><i class="bi bi-journal-check"></i><h5>Notes</h5></div>
-            <textarea class="form-control" placeholder="Enter quotation notes...">Includes material, labour and installation. Final scope as per approved design.</textarea>
-          </div>
-          <div class="q-footer-actions align-self-end">
-            <button type="button" class="btn btn-outline-ibk">Cancel</button>
-            <button type="button" class="btn btn-outline-ibk">Save as Draft</button>
-            <button type="button" class="btn btn-ibk"><i class="bi bi-check-lg me-1"></i> Update Quotation</button>
-            <button type="button" class="btn btn-gold"><i class="bi bi-eye me-1"></i> Preview</button>
-            <button type="button" class="btn btn-gold"><i class="bi bi-download me-1"></i> Download PDF</button>
-          </div>
+                <div class="q-footer">
+
+                    <div class="flex-grow-1"
+                         style="min-width:260px;max-width:560px">
+
+                        <div class="q-heading mb-2">
+                            <i class="bi bi-journal-check"></i>
+                            <h5>Quotation Notes</h5>
+                        </div>
+
+                        <textarea
+                            class="form-control"
+                            id="qNotes"
+                            placeholder="Enter quotation notes...">{{ quotation_data.notes|default:'' }}</textarea>
+
+                    </div>
+
+                    <div class="q-footer-actions">
+
+                        <button type="button"
+                                class="btn btn-outline-ibk"
+                                onclick="window.location.reload()">
+
+                            Cancel
+
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-ibk"
+                                id="saveQuotationBtn">
+
+                            <i class="bi bi-check-lg me-1"></i>
+                            Update Quotation
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
-      </div>
+
     </div>
-  </div>
+
 </div>
 
 <script>
 (function () {
-  const root = document.currentScript.previousElementSibling;
-  if (!root || !root.classList.contains('quotation-page')) return;
-  const tbody = root.querySelector('#quotationRows');
-  const discountInput = root.querySelector('#qDiscount');
-  const fmt = value => new Intl.NumberFormat('en-IN', {maximumFractionDigits: 2}).format(value || 0);
 
-  function recalculate() {
-    let subtotal = 0;
-    [...tbody.querySelectorAll('tr')].forEach((row, index) => {
-      row.cells[0].textContent = index + 1;
-      const qty = Number(row.querySelector('.q-qty')?.value || 0);
-      const rate = Number(row.querySelector('.q-rate')?.value || 0);
-      const amount = qty * rate;
-      subtotal += amount;
-      row.querySelector('.amount-cell').textContent = fmt(amount);
-    });
-    const discount = Math.max(0, Number(discountInput.value || 0));
-    const taxable = Math.max(0, subtotal - discount);
-    const tax = taxable * 0.18;
-    root.querySelector('#qSubtotal').textContent = '₹ ' + fmt(subtotal);
-    root.querySelector('#qTax').textContent = '₹ ' + fmt(tax);
-    root.querySelector('#qGrandTotal').textContent = '₹ ' + fmt(taxable + tax);
-  }
+    const root = document.querySelector('.quotation-page');
 
-  tbody.addEventListener('input', event => {
-    if (event.target.matches('.q-qty, .q-rate')) recalculate();
-  });
-  discountInput.addEventListener('input', recalculate);
-  tbody.addEventListener('click', event => {
-    const del = event.target.closest('.q-delete');
-    if (del) {
-      del.closest('tr').remove();
-      recalculate();
+    if (!root) return;
+
+    const tbody = root.querySelector('#quotationRows');
+    const form = root.closest('form');
+
+    const quotationJson = root.querySelector('#quotation_json');
+    const discountHidden = root.querySelector('#quotation_discount');
+    const transportHidden = root.querySelector('#quotation_transport');
+    const gstHidden = root.querySelector('#quotation_gst');
+
+    const discountInput = root.querySelector('#qDiscountInput');
+    const transportInput = root.querySelector('#qTransportInput');
+    const gstInput = root.querySelector('#qGstInput');
+
+    const fmt = value => new Intl.NumberFormat('en-IN', {
+        maximumFractionDigits: 0
+    }).format(Math.round(Number(value) || 0));
+
+
+    function recalculate() {
+
+        let subtotal = 0;
+
+        [...tbody.querySelectorAll('tr')].forEach((row, index) => {
+
+            const sqftInput = row.querySelector('.q-sqft');
+            const rateInput = row.querySelector('.q-rate');
+            const amountCell = row.querySelector('.amount-cell');
+
+            if (!sqftInput || !rateInput || !amountCell) return;
+
+            row.cells[0].textContent = index + 1;
+
+            const sqft = Number(sqftInput.value || 0);
+            const rate = Number(rateInput.value || 0);
+
+            const amount = sqft * rate;
+
+            subtotal += amount;
+
+            amountCell.textContent = fmt(amount);
+
+        });
+
+        const discount = Math.max(0, Number(discountInput.value || 0));
+        const transport = Math.max(0, Number(transportInput.value || 0));
+        const gst = Math.max(0, Number(gstInput.value || 0));
+
+        const taxable = Math.max(0, subtotal - discount + transport);
+
+        const taxAmount = taxable * gst / 100;
+
+        const grandTotal = taxable + taxAmount;
+
+        root.querySelector('#qSubtotal').textContent =
+            '₹ ' + fmt(subtotal);
+
+        root.querySelector('#qTax').textContent =
+            '₹ ' + fmt(taxAmount);
+
+        root.querySelector('#qGrandTotal').textContent =
+            '₹ ' + fmt(grandTotal);
+
+        return {
+            subtotal,
+            discount,
+            transport,
+            gst,
+            tax_amount: taxAmount,
+            grand_total: grandTotal
+        };
+
     }
-  });
 
-  root.querySelector('#addQuotationRow').addEventListener('click', () => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td class="text-center"></td>
-      <td><input class="form-control description-input" placeholder="Work description"></td>
-      <td><input class="form-control q-qty" type="number" min="0" step="0.01" value="1"></td>
-      <td><select class="form-select"><option>LS</option><option>Sq.ft</option><option>Nos</option><option>Rft</option></select></td>
-      <td><input class="form-control q-rate" type="number" min="0" value="0"></td>
-      <td class="amount-cell text-end">0</td>
-      <td class="text-center"><button type="button" class="q-action edit"><i class="bi bi-pencil"></i></button><button type="button" class="q-action delete q-delete"><i class="bi bi-trash3"></i></button></td>`;
-    tbody.appendChild(row);
+
+    function addQuotationRow(data = {}) {
+
+        const row = document.createElement('tr');
+
+        row.dataset.workId = data.work_id || '';
+
+        const room = document.createElement('input');
+        room.type = 'text';
+        room.className = 'form-control q-room';
+        room.value = data.room_name || '';
+        room.placeholder = 'Room name';
+
+        const work = document.createElement('input');
+        work.type = 'text';
+        work.className = 'form-control description-input q-work';
+        work.value = data.work_name || '';
+        work.placeholder = 'Work description';
+
+        const sqft = document.createElement('input');
+        sqft.type = 'number';
+        sqft.min = '0';
+        sqft.step = '1';
+        sqft.className = 'form-control q-sqft';
+        sqft.value = data.sqft || 0;
+
+        const rate = document.createElement('input');
+        rate.type = 'number';
+        rate.min = '0';
+        rate.step = '1';
+        rate.className = 'form-control q-rate';
+        rate.value = data.rate || 0;
+
+        row.innerHTML = `
+            <td class="text-center"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="amount-cell text-end">0</td>
+            <td class="text-center">
+                <button type="button"
+                        class="q-action delete q-delete"
+                        title="Delete">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </td>
+        `;
+
+        row.cells[1].appendChild(room);
+        row.cells[2].appendChild(work);
+        row.cells[3].appendChild(sqft);
+        row.cells[4].appendChild(rate);
+
+        tbody.appendChild(row);
+
+        recalculate();
+
+    }
+
+
+    root.querySelector('#addQuotationRow').addEventListener('click', function () {
+
+        addQuotationRow();
+
+    });
+
+
+    tbody.addEventListener('input', function (event) {
+
+        if (event.target.matches('.q-sqft, .q-rate')) {
+            recalculate();
+        }
+
+    });
+
+
+    discountInput.addEventListener('input', recalculate);
+    transportInput.addEventListener('input', recalculate);
+    gstInput.addEventListener('input', recalculate);
+
+
+    tbody.addEventListener('click', function (event) {
+
+        const deleteButton = event.target.closest('.q-delete');
+
+        if (!deleteButton) return;
+
+        deleteButton.closest('tr').remove();
+
+        recalculate();
+
+    });
+
+
+    function prepareQuotationData() {
+
+        const items = [];
+
+        tbody.querySelectorAll('tr').forEach(row => {
+
+            const roomInput = row.querySelector('.q-room');
+            const workInput = row.querySelector('.q-work');
+            const sqftInput = row.querySelector('.q-sqft');
+            const rateInput = row.querySelector('.q-rate');
+
+            if (!roomInput || !workInput || !sqftInput || !rateInput) {
+                return;
+            }
+
+            const sqft = Number(sqftInput.value || 0);
+            const rate = Number(rateInput.value || 0);
+
+            items.push({
+
+                work_id: row.dataset.workId || null,
+
+                room_name: roomInput.value.trim(),
+
+                work_name: workInput.value.trim(),
+
+                sqft: sqft,
+
+                rate: rate,
+
+                amount: sqft * rate
+
+            });
+
+        });
+
+        const totals = recalculate();
+
+        const quotation = {
+
+            items: items,
+
+            subtotal: totals.subtotal,
+
+            discount: totals.discount,
+
+            transport: totals.transport,
+
+            gst: totals.gst,
+
+            tax_amount: totals.tax_amount,
+
+            grand_total: totals.grand_total,
+
+            notes: root.querySelector('#qNotes').value.trim()
+
+        };
+
+        quotationJson.value = JSON.stringify(quotation);
+
+        discountHidden.value = totals.discount;
+        transportHidden.value = totals.transport;
+        gstHidden.value = totals.gst;
+
+    }
+
+
+    if (form) {
+
+        form.addEventListener('submit', function () {
+
+            prepareQuotationData();
+
+        });
+
+    }
+
     recalculate();
-  });
-  recalculate();
+
+    prepareQuotationData();
+
 })();
 </script>
